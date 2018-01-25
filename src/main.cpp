@@ -28,9 +28,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-//imgui headers
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw_gl3.h"
+//imgui API
+#include "Hud.h"
 
 
 using namespace std;
@@ -44,6 +43,7 @@ public:
 
 	WindowManager * windowManager = nullptr;
 	Player * player = nullptr;
+  Hud * hud = nullptr;
 
 	// Our shader program
 	shared_ptr<Program> prog;
@@ -216,6 +216,8 @@ public:
 		player = new Player(width, height, windowManager);
 
 		cout << "Init\n" << endl;
+
+    hud = new Hud(windowManager->getHandle());
 	 }
 
 	void initGeom(const std::string& resourceDirectory)
@@ -452,6 +454,11 @@ public:
 
 		// Clear framebuffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Hud generation
+    hud->start();
+    hud->textbox("Hello World", 128, 128, 64, 64);
+    hud->render();
 
 		/* Leave this code to just draw the meshes alone */
 		float aspect = width/(float)height;
