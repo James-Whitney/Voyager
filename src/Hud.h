@@ -1,17 +1,23 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
+#include <GLFW/glfw3.h>
 
 class Hud {
 public:
   // Defaults for Begin()
   ImGuiWindowFlags beginDefaults = ImGuiWindowFlags_NoTitleBar |
-                      ImGuiWindowFlags_NoResize |
-                      ImGuiWindowFlags_NoMove |
-                      ImGuiWindowFlags_NoCollapse;
+                                   ImGuiWindowFlags_NoResize |
+                                   ImGuiWindowFlags_NoMove |
+                                   ImGuiWindowFlags_NoCollapse;
+
+ int width;
+ int height;
 
   // Sets the window and establishes the frame.
   Hud(GLFWwindow* window) {
     ImGui_ImplGlfwGL3_Init(window, true);
+    glfwGetWindowSize(window, &width, &height);
+    //std::printf("%d x %d\n", width, height);
   }
   // Creates new frame
   void start() { ImGui_ImplGlfwGL3_NewFrame(); }

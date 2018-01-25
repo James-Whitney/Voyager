@@ -457,7 +457,7 @@ public:
 
     // Hud generation
     hud->start();
-    hud->textbox("Hello World", 128, 128, 64, 64);
+    hud->textbox("Hello World", width/2, 64, width/1.25, 128);
     hud->render();
 
 		/* Leave this code to just draw the meshes alone */
@@ -475,7 +475,7 @@ public:
 		V->lookAt(player->getEyePos(), player->getEyePos() + player->getCurrLook(), Y_AXIS);
 
 		//Console updates:
-		updateConsole(deltaTime);
+		//updateConsole(deltaTime);
 		if (score == ENTITY_MAX)
 		{
 			printf("YOU WIN!\n");
