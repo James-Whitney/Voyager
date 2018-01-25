@@ -14,8 +14,7 @@
  * Written by Ian Dunn, 9/24/2017
  */
 
-#pragma  once
-
+#pragma once
 #ifndef LAB471_WINDOW_H_INCLUDED
 #define LAB471_WINDOW_H_INCLUDED
 
@@ -57,7 +56,7 @@ public:
 	WindowManager(const WindowManager&) = delete;
 	WindowManager& operator= (const WindowManager&) = delete;
 
-	bool init();
+	bool init(int const width, int const height);
 	void shutdown();
 
 	void setEventCallbacks(EventCallbacks *callbacks);
