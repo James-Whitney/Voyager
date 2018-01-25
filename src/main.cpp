@@ -28,6 +28,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+//imgui headers
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw_gl3.h"
+
+
 using namespace std;
 using namespace glm;
 
@@ -104,7 +109,7 @@ public:
 
 	void scrollCallback(GLFWwindow* window, double deltaX, double deltaY)
 	{
-		
+
 	}
 
 	void mouseCallback(GLFWwindow *window, int button, int action, int mods)
@@ -419,7 +424,7 @@ public:
 				newEntity->randomPosition();
 				isCollidingEntities = newEntity->checkEntityCollision(Entities, Entities.size() - 1);
 				isCollidingPlayer = newEntity->checkCollision(player->getEyePos(), PLAYER_SIZE);
-			}	
+			}
 		}
 	}
 
