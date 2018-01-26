@@ -1,0 +1,29 @@
+[
+  {
+    "type" : "textbox",
+    "titlebar" : "header",
+    "text" : "Hello World",
+    "x_pos" : 0.5,
+    "y_pos" : 0.1,
+    "width" : 0.75,
+    "height" : 0.1
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "bottom left",
+    "text" : "Left box",
+    "x_pos" : 0.25,
+    "y_pos" : 0.9,
+    "width" : 0.25,
+    "height" : 0.05
+    },
+    {
+      "type" : "textbox",
+      "titlebar" : "bottom right",
+      "text" : "Right box",
+      "x_pos" : 0.75,
+      "y_pos" : 0.9,
+      "width" : 0.25,
+      "height" : 0.05
+      }
+]

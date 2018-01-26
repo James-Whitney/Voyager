@@ -6,35 +6,39 @@
 #include <imgui/imgui_impl_glfw_gl3.h>
 #include <GLFW/glfw3.h>
 
+#include <rapidjson/rapidjson.h>
+#include <rapidjson/document.h>
+
 class Hud {
 public:
   // Defaults for Begin()
-  ImGuiWindowFlags beginDefaults = ImGuiWindowFlags_NoTitleBar |
-                                   ImGuiWindowFlags_NoResize |
-                                   ImGuiWindowFlags_NoMove |
-                                   ImGuiWindowFlags_NoCollapse;
+  static const ImGuiWindowFlags beginDefaults = \
+    ImGuiWindowFlags_NoTitleBar |
+    ImGuiWindowFlags_NoResize |
+    ImGuiWindowFlags_NoMove |
+    ImGuiWindowFlags_NoCollapse;
 
   int width;
   int height;
 
-  // Sets the window and establishes the frame.
-  Hud(GLFWwindow* window) {
-    ImGui_ImplGlfwGL3_Init(window, true);
-    glfwGetWindowSize(window, &width, &height);
-    //std::printf("%d x %d\n", width, height);
-  }
-  // Creates new frame
-  void start() { ImGui_ImplGlfwGL3_NewFrame(); }
-  void render() { ImGui::Render(); }
-  // create a textbox
-  void textbox(const char * txt, int x_pos, int y_pos, int height, int width) {
-    ImGui::SetNextWindowPos(ImVec2(x_pos, y_pos), 0, ImVec2(0.5f,0.5f));
-    ImGui::SetNextWindowSize(ImVec2(height, width), 0);
+  rapidjson::Document doc;
 
-    ImGui::Begin("", NULL, beginDefaults);
-    ImGui::Text(txt);
-    ImGui::End();
-  }
+  // Sets the window to work in and establishes the frame.
+  Hud(GLFWwindow* window);
+  // Creates new frame, start adding widgets
+  void start();
+  // Render all of the current widgets
+  void render();
+  // Loops through doc array and generates the widgests specified by the json file
+  void generate();
+  // create a textbox widget
+  void textbox(const char *titlebar, const char * txt, int x_pos, int y_pos, int width, int heigth);
+  // No wdith or height defaults to have buton be same size as text.
+  void button(const char* txt, int width = 0, int height = 0);
+
+private:
+  // Loads resources/hud.json into doc
+  void open();
 };
 
 #endif

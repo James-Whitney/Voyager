@@ -205,7 +205,7 @@ public:
 			std::cerr << "One or more shaders failed to compile... exiting!" << std::endl;
 			exit(1);
 		}
- 		texProg->addUniform("P");
+		texProg->addUniform("P");
 		texProg->addUniform("V");
 		texProg->addUniform("M");
 		texProg->addAttribute("vertPos");
@@ -218,6 +218,7 @@ public:
 		cout << "Init\n" << endl;
 
     hud = new Hud(windowManager->getHandle());
+
 	 }
 
 	void initGeom(const std::string& resourceDirectory)
@@ -455,11 +456,6 @@ public:
 		// Clear framebuffer.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // Hud generation
-    hud->start();
-    hud->textbox("Hello World", width/2, 64, width/1.25, 128);
-    hud->render();
-
 		/* Leave this code to just draw the meshes alone */
 		float aspect = width/(float)height;
 
@@ -536,6 +532,11 @@ public:
 
 		V->popMatrix();
 		P->popMatrix();
+
+    // Hud generation
+    hud->start();
+    hud->generate();
+    hud->render();
 	}
 
 	// helper function to set materials for shading
@@ -598,6 +599,7 @@ int main(int argc, char **argv)
 
 		// Swap front and back buffers.
 		glfwSwapBuffers(windowManager->getHandle());
+
 		// Poll for and process events.
 		glfwPollEvents();
 	}
