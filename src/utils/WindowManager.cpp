@@ -1,6 +1,6 @@
 
 #include "WindowManager.h"
-#include "GLSL.h"
+// #include "GLSL.h"
 
 #include <iostream>
 
@@ -30,10 +30,8 @@ WindowManager::~WindowManager()
 	}
 }
 
-bool WindowManager::init()
+bool WindowManager::init(int const width, int const height)
 {
-	int const width = 512;
-	int const height = 512;
 	glfwSetErrorCallback(error_callback);
 
 	// Initialize glfw library
@@ -49,16 +47,7 @@ bool WindowManager::init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	// Create a windowed mode window and its OpenGL context.
-	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	if (mode == NULL)
-	{
-		perror("VideoMode didn't get primary monitor");
-		exit(1);
-	}
-
-	//windowHandle = glfwCreateWindow(mode->width, mode->height, "The Lab", glfwGetPrimaryMonitor(), nullptr);
-	windowHandle = glfwCreateWindow(1920, 1080, "The Lab", nullptr, nullptr);
-
+	windowHandle = glfwCreateWindow(width, height, "Git Got", nullptr, nullptr);
 	if (! windowHandle)
 	{
 		glfwTerminate();
