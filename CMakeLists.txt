@@ -1,92 +1,72 @@
-cmake_minimum_required(VERSION 2.7)
+set(VOYAGER_VERSION 0.1.0)
 
-# Name of the project
-project(voyager)
+# CMake
+cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
+project(voyager VERSION ${VOYAGER_VERSION} LANGUAGES CXX C)
+set(CMAKE_CXX_STANDARD 11)
 
-# Use glob to get the list of all source files.
-file(GLOB_RECURSE SOURCES "src/*.cpp" "ext/*/*.cpp" "ext/glad/src/*.c")
+###############################################################################################
 
-# We don't really need to include header and resource files to build, but it's
-# nice to have them show up in IDEs.
-file(GLOB_RECURSE HEADERS "src/*.h" "ext/*/*.h" "ext/glad/*/*.h")
-file(GLOB_RECURSE GLSL "resources/*.glsl")
+function(AddExt TargetName)
 
-include_directories("ext")
-include_directories("ext/glad/include")
-include_directories("src")
+   # glfw
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glfw/include")
+   target_link_libraries(${TargetName} glfw ${GLFW_LIBRARIES})
 
-# Set the executable.
-add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS} ${GLSL})
+   # glad
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glad/include")
 
+   # general include dir
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext")
 
+   # OS specific options and libraries
+   if(WIN32)
+      # c++0x is enabled by default.
+      # -Wall produces way too many warnings.
+      # -pedantic is not supported.
+      target_link_libraries(${TargetName} opengl32.lib)
+   else()
+      # Enable all pedantic warnings.
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -pedantic")
+      if(APPLE)
+         # Add required frameworks for GLFW.
+         target_link_libraries(${TargetName} "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo")
+      else()
+         #Link the Linux OpenGL library
+         target_link_libraries(${TargetName} "GL" "dl")
+      endif()
+   endif()
 
-# Add GLFW
-# Get the GLFW environment variable.
-# There should be a CMakeLists.txt in the specified directory.
-set(GLFW_DIR "$ENV{GLFW_DIR}")
-if(GLFW_DIR)
-  message(STATUS "GLFW environment variable found")
+endfunction(AddExt)
 
-  option(GLFW_BUILD_EXAMPLES "GLFW_BUILD_EXAMPLES" OFF)
-  option(GLFW_BUILD_TESTS "GLFW_BUILD_TESTS" OFF)
-  option(GLFW_BUILD_DOCS "GLFW_BUILD_DOCS" OFF)
-  if(CMAKE_BUILD_TYPE MATCHES Release)
-    add_subdirectory(${GLFW_DIR} ${GLFW_DIR}/release)
-  else()
-    add_subdirectory(${GLFW_DIR} ${GLFW_DIR}/debug)
-  endif()
+function(LinkVoyagerLibraries TargetName)
+   target_link_libraries(${TargetName} voyager-core)
+endfunction(LinkVoyagerLibraries)
 
-  include_directories(${GLFW_DIR}/include)
-  target_link_libraries(${CMAKE_PROJECT_NAME} glfw ${GLFW_LIBRARIES})
-else()
-  message(STATUS "GLFW environment variable `GLFW_DIR` not found, GLFW3 must be installed with the system")
+function(ConfigureBuildProperties TargetName)
+   target_include_directories(${TARGET_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/src")
+endfunction(ConfigureBuildProperties)
 
-  find_package(PkgConfig)
-  if (PKGCONFIG_FOUND)
-    message(STATUS "PkgConfig found")
-    pkg_search_module(GLFW REQUIRED glfw3)
-    include_directories(${GLFW_INCLUDE_DIRS})
-    target_link_libraries(${CMAKE_PROJECT_NAME} ${GLFW_LIBRARIES})
-  else()
-    message(STATUS "No PkgConfig found")
-    find_package(glfw3 REQUIRED)
-    include_directories(${GLFW_INCLUDE_DIRS})
-    target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
-  endif()
-endif()
+###############################################################################################
 
+# GLFW
+set(GLFW_DIR "${PROJECT_SOURCE_DIR}/ext/glfw")
+option(GLFW_BUILD_EXAMPLES "GLFW_BUILD_EXAMPLES" OFF)
+option(GLFW_BUILD_TESTS "GLFW_BUILD_TESTS" OFF)
+option(GLFW_BUILD_DOCS "GLFW_BUILD_DOCS" OFF)
+add_subdirectory(${GLFW_DIR})
 
+###############################################################################################
 
-# Add GLM
-# Get the GLM environment variable. Since GLM is a header-only library, we
-# just need to add it to the include directory.
-set(GLM_INCLUDE_DIR "$ENV{GLM_INCLUDE_DIR}")
-if(GLM_INCLUDE_DIR)
-  include_directories(${GLM_INCLUDE_DIR})
-  message(STATUS "GLM environment variable found")
-else()
-# If the GLM_INCLUDE_DIR environment variable is not set, we assume
-# the user has installed GLM properly on their system
-  message(STATUS "GLM environment variable `GLM_INCLUDE_DIR` not found, GLM must be installed with the system")
-endif()
+# Output Directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Engine Libraries
+add_subdirectory("src/voyager-core")
+add_subdirectory("src/voyager-utils")
 
-
-# OS specific options and libraries
-if(WIN32)
-  # c++0x is enabled by default.
-  # -Wall produces way too many warnings.
-  # -pedantic is not supported.
-  target_link_libraries(${CMAKE_PROJECT_NAME} opengl32.lib)
-else()
-  # Enable all pedantic warnings.
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -pedantic")
-
-  if(APPLE)
-    # Add required frameworks for GLFW.
-    target_link_libraries(${CMAKE_PROJECT_NAME} "-framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo")
-  else()
-    #Link the Linux OpenGL library
-    target_link_libraries(${CMAKE_PROJECT_NAME} "GL" "dl")
-  endif()
-endif()
+# Engine Executables
+add_subdirectory("src/voyager-client")
+add_subdirectory("src/voyager-server")
