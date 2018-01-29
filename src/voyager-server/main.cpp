@@ -11,6 +11,6 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-   Application app = Application(SERVER, RESOURCE_DIR);
+   Application app(SERVER, RESOURCE_DIR);
    app.run();
 }

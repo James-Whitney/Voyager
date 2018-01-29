@@ -2,8 +2,8 @@
 #ifndef _ENTITY_H
 #define _ENTITY_H
 
-// #include "utils/Ray.h"
-// #include "utils/Shape.h"
+#include <voyager-utils/include/Ray.h>
+#include <voyager-utils/include/Shape.h>
 
 class Entity {
 
@@ -15,8 +15,8 @@ public:
 
 private:
 
-   // Ray orientation;
-   // std::shared_ptr<Shape> shape;
+   Ray orientation;
+   std::shared_ptr<Shape> shape;
 
 };
 
