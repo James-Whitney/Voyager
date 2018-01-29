@@ -1,8 +1,8 @@
 [submodule "ext/glm"]
 	path = ext/glm
 	url = https://github.com/g-truc/glm.git
-	gnore = dirty
+	ignore = dirty
 [submodule "ext/glfw"]
 	path = ext/glfw
 	url = https://github.com/glfw/glfw.git
-	gnore = dirty
+	ignore = dirty
