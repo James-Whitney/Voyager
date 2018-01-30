@@ -2,6 +2,12 @@
 
 using namespace std;
 
+long nextId = 0;
+
+Entity::Entity() :
+   id(nextId++)
+{}
+
 void Entity::update(double delta_time) {
    for (int i = 0; i < this->size(); ++i) {
       this->at(i)->update(delta_time);
