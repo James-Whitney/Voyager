@@ -71,12 +71,12 @@ void Application::init() {
 }
 
 void Application::update(double delta_time) {
-   cout << "update: " << delta_time << endl;
    glfwPollEvents();
 
    for (int i = 0; i < this->things.size(); ++i) {
-      this->things.at(i)->update();
+      this->things.at(i)->update(delta_time);
    }
+
 }
 
 void Application::render() {
@@ -89,10 +89,6 @@ void Application::render() {
    glViewport(0, 0, width, height);
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-   for (int i = 0; i < this->things.size(); ++i) {
-      this->things.at(i)->render();
-   }
 
    glfwSwapBuffers(this->window->getHandle());
 }
