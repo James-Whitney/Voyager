@@ -37,8 +37,14 @@ void Application::run() {
 
    while (!this->shouldQuit()) {
 
-      this->update();
+      // Game Update
+      double delta_time;
+      this->timer.reset();
+      while (this->timer.tick(&delta_time)) {
+         this->update(delta_time);
+      }
 
+      // Render
       if (this->type == CLIENT) {
          this->render();
       }
@@ -64,7 +70,8 @@ void Application::init() {
    }
 }
 
-void Application::update() {
+void Application::update(double delta_time) {
+   cout << "update: " << delta_time << endl;
    glfwPollEvents();
 
    for (int i = 0; i < this->things.size(); ++i) {

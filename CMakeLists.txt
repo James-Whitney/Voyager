@@ -41,6 +41,7 @@ endfunction(AddExt)
 
 function(LinkVoyagerLibraries TargetName)
    target_link_libraries(${TargetName} voyager-core)
+   target_link_libraries(${TargetName} voyager-utils)
 endfunction(LinkVoyagerLibraries)
 
 function(ConfigureBuildProperties TargetName)
