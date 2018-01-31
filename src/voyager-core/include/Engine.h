@@ -7,16 +7,18 @@
 
 #include "Component.h"
 
-template <typename C>
 class Engine {
 
 public:
 
-   void registerComponent(std::shared_ptr<C> component);
+   virtual void init() = 0;
+   virtual void execute(double delta_time = 0) = 0;
 
-private:
+   void registerComponent(std::shared_ptr<Component> component);
 
-   std::vector< std::shared_ptr<C> > components;
+protected:
+
+   std::vector< std::shared_ptr<Component> > components;
 
 };
 

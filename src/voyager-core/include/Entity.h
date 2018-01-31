@@ -18,6 +18,7 @@ public:
    virtual void update(double delta_time);
 
    virtual void add(std::shared_ptr<Component> component);
+   virtual std::shared_ptr<Component> componentAt(int i);
    virtual bool remove(std::shared_ptr<Component> component);
 
 protected:

@@ -12,6 +12,8 @@
 #include <voyager-utils/include/Time.h>
 
 #include "ApplicationType.h"
+#include "Component.h"
+#include "Engine.h"
 #include "Entity.h"
 #include "WindowManager.h"
 
@@ -24,8 +26,16 @@ public:
 
    // getters/setters
    ApplicationType getType() { return this->type; }
+
+   std::string getResourceDir() { return this->resource_dir; }
+   void setResourceDir(std::string resource_dir) {
+      this->resource_dir = resource_dir;
+   }
+
    std::shared_ptr<WindowManager> getWindowManager() { return this->window; }
    void setWindowManager(std::shared_ptr<WindowManager> window) { this->window = window; }
+
+   void setRenderEngine(std::shared_ptr<Engine> render_engine) { this->render_engine = render_engine; }
 
    // event callbacks
    virtual void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -45,7 +55,9 @@ private:
 
    std::vector< std::shared_ptr<Entity> > things;
 
-   LoopTimer timer = LoopTimer(10); // 10ms max time step
+   LoopTimer timer = LoopTimer(10); // 10ms ma time step
+
+   std::shared_ptr<Engine> render_engine;
 
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update

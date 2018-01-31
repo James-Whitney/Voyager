@@ -2,7 +2,7 @@
 
 using namespace std;
 
-long nextId = 0;
+static long nextId = 0;
 
 Entity::Entity() :
    id(nextId++)
@@ -16,6 +16,10 @@ void Entity::update(double delta_time) {
 
 void Entity::add(shared_ptr<Component> component) {
    this->push_back(component);
+}
+
+shared_ptr<Component> Entity::componentAt(int i) {
+   return this->at(i);
 }
 
 bool Entity::remove(shared_ptr<Component> component) {
