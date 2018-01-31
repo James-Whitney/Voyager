@@ -67,6 +67,8 @@ void Application::init() {
       glClearColor(0.12f, 0.34f, 0.56f, 1.0f);
       glEnable(GL_DEPTH_TEST);
       glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+      this->render_engine->init();
    }
 }
 
@@ -81,16 +83,8 @@ void Application::update(double delta_time) {
 
 void Application::render() {
    assert(this->type == CLIENT);
-
-   int width, height;
-   glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
-   float aspect = width / (float)height;
-
-   glViewport(0, 0, width, height);
-   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-   glfwSwapBuffers(this->window->getHandle());
+   assert(this->render_engine != nullptr);
+   this->render_engine->execute();
 }
 
 void Application::shutdown() {

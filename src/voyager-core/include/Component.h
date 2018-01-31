@@ -8,9 +8,12 @@ public:
 
    Component();
 
+   long getId() { return this->id; }
+
+   virtual void init() = 0;
    virtual void update(double delta_time) = 0;
 
-private:
+protected:
 
    long id;
 
