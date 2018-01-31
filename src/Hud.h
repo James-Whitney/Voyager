@@ -21,6 +21,8 @@ public:
   int width;
   int height;
 
+  GLuint tex_2d;
+
   rapidjson::Document doc;
 
   // Sets the window to work in and establishes the frame.
@@ -35,6 +37,8 @@ public:
   void textbox(const char *titlebar, const char * txt, int x_pos, int y_pos, int width, int heigth);
   // No wdith or height defaults to have buton be same size as text.
   void button(const char* txt, int width = 0, int height = 0);
+
+  void image(std::string filename, int w_width, int w_height);
 
 private:
   // Loads resources/hud.json into doc

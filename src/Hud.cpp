@@ -4,6 +4,9 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/error/en.h>
 #include <cstdio>
+#include <string>
+
+#include "../ext/soil/src/SOIL.h"
 
 Hud::Hud(GLFWwindow* window) {
   ImGui_ImplGlfwGL3_Init(window, true);
@@ -52,4 +55,18 @@ void Hud::generate() {
       widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
       widget["width"].GetFloat()*Hud::width, widget["height"].GetFloat()*Hud::height);
   }
+  Hud::image("../resources/crate.bmp", Hud::width, Hud::height);
+}
+
+
+//Image(ImTextureID user_texture_id, const ImVec2& size
+
+void Hud::image(std::string filename, int w_width, int w_height) {
+  tex_2d = SOIL_load_image(filename, w_width, w_height, 0, SOIL_LOAD_RGB);
+
+  ImGui::SetNextWindowPos(ImVec2(w_width/2.0f, w_height/2.0f), 0, ImVec2(0.5f,0.5f));
+
+  ImGui::Begin("", NULL, Hud::beginDefaults);
+  ImGui::Image(&tex_2d, ImVec2(100,100));
+  ImGui::End();
 }
