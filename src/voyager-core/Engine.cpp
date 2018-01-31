@@ -2,6 +2,7 @@
 
 using namespace std;
 
-void Engine::registerComponent(shared_ptr<Component> component) {
+template <typename C>
+void Engine<C>::registerComponent(shared_ptr<C> component) {
    this->components.push_back(component);
 }
