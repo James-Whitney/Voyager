@@ -2,21 +2,25 @@
 #ifndef _ENTITY_H
 #define _ENTITY_H
 
-#include <voyager-utils/include/Ray.h>
-#include <voyager-utils/include/Shape.h>
+#include <memory>
+#include <vector>
 
-class Entity {
+#include "Component.h"
+
+class Entity : private std::vector< std::shared_ptr<Component> > {
 
 public:
+
    Entity();
 
-   void update();
-   void render();
+   virtual void update(double delta_time);
+
+   virtual void add(std::shared_ptr<Component> component);
+   virtual bool remove(std::shared_ptr<Component> component);
 
 private:
 
-   Ray orientation;
-   std::shared_ptr<Shape> shape;
+   long id;
 
 };
 

@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <voyager-utils/include/GLSL.h>
+#include <voyager-utils/include/Time.h>
 
 #include "ApplicationType.h"
 #include "Entity.h"
@@ -44,10 +45,12 @@ private:
 
    std::vector< std::shared_ptr<Entity> > things;
 
-   void init();            // called once at the beginning
-   void update();          // game update
-   void render();          // render the scene
-   void shutdown();        // called once at the end
+   LoopTimer timer = LoopTimer(10); // 10ms max time step
+
+   void init();                     // called once at the beginning
+   void update(double delta_time);  // game update
+   void render();                   // render the scene
+   void shutdown();                 // called once at the end
 
    bool shouldQuit();
 

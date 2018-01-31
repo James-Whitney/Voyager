@@ -1,13 +1,29 @@
 #include "include/Entity.h"
 
-Entity::Entity()
-{
+using namespace std;
+
+long nextId = 0;
+
+Entity::Entity() :
+   id(nextId++)
+{}
+
+void Entity::update(double delta_time) {
+   for (int i = 0; i < this->size(); ++i) {
+      this->at(i)->update(delta_time);
+   }
 }
 
-void Entity::update() {
-
+void Entity::add(shared_ptr<Component> component) {
+   this->push_back(component);
 }
 
-void Entity::render() {
-
+bool Entity::remove(shared_ptr<Component> component) {
+   for (int i = 0; i < this->size(); ++i) {
+      if (this->at(i).get() == component.get()) {
+         this->erase(this->begin() + i);
+         return true;
+      }
+   }
+   return false;
 }

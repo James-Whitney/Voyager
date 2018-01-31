@@ -37,8 +37,14 @@ void Application::run() {
 
    while (!this->shouldQuit()) {
 
-      this->update();
+      // Game Update
+      double delta_time;
+      this->timer.reset();
+      while (this->timer.tick(&delta_time)) {
+         this->update(delta_time);
+      }
 
+      // Render
       if (this->type == CLIENT) {
          this->render();
       }
@@ -64,12 +70,13 @@ void Application::init() {
    }
 }
 
-void Application::update() {
+void Application::update(double delta_time) {
    glfwPollEvents();
 
    for (int i = 0; i < this->things.size(); ++i) {
-      this->things.at(i)->update();
+      this->things.at(i)->update(delta_time);
    }
+
 }
 
 void Application::render() {
@@ -82,10 +89,6 @@ void Application::render() {
    glViewport(0, 0, width, height);
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-   for (int i = 0; i < this->things.size(); ++i) {
-      this->things.at(i)->render();
-   }
 
    glfwSwapBuffers(this->window->getHandle());
 }

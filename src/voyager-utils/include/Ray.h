@@ -13,6 +13,8 @@ public:
 
    glm::vec3 getPos() { return this->pos; }
    void setPos(glm::vec3 pos) { this->pos = pos; }
+   glm::vec3 getDir() { return this->dir; }
+   void setDir(glm::vec3 dir) { this->dir = dir; }
 
 private:
 
