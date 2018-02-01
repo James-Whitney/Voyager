@@ -52,7 +52,7 @@ void Hud::image(const char *filename, const char *titlebar, int x_pos, int y_pos
 }
 
 void Hud::open() {
-  FILE* fp = fopen("../resources/hud.json", "r"); // non-Windows use "r"
+  FILE* fp = fopen("../../resources/hud.json", "r"); // non-Windows use "r"
   char readBuffer[65536];
   rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
   if (doc.ParseStream(is).HasParseError()) {
