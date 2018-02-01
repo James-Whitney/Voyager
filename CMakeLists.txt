@@ -40,6 +40,7 @@ function(AddExt TargetName)
 endfunction(AddExt)
 
 function(LinkVoyagerLibraries TargetName)
+   target_link_libraries(${TargetName} voyager-actors)
    target_link_libraries(${TargetName} voyager-core)
    target_link_libraries(${TargetName} voyager-render)
    target_link_libraries(${TargetName} voyager-utils)
@@ -66,6 +67,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Engine Libraries
+add_subdirectory("src/voyager-actors")
 add_subdirectory("src/voyager-core")
 add_subdirectory("src/voyager-render")
 add_subdirectory("src/voyager-utils")
