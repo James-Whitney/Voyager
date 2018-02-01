@@ -55,7 +55,7 @@ private:
 
    std::vector< std::shared_ptr<Entity> > things;
 
-   LoopTimer timer = LoopTimer(10); // 10ms ma time step
+   LoopTimer timer = LoopTimer(10); // 10ms max time step
 
    std::shared_ptr<Engine> render_engine;
 

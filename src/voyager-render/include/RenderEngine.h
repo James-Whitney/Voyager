@@ -6,9 +6,11 @@
 #include <memory>
 
 #include <voyager-core/include/Engine.h>
+#include <voyager-core/include/Entity.h>
 #include <voyager-core/include/WindowManager.h>
 #include <voyager-utils/include/MatrixStack.h>
 #include <voyager-utils/include/Program.h>
+#include <voyager-utils/include/Transform.h>
 
 #include "Camera.h"
 #include "Renderable.h"
@@ -48,6 +50,9 @@ protected:
 
    virtual void render(std::shared_ptr<Renderable> renderable,
       std::shared_ptr<MatrixStack> MV);
+
+   // virtual void setMaterial(std::shared_ptr<Program> prog, glm::vec3 amb,
+   //    glm::vec3 dif);
 
 };
 
