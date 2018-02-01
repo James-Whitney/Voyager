@@ -57,4 +57,5 @@ TODO:
  - Image button
  - Text Button
  - Progress bar
+ - Classes for each of the widget types, make hud a list of those classes
 */
