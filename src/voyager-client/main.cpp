@@ -7,7 +7,7 @@
 #include <voyager-render/include/RenderEngine.h>
 #include <voyager-render/include/Uber.h>
 
-#define RESOURCE_DIR "../resources"
+#define RESOURCE_DIR "resources/"
 #define WINDOW_WIDTH 1024
 #define WINDOW_HEIGHT 1024
 
