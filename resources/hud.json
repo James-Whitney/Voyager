@@ -2,7 +2,7 @@
   {
     "type" : "image",
     "titlebar" : "crossair",
-    "image" : "../resources/crossair_red.png",
+    "image" : "resources/crossair_red.png",
     "x_pos" : 0.5,
     "y_pos" : 0.5,
     "width" : 32,
@@ -11,7 +11,7 @@
   {
     "type" : "image",
     "titlebar" : "compass",
-    "image" : "../resources/compass2.png",
+    "image" : "resources/compass2.png",
     "x_pos" : 0.5,
     "y_pos" : 1.0,
     "width" : 400,
@@ -20,7 +20,7 @@
   {
     "type" : "image",
     "titlebar" : "healthbar",
-    "image" : "../resources/red_button02.png",
+    "image" : "resources/red_button02.png",
     "x_pos" : 0.5,
     "y_pos" : 0.02,
     "width" : 600,
@@ -39,7 +39,7 @@
   {
     "type" : "image",
     "titlebar" : "healthbar",
-    "image" : "../resources/metalPanel_red.png",
+    "image" : "resources/metalPanel_red.png",
     "x_pos" : 0.75,
     "y_pos" : 0.9,
     "width" : 100,
