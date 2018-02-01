@@ -11,6 +11,7 @@
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
 
+#include <string>
 
 class Hud {
 public:
@@ -28,8 +29,10 @@ public:
 
   rapidjson::Document doc;
 
+  std::string resource_dir;
+
   // Sets the window to work in and establishes the frame.
-  Hud(GLFWwindow* window);
+  Hud(GLFWwindow* window, std::string resourcedir);
   // Creates new frame, start adding widgets
   void start();
   // Render all of the current widgets

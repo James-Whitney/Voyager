@@ -8,6 +8,7 @@ add_library(${TARGET_NAME} ${HEADERS} ${SOURCES})
 AddExt(${TARGET_NAME})
 target_link_libraries(${TARGET_NAME} voyager-core)
 target_link_libraries(${TARGET_NAME} voyager-utils)
+target_link_libraries(${TARGET_NAME} voyager-hud)
 
 # How should we make it?
 target_include_directories(${TARGET_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/src")

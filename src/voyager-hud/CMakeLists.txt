@@ -1,7 +1,7 @@
 # What are we making?
 set(TARGET_NAME voyager-hud)
-file(GLOB_RECURSE HEADERS "include/*.h")
-file(GLOB_RECURSE SOURCES "*.cpp")
+file(GLOB_RECURSE HEADERS "include/*.h" "${PROJECT_SOURCE_DIR}/ext/imgui/*.h")
+file(GLOB_RECURSE SOURCES "*.cpp" "${PROJECT_SOURCE_DIR}/ext/imgui/*.cpp")
 add_library(${TARGET_NAME} ${HEADERS} ${SOURCES})
 
 # What does it depend on?
