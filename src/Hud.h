@@ -2,12 +2,15 @@
 #ifndef VOYAGER_HUD_H_INCLUDED
 #define VOYAGER_HUD_H_INCLUDED
 
+#include "Texture.h"
+
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw_gl3.h>
 #include <GLFW/glfw3.h>
 
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/document.h>
+
 
 class Hud {
 public:

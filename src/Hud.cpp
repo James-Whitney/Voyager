@@ -1,12 +1,9 @@
 #include "Hud.h"
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw_gl3.h>
-#include <rapidjson/filereadstream.h>
-#include <rapidjson/error/en.h>
 #include <cstdio>
 #include <string>
 
-#include "../ext/soil/src/SOIL.h"
+#include <rapidjson/error/en.h>
+#include <rapidjson/filereadstream.h>
 
 Hud::Hud(GLFWwindow* window) {
   ImGui_ImplGlfwGL3_Init(window, true);
@@ -18,6 +15,7 @@ void Hud::start() {
   ImGui_ImplGlfwGL3_NewFrame();
 }
 void Hud::render() {
+  Hud::image("../resources/crossair_red.png", Hud::width, Hud::height);
   ImGui::Render();
 }
 // create a textbox
@@ -55,18 +53,17 @@ void Hud::generate() {
       widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
       widget["width"].GetFloat()*Hud::width, widget["height"].GetFloat()*Hud::height);
   }
-  Hud::image("../resources/crate.bmp", Hud::width, Hud::height);
 }
 
-
-//Image(ImTextureID user_texture_id, const ImVec2& size
-
 void Hud::image(std::string filename, int w_width, int w_height) {
-  tex_2d = SOIL_load_image(filename, w_width, w_height, 0, SOIL_LOAD_RGB);
+  Texture *tex = new Texture();
+  tex->setFilename(filename);
+  tex->init();
 
   ImGui::SetNextWindowPos(ImVec2(w_width/2.0f, w_height/2.0f), 0, ImVec2(0.5f,0.5f));
+  ImGui::SetNextWindowSize(ImVec2(500, 500), 0);
 
   ImGui::Begin("", NULL, Hud::beginDefaults);
-  ImGui::Image(&tex_2d, ImVec2(100,100));
+  ImGui::Image((void *)tex->getID(), ImVec2(500,500));
   ImGui::End();
 }
