@@ -2,7 +2,7 @@
 #ifndef VOYAGER_HUD_H_INCLUDED
 #define VOYAGER_HUD_H_INCLUDED
 
-#include "Texture.h"
+#include <voyager-utils/include/Texture.h>
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw_gl3.h>

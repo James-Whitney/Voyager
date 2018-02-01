@@ -43,6 +43,7 @@ function(LinkVoyagerLibraries TargetName)
    target_link_libraries(${TargetName} voyager-core)
    target_link_libraries(${TargetName} voyager-render)
    target_link_libraries(${TargetName} voyager-utils)
+   target_link_libraries(${TargetName} voyager-hud)
 endfunction(LinkVoyagerLibraries)
 
 function(ConfigureBuildProperties TargetName)
@@ -69,6 +70,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_subdirectory("src/voyager-core")
 add_subdirectory("src/voyager-render")
 add_subdirectory("src/voyager-utils")
+add_subdirectory("src/voyager-hud")
 
 # Engine Executables
 add_subdirectory("src/voyager-client")
