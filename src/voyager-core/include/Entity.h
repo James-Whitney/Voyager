@@ -5,15 +5,25 @@
 #include <memory>
 #include <vector>
 
+#include <voyager-utils/include/Transform.h>
+
 #include "Component.h"
 
-class Entity : private std::vector< std::shared_ptr<Component> > {
+class Entity :
+   public std::enable_shared_from_this<Entity>,
+   private std::vector< std::shared_ptr<Component> >
+{
 
 public:
 
    Entity();
 
    long getId() { return this->id; }
+
+   std::shared_ptr<Transform> getTransform() { return this->transform; }
+   void setTransform(std::shared_ptr<Transform> transform) {
+      this->transform = transform;
+   }
 
    virtual void update(double delta_time);
 
@@ -24,6 +34,8 @@ public:
 protected:
 
    long id;
+
+   std::shared_ptr<Transform> transform;
 
 };
 

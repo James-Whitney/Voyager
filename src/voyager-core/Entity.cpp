@@ -16,6 +16,7 @@ void Entity::update(double delta_time) {
 
 void Entity::add(shared_ptr<Component> component) {
    this->push_back(component);
+   component->setEntity(this->shared_from_this());
 }
 
 shared_ptr<Component> Entity::componentAt(int i) {
