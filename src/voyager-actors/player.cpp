@@ -11,8 +11,8 @@ void Player::init() {
 }
 
 glm::vec3 Player::getPosition() {
-   return ship->getTransform()->getOrientation()->getPos() + 
-                     transform->getOrientation()->getPos();
+   return ship->getTransform()->getPosition() + 
+                     transform->getPosition();
 }
 
 
@@ -26,6 +26,8 @@ void Player::cameraUpdate() {
    double curr_xPos, curr_yPos;
    float delta_pitch, delta_yaw;
    int width, height;
+
+   const float cameraHeight = 1.0;
 
    glfwGetFramebufferSize(window->getHandle(), &width, &height);
    glfwGetCursorPos(window->getHandle(), &curr_xPos, &curr_yPos);
@@ -44,7 +46,7 @@ void Player::cameraUpdate() {
 
    camera->move(delta_pitch, delta_yaw + deltaShipAngle);
    
-   camera->setPosition(glm::vec3(0, 1, 0) + getPosition());
+   camera->setPosition(glm::vec3(0, cameraHeight, 0) + getPosition());
    return;
 }
 
@@ -86,7 +88,7 @@ void Player::positionUpdate(float delta_time) {
    }
    movement *= delta_time * speed;
 
-   glm::vec3 pos = transform->getOrientation()->getPos() + movement;
+   glm::vec3 pos = transform->getPosition() + movement;
    if(pos.x > 1)
       pos.x = 1;
    if(pos.x < -1)
@@ -95,5 +97,6 @@ void Player::positionUpdate(float delta_time) {
       pos.z = 1;
    if(pos.z < -1)
       pos.z = -1;
-   setTransform(std::make_shared<Transform>(pos, glm::vec3(1, 0, 0), 1));
+   setTransform(std::make_shared<Transform>
+   (pos, glm::vec3(0, 0, 0), 0, 0, 0));
 }

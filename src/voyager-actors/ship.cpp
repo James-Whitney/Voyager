@@ -27,16 +27,16 @@ void Ship::moveShip(float delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_DOWN ) == GLFW_PRESS){
       deltaPos -= flightSpeed * delta_time;
    }
-   glm::vec3 currPos = transform->getOrientation()->getPos();
+   glm::vec3 currPos = transform->getPosition();
    angle += deltaAngle;
-   setTransform(std::make_shared<Transform>(currPos, 
-                                             glm::vec3(sin(angle), 0, cos(angle)), 
-                                             2));
 
-   glm::vec3 currDir = transform->getOrientation()->getDir();
+   glm::vec3 currDir = glm::vec3(sin(transform->getRoll()), 0, cos(transform->getRoll()));
+
    glm::vec3 deltaMovement = (currDir * deltaPos);
-   setTransform(std::make_shared<Transform>(currPos + deltaMovement, 
-                                             currDir,
-                                             2));
+
+   currPos += (currDir * deltaPos);
+   
+   setTransform(std::make_shared<Transform>
+   (currPos, glm::vec3(2.0, 0.25, 2.0), 3.1415926 / 2, 3.1415926 / 2, angle));
 
 }
