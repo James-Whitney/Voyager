@@ -36,6 +36,9 @@ public:
    void setWindowManager(std::shared_ptr<WindowManager> window) { this->window = window; }
 
    void setRenderEngine(std::shared_ptr<Engine> render_engine) { this->render_engine = render_engine; }
+   void setPhysicsEngine(std::shared_ptr<Engine> physics_engine) { this->physics_engine = physics_engine; }
+
+   void addThing(std::shared_ptr<Entity> thing) { this->things.push_back(thing); }
 
    // event callbacks
    virtual void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -58,6 +61,7 @@ private:
    LoopTimer timer = LoopTimer(10); // 10ms max time step
 
    std::shared_ptr<Engine> render_engine;
+   std::shared_ptr<Engine> physics_engine;
 
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update
