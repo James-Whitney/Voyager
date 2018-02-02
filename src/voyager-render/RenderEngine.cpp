@@ -34,6 +34,8 @@ void RenderEngine::init() {
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
    }
+
+   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -70,9 +72,14 @@ void RenderEngine::execute(double delta_time) {
    MV->popMatrix();
    P->popMatrix();
 
+   hud->start();
+   hud->render();
+
    this->program->unbind();
 
    glfwSwapBuffers(this->window->getHandle());
+
+
 }
 
 void RenderEngine::render(shared_ptr<Renderable> renderable,

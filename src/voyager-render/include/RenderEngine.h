@@ -10,6 +10,7 @@
 #include <voyager-core/include/WindowManager.h>
 #include <voyager-utils/include/MatrixStack.h>
 #include <voyager-utils/include/Program.h>
+#include <voyager-hud/include/Hud.h>
 #include <voyager-utils/include/Transform.h>
 
 #include "Camera.h"
@@ -47,6 +48,7 @@ protected:
    std::shared_ptr<Camera> camera;
    std::shared_ptr<Program> program;
    std::shared_ptr<WindowManager> window;
+   std::shared_ptr<Hud> hud;
 
    virtual void render(std::shared_ptr<Renderable> renderable,
       std::shared_ptr<MatrixStack> MV);
