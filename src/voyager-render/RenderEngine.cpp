@@ -73,7 +73,6 @@ void RenderEngine::execute(double delta_time) {
    P->popMatrix();
 
    hud->start();
-   hud->generate();
    hud->render();
 
    this->program->unbind();

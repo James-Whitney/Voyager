@@ -11,7 +11,7 @@
   {
     "type" : "image",
     "titlebar" : "compass",
-    "image" : "resources/compass2.png",
+    "image" : "resources/compass.png",
     "x_pos" : 0.5,
     "y_pos" : 1.0,
     "width" : 400,
@@ -19,7 +19,7 @@
   },
   {
     "type" : "image",
-    "titlebar" : "healthbar",
+    "titlebar" : "health-bar",
     "image" : "resources/red_button02.png",
     "x_pos" : 0.5,
     "y_pos" : 0.02,
@@ -28,31 +28,35 @@
   },
   {
     "type" : "textbox",
-    "titlebar" : "healthtext",
+    "titlebar" : "health-text",
     "text" : "Ship Health",
     "x_pos" : 0.5,
     "y_pos" : 0.04,
-    "width" : 0.75,
-    "height" : 0.1,
     "r" : 1, "g" : 1, "b" : 1, "a" : 1
   },
   {
     "type" : "image",
-    "titlebar" : "healthbar",
+    "titlebar" : "player-box",
     "image" : "resources/metalPanel_red.png",
-    "x_pos" : 0.75,
+    "x_pos" : 0.9,
     "y_pos" : 0.9,
     "width" : 100,
     "height" : 100
   },
   {
     "type" : "textbox",
-    "titlebar" : "bottom right",
-    "text" : "Player List:\nspslater\nninjadude\nmicboy\nnerdythespian\n",
-    "x_pos" : 0.75,
-    "y_pos" : 0.9,
-    "width" : 0.25,
-    "height" : 0.05,
+    "titlebar" : "player-text",
+    "text" : "\nPlayer List:\n",
+    "x_pos" : 0.9,
+    "y_pos" : 0.91,
     "r" : 1, "g" : 1, "b" : 1, "a" : 1
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "player-text",
+    "text" : "\nspslater\nninjadude\nmicboy\nnerdythespian\n\n\n\n",
+    "x_pos" : 0.9,
+    "y_pos" : 0.9,
+    "r" : 0, "g" : 0, "b" : 0, "a" : 1
   }
 ]
