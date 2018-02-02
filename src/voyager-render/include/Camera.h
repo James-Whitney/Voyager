@@ -14,6 +14,9 @@ public:
 
    glm::vec3 getLookAt(bool relative = true);
 
+   void setPosition(glm::vec3 pos) { this->pos = pos; }
+   glm::vec3 getPosition() { return this->pos; }
+
    void move(float deltaPitch, float deltaYaw);
 
    void setView(float aspect, std::shared_ptr<MatrixStack> P,
@@ -23,7 +26,8 @@ protected:
 
    const glm::vec3 up = glm::vec3(0, 1, 0);
    glm::vec3 pos = glm::vec3(0, 0, 0);
-   float pitch = 0;
+
+   float pitch = 1.4;
    float yaw = 0;
    float fov_y = 70.0f;
    float z_near = 0.01f;
