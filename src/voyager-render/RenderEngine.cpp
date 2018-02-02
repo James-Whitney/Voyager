@@ -90,8 +90,8 @@ void RenderEngine::render(shared_ptr<Renderable> renderable,
    MV->pushMatrix();
 
    std::shared_ptr<Transform> trans = renderable->getEntity()->getTransform();
-   MV->translate(trans->getOrientation()->getPos());
-   MV->rotate(0, vec3(0, 1, 0)); // TODO: apply rotation
+   MV->translate(trans->getPosition());
+   MV->rotate(trans->getRoll(), trans->getDirection());
    MV->scale(trans->getScale());
 
    glUniformMatrix4fv(this->program->getUniform("MV"), 1, GL_FALSE,
