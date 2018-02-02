@@ -91,6 +91,7 @@ void RenderEngine::render(shared_ptr<Renderable> renderable,
 
    std::shared_ptr<Transform> trans = renderable->getEntity()->getTransform();
    MV->translate(trans->getOrientation()->getPos());
+   trans->getOrientation()->getDir();
    MV->rotate(0, vec3(0, 1, 0)); // TODO: apply rotation
    MV->scale(trans->getScale());
 
