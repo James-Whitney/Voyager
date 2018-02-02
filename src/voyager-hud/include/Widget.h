@@ -13,8 +13,26 @@ public:
   int x_pos;
   int y_pos;
   const char *titlebar;
-  int width;
-  int height;
+
+  Widget(const char *title, int x, int y) {
+    this->titlebar = title;
+    this->x_pos = x;
+    this->y_pos = y;
+  }
+
+  virtual void render() { };
+
+  void setupDefaults() {
+    ImGui::SetNextWindowPos(ImVec2(this->x_pos, this->y_pos), 0, ImVec2(0.5f,0.5f));
+    ImGui::SetNextWindowSize(ImVec2(0,0), 0);
+    ImGui::SetNextWindowBgAlpha(0.0f);
+    ImGui::Begin(this->titlebar, NULL, this->beginDefaults);
+  }
+
+  void endDefault() {
+    ImGui::End();
+  }
+
 };
 
 #endif

@@ -12,6 +12,11 @@
 #include <rapidjson/document.h>
 
 #include <string>
+#include <vector>
+
+#include "Widget.h"
+#include "Image.h"
+#include "Textbox.h"
 
 class Hud {
 public:
@@ -26,10 +31,9 @@ public:
   int height;
 
   GLuint tex_2d;
-
   rapidjson::Document doc;
-
   std::string resource_dir;
+  std::vector<Widget*> widgets;
 
   // Sets the window to work in and establishes the frame.
   Hud(GLFWwindow* window, std::string resourcedir);
@@ -40,11 +44,11 @@ public:
   // Loops through doc array and generates the widgests specified by the json file
   void generate();
   // create a textbox widget
-  void textbox(const char *titlebar, const char *txt, int x_pos, int y_pos, int width = 0, int heigth = 0, int r = 1, int g = 1, int b = 1, int a = 1);
+  //void textbox(const char *titlebar, const char *txt, int x_pos, int y_pos, int width = 0, int heigth = 0, int r = 1, int g = 1, int b = 1, int a = 1);
   // No wdith or height defaults to have buton be same size as text.
-  void button(const char *titlebar, const char *txt, int x_pos, int y_pos, int width = 0, int height = 0);
+  //void button(const char *titlebar, const char *txt, int x_pos, int y_pos, int width = 0, int height = 0);
   // Draw image to screen
-  void image(const char *filename, const char *titlebar, int x_pos, int y_pos, int i_width, int i_height);
+  //void image(const char *filename, const char *titlebar, int x_pos, int y_pos, int i_width, int i_height);
 
 private:
   // Loads resources/hud.json into doc
