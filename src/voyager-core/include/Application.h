@@ -37,6 +37,7 @@ public:
 
    void setRenderEngine(std::shared_ptr<Engine> render_engine) { this->render_engine = render_engine; }
    void setPhysicsEngine(std::shared_ptr<Engine> physics_engine) { this->physics_engine = physics_engine; }
+   void setNetworkEngine(std::shared_ptr<Engine> network_engine) { this->network_engine = network_engine; }
 
    void addThing(std::shared_ptr<Entity> thing) { this->things.push_back(thing); }
 
@@ -62,6 +63,7 @@ private:
 
    std::shared_ptr<Engine> render_engine;
    std::shared_ptr<Engine> physics_engine;
+   std::shared_ptr<Engine> network_engine;
 
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update

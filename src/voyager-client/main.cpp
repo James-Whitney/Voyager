@@ -86,8 +86,8 @@ shared_ptr<Ship> make_ship(string resource_dir) {
    result->add(physicsComponent);
 
    //set initial Positon
-   result->setTransform(make_shared<Transform>(vec3(0, 0, 0), 
-                                               vec3(1, 0.25, 1), 
+   result->setTransform(make_shared<Transform>(vec3(0, 0, 0),
+                                               vec3(1, 0.25, 1),
                                                0, 0, 0));
 
    return result;
@@ -97,7 +97,7 @@ shared_ptr<Player> make_player(string resource_dir) {
    shared_ptr<Player> result = make_shared<Player>();
 
    //render component
-   
+
    shared_ptr<Renderable> renderComponent = make_shared<Renderable>();
    renderComponent->setShape(resource_dir + "/cube.obj");
    shared_ptr<Uber> uber = make_shared<CookTorranceUber>
@@ -110,16 +110,16 @@ shared_ptr<Player> make_player(string resource_dir) {
    result->add(physicsComponent);
 
    //set initial Positon
-   result->setTransform(make_shared<Transform>(vec3(0, 0, 0), 
-                                               vec3(1, 1, 1), 
+   result->setTransform(make_shared<Transform>(vec3(0, 0, 0),
+                                               vec3(1, 1, 1),
                                                0, 0, 0));
    return result;
 }
 
 shared_ptr<Entity> make_box(string resource_dir) {
    shared_ptr<Entity> result = make_shared<Entity>();
-   result->setTransform(make_shared<Transform>(vec3(7, 0, 0), 
-                                               vec3(1, 1, 1), 
+   result->setTransform(make_shared<Transform>(vec3(7, 0, 0),
+                                               vec3(1, 1, 1),
                                                0, 0, 0));
 
    shared_ptr<Renderable> renderable = make_shared<Renderable>();

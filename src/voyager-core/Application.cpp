@@ -69,6 +69,9 @@ void Application::init() {
       glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
       this->render_engine->init();
+   } else if ( this->type == SERVER) {
+      this->network_engine->init();
+      cout << "----------==[ I am the " << type << " ]==----------" << endl;
    }
 }
 

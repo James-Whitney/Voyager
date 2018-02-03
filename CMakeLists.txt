@@ -16,6 +16,10 @@ function(AddExt TargetName)
    # glad
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glad/include")
 
+   # sfml
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/sfml/include")
+   target_link_libraries(${TargetName} sfml ${SFML_LIBRARIES})
+
    # general include dir
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext")
 
@@ -46,6 +50,7 @@ function(LinkVoyagerLibraries TargetName)
    target_link_libraries(${TargetName} voyager-render)
    target_link_libraries(${TargetName} voyager-utils)
    target_link_libraries(${TargetName} voyager-hud)
+   target_link_libraries(${TargetName} voyager-network)
 endfunction(LinkVoyagerLibraries)
 
 function(ConfigureBuildProperties TargetName)
@@ -63,6 +68,15 @@ add_subdirectory(${GLFW_DIR})
 
 ###############################################################################################
 
+# SFML
+set(SFML_DIR "${PROJECT_SOURCE_DIR}/ext/sfml")
+option(SFML_BUILD_EXAMPLES "SFML_BUILD_EXAMPLES" OFF)
+option(SFML_BUILD_TESTS "SFML_BUILD_TESTS" OFF)
+option(SFML_BUILD_DOCS "SFML_BUILD_DOCS" OFF)
+add_subdirectory(${SFML_DIR})
+
+###############################################################################################
+
 # Output Directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -75,6 +89,7 @@ add_subdirectory("src/voyager-physics")
 add_subdirectory("src/voyager-render")
 add_subdirectory("src/voyager-utils")
 add_subdirectory("src/voyager-hud")
+add_subdirectory("src/voyager-network")
 
 # Engine Executables
 add_subdirectory("src/voyager-client")
