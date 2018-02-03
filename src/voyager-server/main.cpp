@@ -1,6 +1,8 @@
 #include <memory>
 #include <string>
 
+#include <iostream>
+
 #include <voyager-core/include/Application.h>
 #include <voyager-core/include/ApplicationType.h>
 
@@ -19,6 +21,5 @@ int main(int argc, char *argv[]) {
    // Initialize the Network Engine
    shared_ptr<NetworkEngine> networkEngine = make_shared<NetworkEngine>();
    app->setNetworkEngine(static_pointer_cast<Engine>(networkEngine));
-
    app->run();
 }
