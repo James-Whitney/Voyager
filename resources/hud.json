@@ -1,0 +1,62 @@
+[
+  {
+    "type" : "image",
+    "titlebar" : "crossair",
+    "image" : "resources/crossair_red.png",
+    "x_pos" : 0.5,
+    "y_pos" : 0.5,
+    "width" : 32,
+    "height" : 32
+  },
+  {
+    "type" : "image",
+    "titlebar" : "compass",
+    "image" : "resources/compass.png",
+    "x_pos" : 0.5,
+    "y_pos" : 1.0,
+    "width" : 400,
+    "height" : 400
+  },
+  {
+    "type" : "image",
+    "titlebar" : "health-bar",
+    "image" : "resources/red_button02.png",
+    "x_pos" : 0.5,
+    "y_pos" : 0.02,
+    "width" : 600,
+    "height" : 45
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "health-text",
+    "text" : "Ship Health",
+    "x_pos" : 0.5,
+    "y_pos" : 0.04,
+    "r" : 1, "g" : 1, "b" : 1, "a" : 1
+  },
+  {
+    "type" : "image",
+    "titlebar" : "player-box",
+    "image" : "resources/metalPanel_red.png",
+    "x_pos" : 0.9,
+    "y_pos" : 0.9,
+    "width" : 100,
+    "height" : 100
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "player-text",
+    "text" : "\nPlayer List:\n",
+    "x_pos" : 0.9,
+    "y_pos" : 0.91,
+    "r" : 1, "g" : 1, "b" : 1, "a" : 1
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "player-text",
+    "text" : "\nspslater\nninjadude\nmicboy\nnerdythespian\n\n\n\n",
+    "x_pos" : 0.9,
+    "y_pos" : 0.9,
+    "r" : 0, "g" : 0, "b" : 0, "a" : 1
+  }
+]
