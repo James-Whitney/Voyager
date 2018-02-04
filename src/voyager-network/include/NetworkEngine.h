@@ -18,12 +18,20 @@ public:
    std::vector<Connection> players;
    std::vector<Networkable> networkables;
 
+   enum {
+      CONNECTION_PHASE = -1,
+      SEND_UPDATE = -2,
+      RECEIVE_UPDATE = -3
+   }
+
    NetworkEngine() { fprintf(stderr, "setting up host\n\n"); };//host = new Connection(); };
 
    void init();
    void execute(double delta_time);
-   void connectToServer();
-   void waitForFirstPlayer();
+
+   virtual void sendUpdate() = 0;
+   virtual void receiveUpdate() = 0;
+   virtual void connectionSetup() = 0;
 };
 
 #endif

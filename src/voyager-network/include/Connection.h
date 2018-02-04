@@ -6,6 +6,7 @@
 
 class Connection {
 private:
+   unsigned short id;
    sf::IpAddress ip;
    unsigned short port;
 public:
