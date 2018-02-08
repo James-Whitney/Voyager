@@ -5,13 +5,17 @@
 #include <SFML/Network.hpp>
 
 #include <voyager-core/include/Component.h>
+#include <voyager-utils/include/Transform.h>
 
 #include <vector>
 
 class Networkable : public Component {
 public:
-   void init() { }
-   void update(double delta_time) { }
+   bool updateThis;
+   std::shared_ptr<Transform> prevTransform;
+
+   void init();
+   void update(double delta_time);
 };
 
 #endif

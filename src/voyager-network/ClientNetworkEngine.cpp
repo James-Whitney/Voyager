@@ -1,9 +1,10 @@
 #include "include/ClientNetworkEngine.h"
 
-ClientNetworkEngine::ClientNetworkEngine() : NetworkEngine() {
-   fprintf(stderr, "setting up host\n\n");
+ClientNetworkEngine::ClientNetworkEngine() : NetworkEngine::NetworkEngine() {
+   status = SEND;
 }
 
+/*
 void ClientNetworkEngine::init() {
    if (this->socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) {
        std::cout << "Error setting up socket." << std::endl;
@@ -12,8 +13,9 @@ void ClientNetworkEngine::init() {
    std::cout << "Ip Address is " << this->host->getIp().toString()
       << " on port " << this->host->getPort() << std::endl;
    ClientNetworkEngine::connectionSetup();
+   this->socket.setBlocking(false);
 }
-
+*/
 
 void ClientNetworkEngine::connectionSetup() {
    sf::IpAddress serverIp;
@@ -56,5 +58,19 @@ void ClientNetworkEngine::connectionSetup() {
 }
 
 void ClientNetworkEngine::execute(double delta_time) {
-   std::cout << "Executing Client Network Engine." << std::endl;
+   if (SEND == status) {
+      ClientNetworkEngine::send();
+      status = RECEIVE;
+   } else if (RECEIVE == status) {
+      ClientNetworkEngine::receive();
+      status = SEND;
+   }
+}
+
+void ClientNetworkEngine::send() {
+
+}
+
+void ClientNetworkEngine::receive() {
+
 }

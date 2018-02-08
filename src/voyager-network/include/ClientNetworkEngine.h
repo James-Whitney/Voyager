@@ -15,10 +15,12 @@ public:
 
    ClientNetworkEngine();
 
-   void init();
+   //void init();
    void execute(double delta_time);
 
    void connectionSetup();
+   void send();
+   void receive();
 };
 
 #endif
