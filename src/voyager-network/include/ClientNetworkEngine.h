@@ -1,10 +1,8 @@
 #pragma once
-#ifndef VOYAGER_NETWORKENGINE_H_INCLUDED
-#define VOYAGER_NETWORKENGINE_H_INCLUDED
+#ifndef VOYAGER_CLIENTNETWORKENGINE_H_INCLUDED
+#define VOYAGER_CLIENTNETWORKENGINE_H_INCLUDED
 
 #include <SFML/Network.hpp>
-#include "Connection.h"
-#include "Networkable.h"
 #include "NetworkEngine.h"
 
 #include <vector>
@@ -15,10 +13,12 @@ public:
    Connection *server;
    std::vector<Networkable> networkables;
 
-   ClientNetworkEngine() { fprintf(stderr, "setting up host\n\n"); };
+   ClientNetworkEngine();
 
    void init();
    void execute(double delta_time);
+
+   void connectionSetup();
 };
 
 #endif
