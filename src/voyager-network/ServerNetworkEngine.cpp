@@ -65,7 +65,8 @@ void ServerNetworkEngine::send() {
          t = networkable.prevTransform;
          scale = t->getScale();
          pos = t->getPosition();
-         packet << (sf::Uint8)TRANSFORM << (sf::Uint32)networkable.getId() << scale.x << scale.y << scale.z
+         packet << (sf::Uint8)TRANSFORM << (sf::Uint32)networkable.getId()
+            << scale.x << scale.y << scale.z
             << pos.x << pos.y << pos.z << t->getPitch() << t->getYaw() << t->getRoll();
          for (auto &player : players) {
             if (this->socket.send(packet, player.getIp(), player.getPort())
