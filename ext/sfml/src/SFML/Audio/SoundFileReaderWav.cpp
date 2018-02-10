@@ -31,7 +31,6 @@
 #include <algorithm>
 #include <cctype>
 #include <cassert>
-#include <cstring>
 
 
 namespace
@@ -89,14 +88,6 @@ namespace
     }
 
     const sf::Uint64 mainChunkSize = 12;
-
-    const sf::Uint16 waveFormatPcm = 1;
-
-    const sf::Uint16 waveFormatExtensible= 65534;
-
-    const char* waveSubformatPcm =
-        "\x01\x00\x00\x00\x00\x00\x10\x00"
-        "\x80\x00\x00\xAA\x00\x38\x9B\x71";
 }
 
 namespace sf
@@ -155,7 +146,7 @@ Uint64 SoundFileReaderWav::read(Int16* samples, Uint64 maxCount)
     assert(m_stream);
 
     Uint64 count = 0;
-    while ((count < maxCount) && (static_cast<Uint64>(m_stream->tell()) < m_dataEnd))
+    while ((count < maxCount) && (m_stream->tell() < m_dataEnd))
     {
         switch (m_bytesPerSample)
         {
@@ -235,9 +226,6 @@ bool SoundFileReaderWav::parseHeader(Info& info)
         Uint32 subChunkSize = 0;
         if (!decode(*m_stream, subChunkSize))
             return false;
-        Int64 subChunkStart = m_stream->tell();
-        if (subChunkStart == -1)
-            return false;
 
         // Check which chunk it is
         if ((subChunkId[0] == 'f') && (subChunkId[1] == 'm') && (subChunkId[2] == 't') && (subChunkId[3] == ' '))
@@ -248,7 +236,7 @@ bool SoundFileReaderWav::parseHeader(Info& info)
             Uint16 format = 0;
             if (!decode(*m_stream, format))
                 return false;
-            if ((format != waveFormatPcm) && (format != waveFormatExtensible))
+            if (format != 1) // PCM
                 return false;
 
             // Channel count
@@ -284,45 +272,12 @@ bool SoundFileReaderWav::parseHeader(Info& info)
             }
             m_bytesPerSample = bitsPerSample / 8;
 
-            if (format == waveFormatExtensible)
+            // Skip potential extra information (should not exist for PCM)
+            if (subChunkSize > 16)
             {
-                // Extension size
-                Uint16 extensionSize = 0;
-                if (!decode(*m_stream, extensionSize))
+                if (m_stream->seek(m_stream->tell() + subChunkSize - 16) == -1)
                     return false;
-
-                // Valid bits per sample
-                Uint16 validBitsPerSample = 0;
-                if (!decode(*m_stream, validBitsPerSample))
-                    return false;
-
-                // Channel mask
-                Uint32 channelMask = 0;
-                if (!decode(*m_stream, channelMask))
-                    return false;
-
-                // Subformat
-                char subformat[16];
-                if (m_stream->read(subformat, sizeof(subformat)) != sizeof(subformat))
-                    return false;
-
-                if (std::memcmp(subformat, waveSubformatPcm, sizeof(subformat)) != 0)
-                {
-                    err() << "Unsupported format: extensible format with non-PCM subformat" << std::endl;
-                    return false;
-                }
-
-                if (validBitsPerSample != bitsPerSample)
-                {
-                    err() << "Unsupported format: sample size (" << validBitsPerSample << " bits) and "
-                            "sample container size (" << bitsPerSample << " bits) differ" << std::endl;
-                    return false;
-                }
             }
-
-            // Skip potential extra information
-            if (m_stream->seek(subChunkStart + subChunkSize) == -1)
-                return false;
         }
         else if ((subChunkId[0] == 'd') && (subChunkId[1] == 'a') && (subChunkId[2] == 't') && (subChunkId[3] == 'a'))
         {
@@ -332,7 +287,7 @@ bool SoundFileReaderWav::parseHeader(Info& info)
             info.sampleCount = subChunkSize / m_bytesPerSample;
 
             // Store the start and end position of samples in the file
-            m_dataStart = subChunkStart;
+            m_dataStart = m_stream->tell();
             m_dataEnd = m_dataStart + info.sampleCount * m_bytesPerSample;
 
             dataChunkFound = true;

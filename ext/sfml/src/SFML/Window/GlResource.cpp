@@ -46,8 +46,19 @@ GlResource::~GlResource()
 
 
 ////////////////////////////////////////////////////////////
-GlResource::TransientContextLock::TransientContextLock()
+void GlResource::ensureGlContext()
 {
+    // Empty function for ABI compatibility, use TransientContextLock instead
+}
+
+
+////////////////////////////////////////////////////////////
+GlResource::TransientContextLock::TransientContextLock() :
+m_context(0)
+{
+    // m_context is no longer used
+    // Remove it when ABI can be broken
+
     priv::GlContext::acquireTransientContext();
 }
 

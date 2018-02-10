@@ -191,13 +191,6 @@ void WindowImplUIKit::setMouseCursorGrabbed(bool grabbed)
 
 
 ////////////////////////////////////////////////////////////
-void WindowImplUIKit::setMouseCursor(const CursorImpl& cursor)
-{
-    // Not applicable
-}
-
-
-////////////////////////////////////////////////////////////
 void WindowImplUIKit::setKeyRepeatEnabled(bool enabled)
 {
     // Not applicable

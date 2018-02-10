@@ -35,6 +35,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
     if(IOS)
         set(SFML_OS_IOS 1)
 
+        # set the target framework and platforms
+        set(CMAKE_OSX_SYSROOT "iphoneos")
+        set(CMAKE_OSX_ARCHITECTURES "armv6;armv7;i386")
+        set(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
+
+        # help the compiler detection script below
+        set(CMAKE_COMPILER_IS_GNUCXX 1)
+
         # use the OpenGL ES implementation on iOS
         set(OPENGL_ES 1)
     else()
@@ -63,19 +71,6 @@ elseif(${CYGWIN})
 else()
     message(FATAL_ERROR "Unsupported operating system or environment")
     return()
-endif()
-
-# check if OS or package system supports pkg-config
-# this could be e.g. macports on mac or msys2 on windows etc.
-find_package(PkgConfig QUIET)
-if(PKG_CONFIG_EXECUTABLE)
-    if(EXISTS "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/pkgconfig")
-        set(SFML_OS_SUPPORTS_PKGCONFIG ON)
-        set(SFML_OS_PKGCONFIG_DIR "/lib${LIB_SUFFIX}/pkgconfig")
-    elseif(EXISTS "${CMAKE_INSTALL_PREFIX}/libdata/pkgconfig")
-        set(SFML_OS_SUPPORTS_PKGCONFIG ON)
-        set(SFML_OS_PKGCONFIG_DIR "/libdata/pkgconfig")
-    endif()
 endif()
 
 # detect the compiler and its version

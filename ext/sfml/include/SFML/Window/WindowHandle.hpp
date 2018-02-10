@@ -65,7 +65,7 @@ namespace sf
 #elif defined(SFML_DOXYGEN)
 
     // Define typedef symbol so that Doxygen can attach some documentation to it
-    typedef "platform-specific" WindowHandle;
+    typedef "platform–specific" WindowHandle;
 
 #endif
 

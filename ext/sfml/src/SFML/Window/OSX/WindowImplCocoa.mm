@@ -494,13 +494,6 @@ void WindowImplCocoa::setMouseCursorGrabbed(bool grabbed)
 
 
 ////////////////////////////////////////////////////////////
-void WindowImplCocoa::setMouseCursor(const CursorImpl& cursor)
-{
-    [m_delegate setCursor:cursor.m_cursor];
-}
-
-
-////////////////////////////////////////////////////////////
 void WindowImplCocoa::setKeyRepeatEnabled(bool enabled)
 {
     if (enabled)

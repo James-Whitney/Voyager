@@ -7,6 +7,6 @@ mkdir build
 cd build
 if [[ "$1" == "fast" ]]; then
   cmake .. && make -j4
-else 
-  cmake .. && make 
+else
+  cmake .. && make
 fi

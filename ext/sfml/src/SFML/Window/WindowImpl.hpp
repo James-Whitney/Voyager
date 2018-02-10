@@ -31,8 +31,6 @@
 #include <SFML/Config.hpp>
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/System/String.hpp>
-#include <SFML/Window/ContextSettings.hpp>
-#include <SFML/Window/CursorImpl.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/JoystickImpl.hpp>
@@ -40,7 +38,7 @@
 #include <SFML/Window/SensorImpl.hpp>
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowHandle.hpp>
-#include <SFML/Window/Window.hpp>
+#include <SFML/Window/ContextSettings.hpp>
 #include <queue>
 #include <set>
 
@@ -195,14 +193,6 @@ public:
     ///
     ////////////////////////////////////////////////////////////
     virtual void setMouseCursorGrabbed(bool grabbed) = 0;
-
-    ////////////////////////////////////////////////////////////
-    /// \brief Set the displayed cursor to a native system cursor
-    ///
-    /// \param cursor Native system cursor type to display
-    ///
-    ////////////////////////////////////////////////////////////
-    virtual void setMouseCursor(const CursorImpl& cursor) = 0;
 
     ////////////////////////////////////////////////////////////
     /// \brief Enable or disable automatic key-repeat

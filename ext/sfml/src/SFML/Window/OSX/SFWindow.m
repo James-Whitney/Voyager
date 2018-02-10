@@ -93,7 +93,7 @@
 ////////////////////////////////////////////////////////
 -(BOOL)validateMenuItem:(NSMenuItem*)menuItem
 {
-    return [menuItem action] == @selector(performClose:) || [super validateMenuItem:menuItem];
+    return [menuItem action] == @selector(performClose:);
 }
 
 

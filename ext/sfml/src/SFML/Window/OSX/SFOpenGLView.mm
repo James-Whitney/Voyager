@@ -111,7 +111,6 @@
         m_cursorGrabbed = NO;
         m_deltaXBuffer = 0;
         m_deltaYBuffer = 0;
-        m_cursor = [NSCursor arrowCursor];
 
         // Create a hidden text view for parsing key down event properly
         m_silentResponder = [[SFSilentResponder alloc] init];
