@@ -6,7 +6,7 @@
 #include <voyager-core/include/Application.h>
 #include <voyager-core/include/ApplicationType.h>
 
-#include <voyager-network/include/NetworkEngine.h>
+#include <voyager-network/include/ServerNetworkEngine.h>
 
 #define RESOURCE_DIR "../resources"
 #define WINDOW_WIDTH 1024
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
    //Application app(SERVER, RESOURCE_DIR);
 
    // Initialize the Network Engine
-   shared_ptr<NetworkEngine> networkEngine = make_shared<NetworkEngine>();
+   shared_ptr<ServerNetworkEngine> networkEngine = make_shared<ServerNetworkEngine>();
    app->setNetworkEngine(static_pointer_cast<Engine>(networkEngine));
    app->run();
 }

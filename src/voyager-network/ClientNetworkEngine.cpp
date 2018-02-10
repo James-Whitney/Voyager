@@ -1,22 +1,21 @@
 #include "include/ClientNetworkEngine.h"
 
+ClientNetworkEngine::ClientNetworkEngine() : NetworkEngine::NetworkEngine() {
+   status = SEND;
+}
+
+/*
 void ClientNetworkEngine::init() {
    if (this->socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) {
        std::cout << "Error setting up socket." << std::endl;
    }
    this->host = new Connection(sf::IpAddress::getLocalAddress(), socket.getLocalPort());
-   std::cout << "Ip Address is " << this->host->getIp().toString() << " on port " << this->host->getPort() << std::endl;
+   std::cout << "Ip Address is " << this->host->getIp().toString()
+      << " on port " << this->host->getPort() << std::endl;
+   ClientNetworkEngine::connectionSetup();
+   this->socket.setBlocking(false);
 }
-
-void ClientNetworkEngine::execute(double delta_time) {
-   if (CONNECTION_PHASE == delta_time) {
-      ClientNetworkEngine::connectionSetup();
-   } else if (SEND_UPDATE == delta_time) {
-      ClientNetworkEngine::sendUpdate();
-   } else if (RECEIVE_UPDATE == delta_time) {
-      ClientNetworkEngine::sendUpdate();
-   }
-}
+*/
 
 void ClientNetworkEngine::connectionSetup() {
    sf::IpAddress serverIp;
@@ -53,16 +52,25 @@ void ClientNetworkEngine::connectionSetup() {
       if (connected) {
          this->server = new Connection(serverIp, serverPort);
       } else {
-         std::cout << "Please Enter Server Information Again." << endl;
+         std::cout << "Please Enter Server Information Again." << std::endl;
       }
    }
 }
 
+void ClientNetworkEngine::execute(double delta_time) {
+   if (SEND == status) {
+      ClientNetworkEngine::send();
+      status = RECEIVE;
+   } else if (RECEIVE == status) {
+      ClientNetworkEngine::receive();
+      status = SEND;
+   }
+}
 
-void sendUpdate() {
+void ClientNetworkEngine::send() {
 
 }
 
-void receiveUpdate() {
+void ClientNetworkEngine::receive() {
 
 }

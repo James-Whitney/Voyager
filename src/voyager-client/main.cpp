@@ -10,7 +10,7 @@
 
 #include <voyager-physics/include/PhysicsEngine.h>
 
-#include <voyager-network/include/NetworkEngine.h>
+#include <voyager-network/include/ClientNetworkEngine.h>
 
 #include <voyager-actors/include/Player.h>
 #include <voyager-actors/include/Ship.h>
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
    app->setPhysicsEngine(static_pointer_cast<Engine>(physicsEngine));
 
    // Initialize the Network Engine
-   shared_ptr<NetworkEngine> networkEngine = make_shared<NetworkEngine>();
+   shared_ptr<ClientNetworkEngine> networkEngine = make_shared<ClientNetworkEngine>();
    app->setNetworkEngine(static_pointer_cast<Engine>(networkEngine));
 
    // make a box

@@ -1,10 +1,8 @@
 #pragma once
-#ifndef VOYAGER_NETWORKENGINE_H_INCLUDED
-#define VOYAGER_NETWORKENGINE_H_INCLUDED
+#ifndef VOYAGER_SERVERNETWORKENGINE_H_INCLUDED
+#define VOYAGER_SERVERNETWORKENGINE_H_INCLUDED
 
 #include <SFML/Network.hpp>
-#include "Connection.h"
-#include "Networkable.h"
 #include "NetworkEngine.h"
 
 #include <vector>
@@ -14,11 +12,19 @@ class ServerNetworkEngine : public NetworkEngine {
 public:
    std::vector<Connection> players;
    std::vector<Networkable> networkables;
+   
+   sf::IpAddress allAddress = sf::IpAddress::Any;
+   unsigned short allPorts = 0;
 
-   ServerNetworkEngine() { fprintf(stderr, "setting up host\n\n"); };//host = new Connection(); };
+   ServerNetworkEngine();
 
-   void init();
+   //void init();
    void execute(double delta_time);
+
+   void connectionSetup();
+   void send();
+   void receive();
+   void updateTransform(sf::Packet packet);
 };
 
 #endif

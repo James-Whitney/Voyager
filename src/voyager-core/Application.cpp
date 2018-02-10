@@ -39,10 +39,12 @@ void Application::run() {
 
       // Game Update
       double delta_time;
+      this->network_engine->execute(delta_time);
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
          this->update(delta_time);
       }
+      this->network_engine->execute(delta_time);
 
       // Render
       if (this->type == CLIENT) {
@@ -70,11 +72,9 @@ void Application::init() {
 
       this->render_engine->init();
       this->network_engine->init();
-      this->network_engine->execute(-1);
    } else if ( this->type == SERVER) {
       this->network_engine->init();
       cout << "----------==[ I am the " << type << " ]==----------" << endl;
-      this->network_engine->execute(-2);
    }
 }
 

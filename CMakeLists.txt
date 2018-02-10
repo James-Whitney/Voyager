@@ -17,8 +17,15 @@ function(AddExt TargetName)
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glad/include")
 
    # sfml
+<<<<<<< HEAD
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/SFML/include")
    target_link_libraries(${TargetName} SFML ${SFML_LIBRARIES})
+=======
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/sfml/include")
+   #file(GLOB_RECURSE SFML_LIB_FILES libsfml-audio libsfml-graphics libsfml-network libsfml-system libsfml-window)
+   #file(GLOB_RECURSE SFML_LIB_FILES "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/*.a")
+   target_link_libraries(${TargetName} "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-audio.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-graphics.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-network.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-system.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-window.a")
+>>>>>>> 331d5e643f0d6576ea3a5be4219e105e7b1efc8c
 
    # general include dir
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext")
