@@ -16,21 +16,18 @@
 #include "Engine.h"
 #include "Entity.h"
 #include "WindowManager.h"
+#include "VoyagerConfig.h"
 
 class Application : public EventCallbacks {
 
 public:
 
    // constructors/destructors
-   Application(ApplicationType, std::string);
+   Application(std::shared_ptr<VoyagerConfig> config);
 
    // getters/setters
-   ApplicationType getType() { return this->type; }
-
-   std::string getResourceDir() { return this->resource_dir; }
-   void setResourceDir(std::string resource_dir) {
-      this->resource_dir = resource_dir;
-   }
+   ApplicationType getType() { return this->config->type; }
+   std::string getResourceDir() { return this->config->resource_dir; }
 
    std::shared_ptr<WindowManager> getWindowManager() { return this->window; }
    void setWindowManager(std::shared_ptr<WindowManager> window) { this->window = window; }
@@ -51,9 +48,8 @@ public:
 
 private:
 
-   ApplicationType type;
+   std::shared_ptr<VoyagerConfig> config;
 
-   std::string resource_dir;
    std::shared_ptr<WindowManager> window;
 
    std::vector< std::shared_ptr<Entity> > things;
