@@ -17,8 +17,8 @@ function(AddExt TargetName)
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glad/include")
 
    # sfml
-   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/sfml/include")
-   target_link_libraries(${TargetName} sfml ${SFML_LIBRARIES})
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/SFML/include")
+   target_link_libraries(${TargetName} SFML ${SFML_LIBRARIES})
 
    # general include dir
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext")
@@ -69,7 +69,7 @@ add_subdirectory(${GLFW_DIR})
 ###############################################################################################
 
 # SFML
-set(SFML_DIR "${PROJECT_SOURCE_DIR}/ext/sfml")
+set(SFML_DIR "${PROJECT_SOURCE_DIR}/ext/SFML")
 option(SFML_BUILD_EXAMPLES "SFML_BUILD_EXAMPLES" OFF)
 option(SFML_BUILD_TESTS "SFML_BUILD_TESTS" OFF)
 option(SFML_BUILD_DOCS "SFML_BUILD_DOCS" OFF)

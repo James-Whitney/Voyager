@@ -297,6 +297,14 @@ void Window::setMouseCursorGrabbed(bool grabbed)
 
 
 ////////////////////////////////////////////////////////////
+void Window::setMouseCursor(const Cursor& cursor)
+{
+    if (m_impl)
+        m_impl->setMouseCursor(cursor.getImpl());
+}
+
+
+////////////////////////////////////////////////////////////
 void Window::setKeyRepeatEnabled(bool enabled)
 {
     if (m_impl)
