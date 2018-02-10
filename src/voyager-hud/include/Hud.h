@@ -1,3 +1,4 @@
+
 #pragma once
 #ifndef VOYAGER_HUD_H_INCLUDED
 #define VOYAGER_HUD_H_INCLUDED
@@ -17,6 +18,8 @@
 #include "Widget.h"
 #include "Image.h"
 #include "Textbox.h"
+#include "FPS.h"
+#include "ProgressBar.h"
 
 class Hud {
 public:
@@ -35,8 +38,13 @@ public:
    std::string resource_dir;
    std::vector<Widget*> widgets;
 
+   int healthIdx;
+   int compassIdx;
+
    // Sets the window to work in and establishes the frame.
    Hud(GLFWwindow* window, std::string resourcedir);
+
+   void run() { start(); render(); }
    // Creates new frame, start adding widgets
    void start();
    // Render all of the current widgets
@@ -50,13 +58,3 @@ private:
 };
 
 #endif
-
-
-/*
-TODO:
- - FPS call
- - Image button
- - Text Button
- - Progress bar
- - Classes for each of the widget types, make hud a list of those classes
-*/

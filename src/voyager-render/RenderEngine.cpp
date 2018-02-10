@@ -72,8 +72,8 @@ void RenderEngine::execute(double delta_time) {
    MV->popMatrix();
    P->popMatrix();
 
-   hud->start();
-   hud->render();
+   hud->updatePosition();
+   hud->run();
 
    this->program->unbind();
 
