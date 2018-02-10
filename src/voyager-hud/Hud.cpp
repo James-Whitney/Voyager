@@ -8,7 +8,7 @@
 
 Hud::Hud(GLFWwindow* window, std::string resourcedir) {
    resource_dir = resourcedir;
-   ImGui_ImplGlfwGL3_Init(window, true);
+   ImGui_ImplGlfwGL3_Init(window, false);
    glfwGetWindowSize(window, &width, &height);
    Hud::open();
 }
