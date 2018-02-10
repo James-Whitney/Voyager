@@ -39,6 +39,10 @@ function(AddExt TargetName)
 
 endfunction(AddExt)
 
+function(AddRapidJson TargetName)
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/rapidjson/include")
+endfunction(AddRapidJson)
+
 function(LinkVoyagerLibraries TargetName)
    target_link_libraries(${TargetName} voyager-actors)
    target_link_libraries(${TargetName} voyager-core)
