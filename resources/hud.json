@@ -1,25 +1,25 @@
 [
+  
   {
     "type" : "image",
-    "titlebar" : "crossair",
-    "image" : "resources/crossair_red.png",
+    "titlebar" : "compass-image",
+    "image" : "resources/blue_button03.png",
     "x_pos" : 0.5,
-    "y_pos" : 0.5,
-    "width" : 32,
-    "height" : 32
+    "y_pos" : 0.95,
+    "width" : 380,
+    "height" : 90
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "compass-text",
+    "text" : "Fore",
+    "x_pos" : 0.5,
+    "y_pos" : 0.95,
+    "r" : 1, "g" : 1, "b" : 1, "a" : 1
   },
   {
     "type" : "image",
-    "titlebar" : "compass",
-    "image" : "resources/compass.png",
-    "x_pos" : 0.5,
-    "y_pos" : 1.0,
-    "width" : 400,
-    "height" : 400
-  },
-  {
-    "type" : "image",
-    "titlebar" : "health-bar",
+    "titlebar" : "health-image",
     "image" : "resources/red_button02.png",
     "x_pos" : 0.5,
     "y_pos" : 0.02,
@@ -36,7 +36,7 @@
   },
   {
     "type" : "image",
-    "titlebar" : "player-box",
+    "titlebar" : "player-image",
     "image" : "resources/metalPanel_red.png",
     "x_pos" : 0.9,
     "y_pos" : 0.9,

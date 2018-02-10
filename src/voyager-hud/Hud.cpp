@@ -24,6 +24,13 @@ void Hud::render() {
    ImGui::Text("%.1f FPS", ImGui::GetIO().Framerate);
    ImGui::End();
 
+   ImGui::SetNextWindowPos(ImVec2(0.5*Hud::width, 0.5*Hud::height), 0, ImVec2(0.5f,0.5f));
+   ImGui::SetNextWindowSize(ImVec2(0,0), 0);
+   ImGui::SetNextWindowBgAlpha(1.0f);
+   ImGui::Begin("progress", NULL, Hud::beginDefaults);
+   ImGui::ProgressBar(0.75, ImVec2(0.11*Hud::width,0.66*Hud::height));
+   ImGui::End();
+
    for (auto& widget : this->widgets) {
       widget->render();
    }
