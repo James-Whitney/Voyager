@@ -7,9 +7,11 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include <voyager-utils/include/GLSL.h>
 #include <voyager-utils/include/Time.h>
+//#include <voyager-utils/include/IdMap.h>
 
 #include "ApplicationType.h"
 #include "Component.h"
@@ -35,7 +37,7 @@ public:
    void setRenderEngine(std::shared_ptr<Engine> render_engine) { this->render_engine = render_engine; }
    void setPhysicsEngine(std::shared_ptr<Engine> physics_engine) { this->physics_engine = physics_engine; }
 
-   void addThing(std::shared_ptr<Entity> thing) { this->things.push_back(thing); }
+   void addThing(std::shared_ptr<Entity> thing) { this->things[thing->getId()]=thing; }
 
    // event callbacks
    virtual void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -52,7 +54,7 @@ private:
 
    std::shared_ptr<WindowManager> window;
 
-   std::vector< std::shared_ptr<Entity> > things;
+   std::unordered_map< long, std::shared_ptr<Entity> > things;
 
    LoopTimer timer = LoopTimer(10); // 10ms max time step
 
