@@ -4,6 +4,8 @@
 
 #include <glm/glm/gtc/type_ptr.hpp>
 
+#include <bullet/btBulletDynamicsCommon.h>
+
 #include <voyager-core/include/Component.h>
 
 class PhysicsComponent : public Component {

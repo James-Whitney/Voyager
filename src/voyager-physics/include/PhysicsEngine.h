@@ -4,6 +4,8 @@
 
 #include <voyager-core/include/Engine.h>
 
+#include <bullet/btBulletDynamicsCommon.h>
+
 #include "PhysicsComponent.h"
 
 class PhysicsEngine : public Engine {
@@ -18,6 +20,11 @@ public:
 
 protected:
 
+   btBroadphaseInterface                  *_broadphase;
+   btDefaultCollisionConfiguration        *_collisionConfiguration;
+   btCollisionDispatcher                  *_dispatcher;
+   btSequentialImpulseConstraintSolver    *_solver;
+   btDiscreteDynamicsWorld                *_world;
 
 
 };

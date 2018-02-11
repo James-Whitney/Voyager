@@ -6,3 +6,6 @@
 	path = ext/glfw
 	url = https://github.com/glfw/glfw.git
 	ignore = dirty
+[submodule "ext/bullet"]
+	path = ext/bullet
+	url = https://github.com/bulletphysics/bullet3.git

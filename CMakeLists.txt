@@ -61,6 +61,15 @@ option(GLFW_BUILD_TESTS "GLFW_BUILD_TESTS" OFF)
 option(GLFW_BUILD_DOCS "GLFW_BUILD_DOCS" OFF)
 add_subdirectory(${GLFW_DIR})
 
+# BULLET
+set(BULLET_DIR "${PROJECT_SOURCE_DIR}/ext/bullet")
+option(BUILD_BULLET2_DEMOS OFF)
+option(BUILD_CPU_DEMOS OFF)
+option(BUILD_EXTRAS OFF)
+option(BUILD_OPENGL3_DEMOS OFF)
+option(BUILD_UNIT_TESTS OFF)
+add_subdirectory(${BULLET_DIR})
+
 ###############################################################################################
 
 # Output Directories
