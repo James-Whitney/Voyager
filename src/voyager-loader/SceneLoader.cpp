@@ -5,7 +5,7 @@
 
 #include <voyager-render/include/Renderable.h>
 
-#define _SCENELOADER_LOG 1 // set to 1 to log as the scene is loading
+#define _SCENELOADER_LOG 0 // set to 1 to log as the scene is loading
 
 using namespace glm;
 using namespace rapidjson;

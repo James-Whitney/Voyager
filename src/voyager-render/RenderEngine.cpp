@@ -1,6 +1,6 @@
 #include "include/RenderEngine.h"
 
-#define _RENDERENGINE_LOG_RENDERS 1 // set to 1 to log rendering
+#define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
 using namespace glm;
 using namespace std;

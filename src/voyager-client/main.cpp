@@ -7,6 +7,7 @@
 #include <voyager-loader/include/ApplicationMaker.h>
 #include <voyager-loader/include/Scene.h>
 #include <voyager-loader/include/SceneLoader.h>
+#include <voyager-utils/include/Time.h>
 
 using namespace std;
 
@@ -22,16 +23,16 @@ int main(int argc, char *argv[]) {
    // make the application
    VoyagerConfigLoader config_loader;
    shared_ptr<VoyagerConfig> config = config_loader.load(config_path);
-   // config->dump();
    shared_ptr<Application> app = make_application(config);
 
    // load the scene
+   double start_scene_load = currentTimeMs();
    SceneLoader scene_loader(config->getResourceDir());
    shared_ptr<Scene> scene = scene_loader.load(config->getResourceDir()
       + "/templates/example.scene.json");
-   scene->dump();
    scene->apply(app);
    scene = nullptr;
+   cout << "Scene loaded in " << currentTimeMs() - start_scene_load << "ms" << endl;
 
    // run it
    app->run();

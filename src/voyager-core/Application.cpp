@@ -1,8 +1,18 @@
 #include "include/Application.h"
 
+#include <sstream>
+
 #include <voyager-render/include/Renderable.h>
 
+#define _APPLICATION_LOG_LIFECYCLE 1 // set to 1 to log lifecycle events
+
 using namespace std;
+
+void log_life(string msg) {
+#if _APPLICATION_LOG_LIFECYCLE
+   cout << msg << endl;
+#endif
+}
 
 Application::Application() {
    this->window = make_shared<WindowManager>();
@@ -35,7 +45,7 @@ void Application::run() {
    this->init();
 
    while (!this->shouldQuit()) {
-      cout << "--------------------==[ LOOP ]==--------------------" << endl;
+      log_life("--------------------==[ LOOP ]==--------------------");
 
       // Game Update
       double delta_time;
@@ -57,7 +67,9 @@ void Application::run() {
 
 void Application::init() {
    string type = this->getType() == CLIENT ? "client" : "server";
-   cout << "--------==[ Initializing " << type << " ]==--------" << endl;
+   stringstream ss;
+   ss << "--------==[ Initializing " << type << " ]==--------";
+   log_life(ss.str());
 
    if (this->getType() == CLIENT) {
 
@@ -78,11 +90,8 @@ void Application::init() {
          cerr << "Application has no render_engine" << endl;
          exit(1);
       }
-      cout << "initialize render engine" << endl;
       this->render_engine->init();
    }
-
-   cout << "initialization complete" << endl;
 }
 
 void Application::update(double delta_time) {
@@ -101,7 +110,7 @@ void Application::render() {
 }
 
 void Application::shutdown() {
-   cout << "--------==[ Shutting Down ]==--------" << endl;
+   log_life("--------==[ Shutting Down ]==--------");
 
    if (this->getType() == CLIENT) {
       this->window->shutdown();
