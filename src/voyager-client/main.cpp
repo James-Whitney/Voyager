@@ -4,6 +4,9 @@
 
 #include <voyager-core/include/All.h>
 #include <voyager-loader/include/VoyagerConfigLoader.h>
+#include <voyager-loader/include/ApplicationMaker.h>
+#include <voyager-loader/include/Scene.h>
+#include <voyager-loader/include/SceneLoader.h>
 
 using namespace std;
 
@@ -16,11 +19,21 @@ int main(int argc, char *argv[]) {
    }
    string config_path(argv[1]);
 
-   // load the config file
-   VoyagerConfigLoader loader;
-   shared_ptr<VoyagerConfig> config = loader.load(config_path);
+   // make the application
+   VoyagerConfigLoader config_loader;
+   shared_ptr<VoyagerConfig> config = config_loader.load(config_path);
+   // config->dump();
+   shared_ptr<Application> app = make_application(config);
 
-   // initialize the Application
-   shared_ptr<Application> app = make_shared<Application>(config);
+   // load the scene
+   SceneLoader scene_loader(config->getResourceDir());
+   shared_ptr<Scene> scene = scene_loader.load(config->getResourceDir()
+      + "/templates/example.scene.json");
+   scene->dump();
+   scene->apply(app);
+   scene = nullptr;
+
+   // run it
+   app->run();
 
 }

@@ -11,7 +11,6 @@
 
 #include <voyager-utils/include/GLSL.h>
 #include <voyager-utils/include/Time.h>
-//#include <voyager-utils/include/IdMap.h>
 
 #include "ApplicationType.h"
 #include "Component.h"
@@ -25,19 +24,25 @@ class Application : public EventCallbacks {
 public:
 
    // constructors/destructors
-   Application(std::shared_ptr<VoyagerConfig> config);
+   Application();
 
    // getters/setters
+   std::shared_ptr<VoyagerConfig> getConfig() { return this->config; }
+   void setConfig(std::shared_ptr<VoyagerConfig> config) { this->config = config; }
+
    ApplicationType getType() { return this->config->type; }
    std::string getResourceDir() { return this->config->resource_dir; }
 
    std::shared_ptr<WindowManager> getWindowManager() { return this->window; }
    void setWindowManager(std::shared_ptr<WindowManager> window) { this->window = window; }
 
+   std::shared_ptr<Engine> getRenderEngine() { return this->render_engine; }
    void setRenderEngine(std::shared_ptr<Engine> render_engine) { this->render_engine = render_engine; }
+
+   std::shared_ptr<Engine> getPhysicsEngine() { return this->physics_engine; }
    void setPhysicsEngine(std::shared_ptr<Engine> physics_engine) { this->physics_engine = physics_engine; }
 
-   void addThing(std::shared_ptr<Entity> thing) { this->things[thing->getId()]=thing; }
+   std::unordered_map<long, std::shared_ptr<Entity> > getThings() { return this->things; }
 
    // event callbacks
    virtual void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);

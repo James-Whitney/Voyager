@@ -14,8 +14,6 @@ public:
 
    virtual void store(std::shared_ptr<VoyagerConfig> thing, std::string path);
 
-private:
-
 };
 
 #endif

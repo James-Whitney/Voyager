@@ -1,5 +1,7 @@
 #include "include/RenderEngine.h"
 
+#define _RENDERENGINE_LOG_RENDERS 1 // set to 1 to log rendering
+
 using namespace glm;
 using namespace std;
 
@@ -35,10 +37,15 @@ void RenderEngine::init() {
       this->components.at(i)->init();
    }
 
-   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+   // TODO: add hud back in
+   // this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
 }
 
 void RenderEngine::execute(double delta_time) {
+#if _RENDERENGINE_LOG_RENDERS
+   cout << "-<Rendering>------------------" << endl;
+   this->camera->dump();
+#endif
 
    int width, height;
    glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
@@ -72,8 +79,8 @@ void RenderEngine::execute(double delta_time) {
    MV->popMatrix();
    P->popMatrix();
 
-   hud->start();
-   hud->render();
+   // hud->start();
+   // hud->render();
 
    this->program->unbind();
 
@@ -84,6 +91,10 @@ void RenderEngine::execute(double delta_time) {
 
 void RenderEngine::render(shared_ptr<Renderable> renderable,
       shared_ptr<MatrixStack> MV) {
+
+#if _RENDERENGINE_LOG_RENDERS
+   cout << "\trendering component " << renderable->getId() << endl;
+#endif
 
    renderable->getUber()->setUniforms(this->program);
 

@@ -27,12 +27,6 @@ public:
    /** store the object to a file */
    virtual void store(std::shared_ptr<T> thing, std::string path) = 0;
 
-   // /** given a file path, load the rapidjson document */
-   // rapidjson::Document loadDocument(std::string path);
-
-   // /** given a rapidjson document, store it to a file */
-   // void storeDocument(rapidjson::Document document, std::string path);
-
 };
 
 #endif

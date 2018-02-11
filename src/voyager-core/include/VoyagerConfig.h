@@ -17,6 +17,7 @@ public:
 
    /** Getters with default values */
    std::string getResourceDir() { return resource_dir.length() ? resource_dir : "resources"; }
+   std::string getApplicationTemplate();
 
    /** print the contents of the config */
    void dump();

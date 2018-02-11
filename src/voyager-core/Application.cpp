@@ -1,10 +1,10 @@
 #include "include/Application.h"
 
+#include <voyager-render/include/Renderable.h>
+
 using namespace std;
 
-Application::Application(shared_ptr<VoyagerConfig> config) :
-   config(config)
-{
+Application::Application() {
    this->window = make_shared<WindowManager>();
 }
 
@@ -35,6 +35,7 @@ void Application::run() {
    this->init();
 
    while (!this->shouldQuit()) {
+      cout << "--------------------==[ LOOP ]==--------------------" << endl;
 
       // Game Update
       double delta_time;
@@ -64,6 +65,7 @@ void Application::init() {
          cerr << "Application has no window" << endl;
          exit(1);
       }
+      cout << "initialize window" << endl;
       this->window->init(1024, 1024);
       this->window->setEventCallbacks(this);
 
@@ -76,8 +78,11 @@ void Application::init() {
          cerr << "Application has no render_engine" << endl;
          exit(1);
       }
+      cout << "initialize render engine" << endl;
       this->render_engine->init();
    }
+
+   cout << "initialization complete" << endl;
 }
 
 void Application::update(double delta_time) {
