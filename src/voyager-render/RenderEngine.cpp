@@ -6,6 +6,8 @@ using namespace std;
 void RenderEngine::init() {
    this->program = make_shared<Program>();
 
+   glCullFace(GL_BACK);
+
    program->setVerbose(true);
    program->setShaderNames(
       this->resource_dir + "/uber.vert.glsl",
@@ -15,8 +17,8 @@ void RenderEngine::init() {
       cerr << "Failed to initialize program" << endl;
       exit(1);
    }
-
-   program->addUniform("MV");
+   program->addUniform("M");
+   program->addUniform("V");
    program->addUniform("P");
    program->addUniform("MatAmb");
    program->addUniform("MatDif");
@@ -52,24 +54,30 @@ void RenderEngine::execute(double delta_time) {
    glUniform1ui(this->program->getUniform("uberMode"), 0);
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
-   shared_ptr<MatrixStack> MV = make_shared<MatrixStack>();
+   shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
+   shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
 
    P->pushMatrix();
-   MV->pushMatrix();
+   M->pushMatrix();
+   V->pushMatrix();
 
-   this->camera->setView(aspect, P, MV);
+   this->camera->setView(aspect, P, V);
+
    glUniformMatrix4fv(this->program->getUniform("P"), 1, GL_FALSE,
       value_ptr(P->topMatrix()));
+   glUniformMatrix4fv(this->program->getUniform("V"), 1, GL_FALSE,
+      value_ptr(V->topMatrix()));
 
    // TODO: remove hardcoding light position and color
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
 
    for (int i = 0; i < this->components.size(); ++i) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(i)), MV);
+      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
    }
 
-   MV->popMatrix();
+   V->popMatrix();
+   M->popMatrix();
    P->popMatrix();
 
    hud->start();
@@ -82,23 +90,35 @@ void RenderEngine::execute(double delta_time) {
 
 }
 
-void RenderEngine::render(shared_ptr<Renderable> renderable,
-      shared_ptr<MatrixStack> MV) {
+void RenderEngine::render(shared_ptr<Renderable> renderable) {
 
    renderable->getUber()->setUniforms(this->program);
 
-   MV->pushMatrix();
+   //M->pushMatrix();
 
-   std::shared_ptr<Transform> trans = renderable->getEntity()->getTransform();
-   MV->translate(trans->getPosition());
-   MV->rotate(trans->getRoll(), trans->getDirection());
-   MV->scale(trans->getScale());
+   std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
+   btTransform btTrans = *trans.get();
 
-   glUniformMatrix4fv(this->program->getUniform("MV"), 1, GL_FALSE,
-      value_ptr(MV->topMatrix()));
+   //btVector3 btTranslation = btTrans->getOrigin();
+   //btTrans->getRotation();
+/*
+   int i, j;
+   for(i = 0; i < 4; i++){
+      for(j = 0; j < 4; j++){
+         fprintf(stderr, "%f, ", glmTrans[i][j]);
+      }
+      fprintf(stderr, "\n");
+   }*/
+
+   //MV->translate(bulletToGlm(trans->getOrigin()));
+   //MV->rotate(bulletToGlm(trans->getRotation()));
+   //MV->scale(trans->getScale());
+
+   //glUniformMatrix4fv(this->program->getUniform("MV"), 1, GL_FALSE, value_ptr(MV->topMatrix()));
+   glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(bulletToGlm(btTrans)));
 
    renderable->getShape()->draw(this->program);
 
-   MV->popMatrix();
+  // M->popMatrix();
 
 }

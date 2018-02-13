@@ -34,7 +34,6 @@ void Application::resizeCallback(GLFWwindow *window, int in_width, int in_height
 void Application::run() {
 
    this->init();
-
    while (!this->shouldQuit()) {
 
       // Game Update
@@ -43,6 +42,9 @@ void Application::run() {
       while (this->timer.tick(&delta_time)) {
          this->update(delta_time);
       }
+
+      //Physics
+      this->physics();
 
       // Render
       if (this->type == CLIENT) {
@@ -79,6 +81,11 @@ void Application::update(double delta_time) {
       this->things.at(i)->update(delta_time);
    }
 
+}
+
+void Application::physics() {
+   assert(this->physics_engine != nullptr);
+   this->physics_engine->execute();
 }
 
 void Application::render() {

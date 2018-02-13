@@ -13,6 +13,20 @@ function(AddExt TargetName)
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glfw/include")
    target_link_libraries(${TargetName} glfw ${GLFW_LIBRARIES})
 
+   #bullet
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/bullet/src")
+   target_link_libraries(${TargetName} 
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Collision/libBullet3Collision.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Common/libBullet3Common.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Dynamics/libBullet3Dynamics.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Geometry/libBullet3Geometry.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3OpenCL/libBullet3OpenCL_clew.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/BulletCollision/libBulletCollision.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/BulletDynamics/libBulletDynamics.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/BulletInverseDynamics/libBulletInverseDynamics.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/BulletSoftBody/libBulletSoftBody.a"
+   "${PROJECT_SOURCE_DIR}/ext/bullet/src/LinearMath/libLinearMath.a")
+
    # glad
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glad/include")
 
@@ -60,15 +74,6 @@ option(GLFW_BUILD_EXAMPLES "GLFW_BUILD_EXAMPLES" OFF)
 option(GLFW_BUILD_TESTS "GLFW_BUILD_TESTS" OFF)
 option(GLFW_BUILD_DOCS "GLFW_BUILD_DOCS" OFF)
 add_subdirectory(${GLFW_DIR})
-
-# BULLET
-set(BULLET_DIR "${PROJECT_SOURCE_DIR}/ext/bullet")
-option(BUILD_BULLET2_DEMOS OFF)
-option(BUILD_CPU_DEMOS OFF)
-option(BUILD_EXTRAS OFF)
-option(BUILD_OPENGL3_DEMOS OFF)
-option(BUILD_UNIT_TESTS OFF)
-add_subdirectory(${BULLET_DIR})
 
 ###############################################################################################
 

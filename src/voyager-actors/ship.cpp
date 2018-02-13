@@ -12,22 +12,27 @@ void Ship::moveShip(float delta_time) {
    const float flightSpeed = 0.05;
 
    // Move forward
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_LEFT ) == GLFW_PRESS){
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_UP ) == GLFW_PRESS) {
+      deltaPos += flightSpeed * delta_time;
+   }
+   // Move backward
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_DOWN ) == GLFW_PRESS) {
+      deltaPos -= flightSpeed * delta_time;
+   }
+
+   // Move forward
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_LEFT ) == GLFW_PRESS) {
       deltaAngle += turnSpeed * delta_time;
    }
    // Move backward
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_RIGHT ) == GLFW_PRESS){
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_RIGHT ) == GLFW_PRESS) {
       deltaAngle -= turnSpeed * delta_time;
    }
-   // Strafe right
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_UP ) == GLFW_PRESS){
-      deltaPos += flightSpeed * delta_time;
-   }
-   // Strafe left
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_DOWN ) == GLFW_PRESS){
-      deltaPos -= flightSpeed * delta_time;
-   }
-   glm::vec3 currPos = transform->getPosition();
+/*
+   btVector3 bullet_force = deltaPos * transform->getRotation();
+   physicsComponent->getBody()->applyCentralForce(bullet_force);
+
+   glm::vec3 currPos = transform->getOrigin();
    angle += deltaAngle;
 
    glm::vec3 currDir = glm::vec3(sin(transform->getRoll()), 0, cos(transform->getRoll()));
@@ -35,8 +40,5 @@ void Ship::moveShip(float delta_time) {
    glm::vec3 deltaMovement = (currDir * deltaPos);
 
    currPos += (currDir * deltaPos);
-   
-   setTransform(std::make_shared<Transform>
-   (currPos, glm::vec3(2.0, 0.25, 2.0), 3.1415926 / 2, 3.1415926 / 2, angle));
-
+*/
 }

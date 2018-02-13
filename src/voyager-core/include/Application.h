@@ -66,6 +66,7 @@ private:
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update
    void render();                   // render the scene
+   void physics();
    void shutdown();                 // called once at the end
 
    bool shouldQuit();

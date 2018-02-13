@@ -4,7 +4,7 @@
 
 #include <voyager-core/include/Engine.h>
 
-#include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/src/btBulletDynamicsCommon.h>
 
 #include "PhysicsComponent.h"
 
@@ -15,17 +15,34 @@ public:
    PhysicsEngine();
 
    void init();
+   void initConfigs();
+   //void initOverworld();
+   //void initShipworld();
+   void initWorld();
+
+   btDiscreteDynamicsWorld* get_world() { return world; }
+
+   //btDiscreteDynamicsWorld* get_shipworld() {return shipworld;}
+
    void execute(double delta_time = 0);
+   void addComponent(std::shared_ptr<PhysicsComponent> component);
+   void removeComponent(PhysicsComponent* component);
+
+   void addEntity();
+
+   void updateEntityTransforms();
 
 
 protected:
 
-   btBroadphaseInterface                  *_broadphase;
-   btDefaultCollisionConfiguration        *_collisionConfiguration;
-   btCollisionDispatcher                  *_dispatcher;
-   btSequentialImpulseConstraintSolver    *_solver;
-   btDiscreteDynamicsWorld                *_world;
+   //Overworld Objects
+   btBroadphaseInterface                  *broadphase;
+   btDefaultCollisionConfiguration        *collisionConfiguration;
+   btCollisionDispatcher                  *dispatcher;
+   btSequentialImpulseConstraintSolver    *solver;
 
+   btDiscreteDynamicsWorld                *world;
+   btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
 };
 

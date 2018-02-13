@@ -4,6 +4,8 @@
 
 #include <voyager-core/include/Entity.h>
 #include <voyager-core/include/WindowManager.h>
+#include <bullet/src/btBulletDynamicsCommon.h>
+
 
 class Ship : public Entity {
 

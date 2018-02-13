@@ -11,8 +11,7 @@ void Player::init() {
 }
 
 glm::vec3 Player::getPosition() {
-   return ship->getTransform()->getPosition() + 
-                     transform->getPosition();
+   return bulletToGlm(transform->getOrigin());
 }
 
 
@@ -40,13 +39,17 @@ void Player::cameraUpdate() {
    delta_pitch = delta_yPos / (height * 2);
    delta_yaw = delta_xPos / width;
 
+   //fprintf(stderr, "delta_pitch: %f, delta_yaw: %f\n", delta_pitch, delta_yaw);
+
    float ship_angle = ship->getShipAngle();
    float deltaShipAngle = ship_angle - prev_shipAngle;
    prev_shipAngle = ship_angle;
 
    camera->move(delta_pitch, delta_yaw + deltaShipAngle);
    
-   camera->setPosition(glm::vec3(0, cameraHeight, 0) + getPosition());
+   camera->setPosition(glm::vec3(0, cameraHeight, 0));// + getPosition());
+   glm::vec3 test = camera->getLookAt();
+   //printf(stderr, "getLookAt: %f, %f, %f\n", test.x, test.y, test.z);
    return;
 }
 
@@ -87,8 +90,10 @@ void Player::positionUpdate(float delta_time) {
       movement = glm::normalize(movement);
    }
    movement *= delta_time * speed;
-
-   glm::vec3 pos = transform->getPosition() + movement;
+   btVector3 bullet_force = glmToBullet(movement);
+   physicsComponent->getBody()->setLinearVelocity(bullet_force);
+/*
+   glm::vec3 pos = transform->getOrigin() + movement;
    if(pos.x > 1)
       pos.x = 1;
    if(pos.x < -1)
@@ -99,4 +104,5 @@ void Player::positionUpdate(float delta_time) {
       pos.z = -1;
    setTransform(std::make_shared<Transform>
    (pos, glm::vec3(0, 0, 0), 0, 0, 0));
+   */
 }
