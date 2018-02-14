@@ -11,6 +11,9 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-   Application app(SERVER, RESOURCE_DIR);
-   app.run();
+   // TODO: maybe don't have a separate server executable?
+   // just adjust behavior based on the application config
+
+   // Application app(SERVER, RESOURCE_DIR);
+   // app.run();
 }

@@ -1,5 +1,7 @@
 #include "include/Camera.h"
 
+#include <iostream>
+
 using namespace glm;
 using namespace std;
 
@@ -26,4 +28,10 @@ void Camera::setView(float aspect, shared_ptr<MatrixStack> P,
 
    P->perspective(this->fov_y, aspect, this->z_near, this->z_far);
    MV->lookAt(this->pos, this->getLookAt(), this->up);
+}
+
+void Camera::dump() {
+   vec3 lookAt = this->getLookAt(false);
+   cout << "Camera: (" << this->pos.x << ", " << this->pos.y << ", " << this->pos.z << ") => ("
+      << lookAt.x << ", " << lookAt.y << ", " << lookAt.z << ")" << endl;
 }
