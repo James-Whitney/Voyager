@@ -32,10 +32,8 @@ void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollision
 }
 
 void PhysicsComponent::update(double delta_time) {
-   fprintf(stderr, "flag 1\n");
    btTransform trans;
    body->getMotionState()->getWorldTransform(trans);
    std::shared_ptr<btTransform> shared_trans= std::make_shared<btTransform>(trans);
    entity->setTransform(shared_trans);
-   fprintf(stderr, "flag 2\n");
 }

@@ -6,12 +6,15 @@
 #include <voyager-core/include/WindowManager.h>
 #include <bullet/src/btBulletDynamicsCommon.h>
 
+#include <voyager-physics/include/PhysicsComponent.h>
+
 
 class Ship : public Entity {
 
 public:
 
    void setWindow(std::shared_ptr<WindowManager> window) { this->window = window; }
+   void setPhysics(std::shared_ptr<PhysicsComponent> physicsComponent) { this->physicsComponent = physicsComponent; }
 
    float getShipAngle() { return angle; }
 
@@ -20,6 +23,7 @@ public:
 
 private:
 
+   std::shared_ptr<PhysicsComponent> physicsComponent;
    void moveShip(float delta_time);
    double angle = 0;
 

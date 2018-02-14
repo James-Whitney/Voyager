@@ -28,6 +28,11 @@ void Ship::moveShip(float delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_RIGHT ) == GLFW_PRESS) {
       deltaAngle -= turnSpeed * delta_time;
    }
+   btQuaternion btQuad = transform->getRotation();
+   btScalar angle = btQuad.getAngle();
+   fprintf(stderr, "Ship_Angle: %f\n", angle);
+   physicsComponent->getBody()->setLinearVelocity(btVector3(1,0,0));
+	physicsComponent->getBody()->setAngularVelocity(btVector3(0,1,0));
 /*
    btVector3 bullet_force = deltaPos * transform->getRotation();
    physicsComponent->getBody()->applyCentralForce(bullet_force);

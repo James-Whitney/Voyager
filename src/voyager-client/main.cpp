@@ -41,8 +41,8 @@ shared_ptr<Entity> make_box(string resource_dir, shared_ptr<PhysicsEngine> physi
    //physics component
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
    btCollisionShape* collisionShape = new btBoxShape(btVector3(1,1,1));
-   btScalar mass(0.f);
-   btVector3 position(7, 0, 0);
+   btScalar mass(1.f);
+   btVector3 position(10, 0, 0);
    btVector3 velocity(0, 0, 0);
    physicsComponent->initRigidBody(result, collisionShape, mass, position, velocity);
    physicsEngine->addComponent(physicsComponent);
@@ -69,7 +69,9 @@ shared_ptr<Ship> make_ship(string resource_dir, shared_ptr<PhysicsEngine> physic
    btVector3 position(0, 0, 0);
    btVector3 velocity(0, 0, 0);
    physicsComponent->initRigidBody(result, collisionShape, mass, position, velocity);
+   //physicsComponent->getBody()->setGravity(btVector3(0, 0, 0));
    physicsEngine->addComponent(physicsComponent);
+   result->setPhysics(physicsComponent);
    result->add(physicsComponent);
 
 
@@ -94,7 +96,7 @@ shared_ptr<Player> make_player(string resource_dir, shared_ptr<PhysicsEngine> ph
 
    btCollisionShape* collisionShape = new btBoxShape(btVector3(0.1,1,0.1));
    btScalar mass(1.f);
-   btVector3 position(50, 50, 50);
+   btVector3 position(0, 10, 0);
    btVector3 velocity(0, 0, 0);
    physicsComponent->initRigidBody(result, collisionShape, mass, position, velocity);
    physicsEngine->addComponent(physicsComponent);
