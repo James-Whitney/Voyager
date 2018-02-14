@@ -41,11 +41,11 @@ void Player::cameraUpdate() {
 
    //fprintf(stderr, "delta_pitch: %f, delta_yaw: %f\n", delta_pitch, delta_yaw);
 
-   float ship_angle = ship->getShipAngle();
-   float deltaShipAngle = ship_angle - prev_shipAngle;
-   prev_shipAngle = ship_angle;
+   //float ship_angle = ship->getShipAngle();
+   //float deltaShipAngle = ship_angle - prev_shipAngle;
+   //prev_shipAngle = ship_angle;
 
-   camera->move(delta_pitch, delta_yaw + deltaShipAngle);
+   camera->move(delta_pitch, delta_yaw);// + deltaShipAngle);
    
    camera->setPosition(glm::vec3(0, cameraHeight, 0));// + getPosition());
    glm::vec3 test = camera->getLookAt();

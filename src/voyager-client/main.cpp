@@ -69,8 +69,11 @@ shared_ptr<Ship> make_ship(string resource_dir, shared_ptr<PhysicsEngine> physic
    btVector3 position(0, 0, 0);
    btVector3 velocity(0, 0, 0);
    physicsComponent->initRigidBody(result, collisionShape, mass, position, velocity);
+   physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
+   physicsComponent->getBody()->setDamping(btScalar(0.15), btScalar(0.15));
    //physicsComponent->getBody()->setGravity(btVector3(0, 0, 0));
    physicsEngine->addComponent(physicsComponent);
+   
    result->setPhysics(physicsComponent);
    result->add(physicsComponent);
 
@@ -99,6 +102,7 @@ shared_ptr<Player> make_player(string resource_dir, shared_ptr<PhysicsEngine> ph
    btVector3 position(0, 10, 0);
    btVector3 velocity(0, 0, 0);
    physicsComponent->initRigidBody(result, collisionShape, mass, position, velocity);
+   physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
    physicsEngine->addComponent(physicsComponent);
    result->setPhysics(physicsComponent);
    result->add(physicsComponent);

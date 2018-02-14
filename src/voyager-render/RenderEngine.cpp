@@ -92,33 +92,10 @@ void RenderEngine::execute(double delta_time) {
 
 void RenderEngine::render(shared_ptr<Renderable> renderable) {
 
+
    renderable->getUber()->setUniforms(this->program);
-
-   //M->pushMatrix();
-
    std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
-   btTransform btTrans = *trans.get();
-
-   //btVector3 btTranslation = btTrans->getOrigin();
-   //btTrans->getRotation();
-/*
-   int i, j;
-   for(i = 0; i < 4; i++){
-      for(j = 0; j < 4; j++){
-         fprintf(stderr, "%f, ", glmTrans[i][j]);
-      }
-      fprintf(stderr, "\n");
-   }*/
-
-   //MV->translate(bulletToGlm(trans->getOrigin()));
-   //MV->rotate(bulletToGlm(trans->getRotation()));
-   //MV->scale(trans->getScale());
-
-   //glUniformMatrix4fv(this->program->getUniform("MV"), 1, GL_FALSE, value_ptr(MV->topMatrix()));
-   glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(bulletToGlm(btTrans)));
+   glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(bulletToGlm(*trans.get())));
 
    renderable->getShape()->draw(this->program);
-
-  // M->popMatrix();
-
 }

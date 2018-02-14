@@ -28,7 +28,8 @@ void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollision
    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, collisionShape, velocity);
    this->body = new btRigidBody(rbInfo);
    entity->setTransform(transform);
-   this->body->applyGravity();
+   //this->body->applyGravity();
+   this->body->setSleepingThresholds(btScalar(0.001), btScalar(0.001));
 }
 
 void PhysicsComponent::update(double delta_time) {
