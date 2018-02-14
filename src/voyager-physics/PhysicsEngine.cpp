@@ -28,7 +28,7 @@ void PhysicsEngine::init() {
 
 void PhysicsEngine::execute(double delta_time) {
    ///-----stepsimulation_start-----
-   fprintf(stderr, "dt: %f\n", delta_time);
+   //fprintf(stderr, "dt: %f\n", delta_time);
    world->stepSimulation(0.1, 2);
 
    for (int i = 0; i < components.size(); i++) {
