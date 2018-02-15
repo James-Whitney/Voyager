@@ -11,6 +11,7 @@ Hud::Hud(GLFWwindow* window, std::string resourcedir) {
    ImGui_ImplGlfwGL3_Init(window, false);
    glfwGetWindowSize(window, &width, &height);
    Hud::open();
+   startScreen = true;
 }
 // Creates new frame
 void Hud::start() {
@@ -36,6 +37,20 @@ void Hud::open() {
    fclose(fp);
 
    Hud::generate();
+}
+
+void Hud::startMenu() {
+   Hud::start();
+   std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
+   ImGui::SetNextWindowPos(ImVec2(0.5*Hud::width, 0.5*Hud::height), 0, ImVec2(0.5f,0.5f));
+   ImGui::SetNextWindowSize(ImVec2(0,0), 0);
+   ImGui::SetNextWindowBgAlpha(0.0f);
+   ImGui::Begin("Server Ip Input", NULL, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse);
+   ImGui::SetKeyboardFocusHere();
+   ImGui::CaptureKeyboardFromApp();
+   ImGui::InputText("serverIp", this->buf, 1024);
+   ImGui::End();
+   ImGui::Render();
 }
 
 

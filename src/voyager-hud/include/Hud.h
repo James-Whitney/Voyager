@@ -41,6 +41,11 @@ public:
    int healthIdx;
    int compassIdx;
 
+   bool startScreen;
+
+
+   char buf[1024];
+
    // Sets the window to work in and establishes the frame.
    Hud(GLFWwindow* window, std::string resourcedir);
 
@@ -52,9 +57,12 @@ public:
    // Loops through doc array and generates the widgests specified by the json file
    void generate();
 
+   void startMenu();
+
 private:
    // Loads resources/hud.json into doc
    void open();
+
 };
 
 #endif
