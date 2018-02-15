@@ -29,6 +29,7 @@ public:
 
    virtual void add(std::shared_ptr<Component> component);
    virtual std::shared_ptr<Component> componentAt(int i);
+   virtual int numComponents();
    virtual bool remove(std::shared_ptr<Component> component);
 
 protected:

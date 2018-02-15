@@ -25,7 +25,7 @@ public:
    //btDiscreteDynamicsWorld* get_shipworld() {return shipworld;}
 
    void execute(double delta_time = 0);
-   void addComponent(std::shared_ptr<PhysicsComponent> component);
+
    void removeComponent(PhysicsComponent* component);
 
    void addEntity();

@@ -27,6 +27,8 @@ public:
 
 private:
 
+   //initialized variables, dont change.
+
    btCollisionShape        *collisionShape;
    btDefaultMotionState    *myMotionState;
    btRigidBody             *body;

@@ -51,11 +51,10 @@ void PhysicsEngine::execute(double delta_time) {
    }*/
 
 }
-
-void PhysicsEngine::addComponent(std::shared_ptr<PhysicsComponent> component){
-   collisionShapes.push_back(component.get()->get_collisionShape());
-   world->addRigidBody(component.get()->getBody());
-
+void registerComponent(std::shared_ptr<Component> component) {
+   std::shared_ptr<PhysicsComponent> physicsComponent = static_pointer_cast<PhysicsComponent>(component);
+   collisionShapes.push_back(physicsComponent.get()->get_collisionShape());
+   world->addRigidBody(physicsComponent.get()->getBody());
 }
 
 void PhysicsEngine::removeComponent(PhysicsComponent* component) {

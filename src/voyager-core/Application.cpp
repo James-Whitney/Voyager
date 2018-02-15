@@ -1,11 +1,20 @@
 #include "include/Application.h"
 
+#include <sstream>
+
+#include <voyager-render/include/Renderable.h>
+
+#define _APPLICATION_LOG_LIFECYCLE 1 // set to 1 to log lifecycle events
+
 using namespace std;
 
-Application::Application(ApplicationType type, std::string resource_dir) :
-   type(type),
-   resource_dir(resource_dir)
-{
+void log_life(string msg) {
+#if _APPLICATION_LOG_LIFECYCLE
+   cout << msg << endl;
+#endif
+}
+
+Application::Application() {
    this->window = make_shared<WindowManager>();
 }
 
@@ -35,6 +44,7 @@ void Application::run() {
 
    this->init();
    while (!this->shouldQuit()) {
+      log_life("--------------------==[ LOOP ]==--------------------");
 
       // Game Update
       double delta_time;
@@ -47,7 +57,7 @@ void Application::run() {
       this->physics();
 
       // Render
-      if (this->type == CLIENT) {
+      if (this->getType() == CLIENT) {
          this->render();
       }
 
@@ -58,10 +68,18 @@ void Application::run() {
 }
 
 void Application::init() {
-   string type = this->type == CLIENT ? "client" : "server";
-   cout << "--------==[ Initializing " << type << " ]==--------" << endl;
+   string type = this->getType() == CLIENT ? "client" : "server";
+   stringstream ss;
+   ss << "--------==[ Initializing " << type << " ]==--------";
+   log_life(ss.str());
 
-   if (this->type == CLIENT) {
+   if (this->getType() == CLIENT) {
+
+      if (this->window == nullptr) {
+         cerr << "Application has no window" << endl;
+         exit(1);
+      }
+      cout << "initialize window" << endl;
       this->window->init(1024, 1024);
       this->window->setEventCallbacks(this);
 
@@ -70,6 +88,10 @@ void Application::init() {
       glEnable(GL_DEPTH_TEST);
       glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
+      if (this->render_engine == nullptr) {
+         cerr << "Application has no render_engine" << endl;
+         exit(1);
+      }
       this->render_engine->init();
    }
 }
@@ -77,10 +99,15 @@ void Application::init() {
 void Application::update(double delta_time) {
    glfwPollEvents();
 
-   for (int i = 0; i < this->things.size(); ++i) {
-      this->things.at(i)->update(delta_time);
+   for (auto &e : this->things) {
+      e.second->update(delta_time);
    }
 
+}
+
+void Application::actors() {
+   assert(this->actor_engine != nullptr);
+   this->actor_engine->execute();
 }
 
 void Application::physics() {
@@ -89,21 +116,21 @@ void Application::physics() {
 }
 
 void Application::render() {
-   assert(this->type == CLIENT);
+   assert(this->getType() == CLIENT);
    assert(this->render_engine != nullptr);
    this->render_engine->execute();
 }
 
 void Application::shutdown() {
-   cout << "--------==[ Shutting Down ]==--------" << endl;
+   log_life("--------==[ Shutting Down ]==--------");
 
-   if (this->type == CLIENT) {
+   if (this->getType() == CLIENT) {
       this->window->shutdown();
    }
 }
 
 bool Application::shouldQuit() {
-   if (this->type == CLIENT) {
+   if (this->getType() == CLIENT) {
       return glfwWindowShouldClose(this->getWindowManager()->getHandle());
    } else {
       return false;
