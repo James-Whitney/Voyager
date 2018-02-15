@@ -12,6 +12,7 @@
 #include <voyager-utils/include/GLSL.h>
 #include <voyager-utils/include/Time.h>
 //#include <voyager-utils/include/IdMap.h>
+#include <voyager-render/include/RenderEngine.h>
 
 #include "ApplicationType.h"
 #include "Component.h"
