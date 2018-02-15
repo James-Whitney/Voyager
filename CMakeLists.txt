@@ -39,9 +39,14 @@ function(AddExt TargetName)
 
 endfunction(AddExt)
 
+function(AddRapidJson TargetName)
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/rapidjson/include")
+endfunction(AddRapidJson)
+
 function(LinkVoyagerLibraries TargetName)
    target_link_libraries(${TargetName} voyager-actors)
    target_link_libraries(${TargetName} voyager-core)
+   target_link_libraries(${TargetName} voyager-loader)
    target_link_libraries(${TargetName} voyager-physics)
    target_link_libraries(${TargetName} voyager-render)
    target_link_libraries(${TargetName} voyager-utils)
@@ -71,6 +76,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # Engine Libraries
 add_subdirectory("src/voyager-actors")
 add_subdirectory("src/voyager-core")
+add_subdirectory("src/voyager-loader")
 add_subdirectory("src/voyager-physics")
 add_subdirectory("src/voyager-render")
 add_subdirectory("src/voyager-utils")

@@ -19,6 +19,10 @@ void Entity::add(shared_ptr<Component> component) {
    component->setEntity(this->shared_from_this());
 }
 
+int Entity::numComponents() {
+   return this->size();
+}
+
 shared_ptr<Component> Entity::componentAt(int i) {
    return this->at(i);
 }

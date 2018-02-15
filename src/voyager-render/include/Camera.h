@@ -22,12 +22,14 @@ public:
    void setView(float aspect, std::shared_ptr<MatrixStack> P,
       std::shared_ptr<MatrixStack> MV);
 
+   void dump();
+
 protected:
 
    const glm::vec3 up = glm::vec3(0, 1, 0);
    glm::vec3 pos = glm::vec3(0, 0, 0);
 
-   float pitch = 1.4;
+   float pitch = 0;
    float yaw = 0;
    float fov_y = 70.0f;
    float z_near = 0.01f;

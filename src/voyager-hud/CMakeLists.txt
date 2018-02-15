@@ -6,6 +6,7 @@ add_library(${TARGET_NAME} ${HEADERS} ${SOURCES})
 
 # What does it depend on?
 AddExt(${TARGET_NAME})
+AddRapidJson(${TARGET_NAME})
 target_link_libraries(${TARGET_NAME} voyager-utils)
 
 # How should we make it?
