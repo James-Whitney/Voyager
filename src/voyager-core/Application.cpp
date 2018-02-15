@@ -75,8 +75,8 @@ void Application::init() {
 void Application::update(double delta_time) {
    glfwPollEvents();
 
-   for (int i = 0; i < this->things.size(); ++i) {
-      this->things.at(i)->update(delta_time);
+   for (auto &e : this->things) {
+      e.second->update(delta_time);
    }
 
 }

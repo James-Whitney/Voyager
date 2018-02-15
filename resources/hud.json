@@ -10,33 +10,50 @@
   },
   {
     "type" : "image",
-    "titlebar" : "compass",
-    "image" : "resources/compass.png",
+    "titlebar" : "compass-image",
+    "image" : "resources/blue_button03.png",
     "x_pos" : 0.5,
-    "y_pos" : 1.0,
-    "width" : 400,
-    "height" : 400
+    "y_pos" : 0.95,
+    "width" : 380,
+    "height" : 90
+  },
+  {
+    "type" : "textbox",
+    "titlebar" : "compass-text",
+    "text" : "Fore",
+    "x_pos" : 0.5,
+    "y_pos" : 0.95,
+    "r" : 1, "g" : 1, "b" : 1, "a" : 1
+  },
+  {
+    "type" : "progress",
+    "titlebar" : "health-bar",
+    "percent" : 0.75,
+    "x_pos" : 0.5,
+    "y_pos" : 0.02,
+    "width" : 0.75,
+    "height" : 0.025
   },
   {
     "type" : "image",
-    "titlebar" : "health-bar",
+    "titlebar" : "health-image",
     "image" : "resources/red_button02.png",
     "x_pos" : 0.5,
-    "y_pos" : 0.02,
-    "width" : 600,
-    "height" : 45
+    "y_pos" : 0.055,
+    "width" : 190,
+    "height" : 23
   },
   {
     "type" : "textbox",
     "titlebar" : "health-text",
     "text" : "Ship Health",
     "x_pos" : 0.5,
-    "y_pos" : 0.04,
-    "r" : 1, "g" : 1, "b" : 1, "a" : 1
+    "y_pos" : 0.055,
+    "r" : 0, "g" : 0, "b" : 0, "a" : 1
   },
   {
     "type" : "image",
-    "titlebar" : "player-box",
+    "titlebar" : "player-image",
     "image" : "resources/metalPanel_red.png",
     "x_pos" : 0.9,
     "y_pos" : 0.9,
@@ -58,5 +75,11 @@
     "x_pos" : 0.9,
     "y_pos" : 0.9,
     "r" : 0, "g" : 0, "b" : 0, "a" : 1
-  }
+  },
+  {
+    "type" : "fps",
+    "titlebar" : "fps",
+    "x_pos" : 0.01,
+    "y_pos" : 0.98
+   }
 ]
