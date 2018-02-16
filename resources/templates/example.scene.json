@@ -1,8 +1,8 @@
 {
    "terrain": {
-      "heightmap": "/example.heightmap.bmp",
-      "height": 10.0,
-      "spacing": 1.0
+      "heightmap": "/heightmap.bmp",
+      "height": 40.0,
+      "spacing": 0.25
    },
 
    "entities": [
@@ -54,7 +54,7 @@
       {
          "name": "terrain",
          "transform": {
-            "position": [-200, -10, -200],
+            "position": [-50, -15, -50],
             "axis": [0, 0, 1],
             "rotation": 0.0
          },
@@ -66,6 +66,7 @@
             }
          ]
       },
+      
       {
          "name": "first box",
          "components": [
@@ -83,6 +84,156 @@
                },
                "mass": 5.0,
                "position": [5, 0, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "box 2",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [10, 0, 2],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "box 3",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [10, 0, -2],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "box 4",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [10, 5, -2],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "box 5",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [10, -5, -2],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "box 6",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [10, 5, 2],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "box 7",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 3,
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [10, -5, 2],
                "axis": [0, 0, 1],
                "rotation": 0.0,
                "velocity": [0, 0, 0],
@@ -139,6 +290,9 @@
          "roughness": 0.3,
          "f0": 0.8,
          "k": 0.3
+      },
+      {
+         "type": "NORMAL"
       }
    ]
 
