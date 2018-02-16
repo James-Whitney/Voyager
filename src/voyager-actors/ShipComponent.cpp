@@ -1,6 +1,8 @@
 #include "include/ShipComponent.h"
 #include <iostream>
 
+#define PI 3.141592684
+
 void ShipComponent::init() {
    
 }
@@ -13,7 +15,7 @@ void ShipComponent::moveShip(float delta_time) {
    float deltaPos = 0;
    float deltaAngle = 0;
 
-   const float turnSpeed = 5000.0;
+   const float turnSpeed = 50000.0;
    const float flightSpeed = 50000.0;
 
    physicsComponent->getBody()->applyDamping(delta_time);
@@ -38,11 +40,14 @@ void ShipComponent::moveShip(float delta_time) {
       deltaAngle -= turnSpeed * delta_time;
    }
    btQuaternion btQuad = entity->getTransform()->getRotation();
-   btScalar yaw = btQuad.getAngle();
+   btScalar yaw = btQuad.angleShortestPath(btQuaternion(btVector3(0.0, 1.0, 0.0), 0.0));
+
+   //btScalar yaw = btQuad.getAngle();
    cout << "Yaw: " << yaw << endl;
+
    //apply force for forward/backward movement
    if (deltaPos != 0.0) {
-      btVector3 currDir = btVector3(1.0, 0, 0);
+      btVector3 currDir = btVector3(1.0, 0.0, 0);
       currDir = currDir.rotate(btVector3(0, 1.0, 0), yaw) * deltaPos;
       physicsComponent->getBody()->applyCentralForce(currDir);
       

@@ -18,11 +18,13 @@ public:
    void init();
    void update(double delta_time);
 
-   void initRigidBody(std::shared_ptr<Entity> entity,
-                      btCollisionShape *collisionShape, 
-                      btScalar mass, 
-                      btVector3 position, 
-                      btVector3 velocity);
+   void initRigidBody(std::shared_ptr<Entity> entity, 
+                                       btCollisionShape *collisionShape, 
+                                       btScalar mass, 
+                                       btVector3 position, 
+                                       btQuaternion rotation, 
+                                       btVector3 velocity);
+
 
    btCollisionShape* get_collisionShape() {return collisionShape;}
    btRigidBody* getBody() { return body; }
