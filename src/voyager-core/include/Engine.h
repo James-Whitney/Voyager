@@ -14,7 +14,7 @@ public:
    virtual void init() = 0;
    virtual void execute(double delta_time = 0) = 0;
 
-   void registerComponent(std::shared_ptr<Component> component);
+   virtual void registerComponent(std::shared_ptr<Component> component);
 
 protected:
 
