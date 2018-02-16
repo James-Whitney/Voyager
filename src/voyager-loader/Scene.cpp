@@ -59,8 +59,6 @@ void Scene::apply(shared_ptr<Application> app) {
    shared_ptr<Entity> terrain = this->entities.at(0);
    initTerrain(app, terrain);
 
-
-
    //init ship
    shared_ptr<Entity> ship = this->entities.at(1);
    shared_ptr<ShipComponent> shipComponent = static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
