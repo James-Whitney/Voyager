@@ -1,9 +1,16 @@
 #include "include/Terrain.h"
 
 void Terrain::createShape(std::string heightmap_path, float max_height, float vertex_spacing) {
+   // Generate terrain from heightmap
    this->heightmap->load(heightmap_path);
    this->generateVerticies(max_height, vertex_spacing);
    this->generateFaces();
+
+   // Build the shape buffers
+   this->buildPositionBuffer();
+   this->buildNormalBuffer();
+   this->buildTextureBuffer();
+   this->buildElementBuffer();
 }
 
 void Terrain::generateVerticies(float max_height, float vertex_spacing) {
@@ -90,6 +97,64 @@ void Terrain::computeNormals() {
    for (int z = 0; z < this->heightmap->height; z++) {
       for (int x = 0; x < this->heightmap->width; x++) {
          this->verticies[x][z].normal = glm::normalize(this->verticies[x][z].normal);
+      }
+   }
+}
+
+void Terrain::buildElementBuffer() {
+   // Clear existing element buffer
+   this->eleBuf.clear();
+
+   // Build the element buffer
+   for (int i = 0; i < this->faces.size(); i++) {
+      triangle t = this->faces[i];
+      this->eleBuf.push_back(t.v1_idx.y * this->heightmap->width + t.v1_idx.x);
+      this->eleBuf.push_back(t.v2_idx.y * this->heightmap->width + t.v2_idx.x);
+      this->eleBuf.push_back(t.v3_idx.y * this->heightmap->width + t.v3_idx.x);
+   }
+}
+
+void Terrain::buildPositionBuffer() {
+   // Clear existing position buffer
+   this->posBuf.clear();
+
+   // Build the position buffer
+   for (int z = 0; z < this->heightmap->height; z++) {
+      for (int x = 0; x < this->heightmap->width; x++) {
+         vertex v = this->verticies[x][z];
+         this->posBuf.push_back(v.pos.x);
+         this->posBuf.push_back(v.pos.y);
+         this->posBuf.push_back(v.pos.z);
+      }
+   }
+}
+
+void Terrain::buildNormalBuffer() {
+   // Clear existing normal buffer
+   this->norBuf.clear();
+
+   // Build the normal buffer
+   for (int z = 0; z < this->heightmap->height; z++) {
+      for (int x = 0; x < this->heightmap->width; x++) {
+         vertex v = this->verticies[x][z];
+         this->norBuf.push_back(v.normal.x);
+         this->norBuf.push_back(v.normal.y);
+         this->norBuf.push_back(v.normal.z);
+      }
+   }
+}
+
+void Terrain::buildTextureBuffer() {
+   // Clear existing texture buffer
+   this->texBuf.clear();
+
+   // Build the texture buffer
+   for (int z = 0; z < this->heightmap->height; z++) {
+      for (int x = 0; x < this->heightmap->width; x++) {
+         // TODO: Compute actual texture coordinates
+         this->texBuf.push_back(0.0f);
+         this->texBuf.push_back(0.0f);
+         this->texBuf.push_back(0.0f);
       }
    }
 }
