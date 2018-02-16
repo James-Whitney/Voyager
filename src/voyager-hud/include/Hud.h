@@ -42,8 +42,7 @@ public:
    int compassIdx;
 
    bool startScreen;
-
-
+   
    char buf[1024];
 
    // Sets the window to work in and establishes the frame.
@@ -58,6 +57,9 @@ public:
    void generate();
 
    void startMenu();
+
+   void guiKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
+   bool inputScreen() { return this->startScreen; }
 
 private:
    // Loads resources/hud.json into doc

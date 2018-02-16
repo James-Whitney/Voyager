@@ -12,6 +12,7 @@ Hud::Hud(GLFWwindow* window, std::string resourcedir) {
    glfwGetWindowSize(window, &width, &height);
    Hud::open();
    startScreen = true;
+   glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
 }
 // Creates new frame
 void Hud::start() {
@@ -46,11 +47,13 @@ void Hud::startMenu() {
    ImGui::SetNextWindowSize(ImVec2(0,0), 0);
    ImGui::SetNextWindowBgAlpha(0.0f);
    ImGui::Begin("Server Ip Input", NULL, ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse);
-   ImGui::SetKeyboardFocusHere();
-   ImGui::CaptureKeyboardFromApp();
    ImGui::InputText("serverIp", this->buf, 1024);
+   if (ImGui::GetIO().KeysDown[GLFW_KEY_ENTER]) {
+      this->startScreen = false;
+   }
    ImGui::End();
    ImGui::Render();
+
 }
 
 
@@ -75,4 +78,8 @@ void Hud::generate() {
             widget["width"].GetFloat()*Hud::width, widget["height"].GetFloat()*Hud::height));
       }
    }
+}
+
+void Hud::guiKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+   ImGui_ImplGlfwGL3_KeyCallback(window, key, scancode, action, mods);
 }
