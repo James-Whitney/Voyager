@@ -4,7 +4,7 @@
 
 #include <voyager-render/include/Renderable.h>
 
-#define _APPLICATION_LOG_LIFECYCLE 1 // set to 1 to log lifecycle events
+#define _APPLICATION_LOG_LIFECYCLE 0 // set to 1 to log lifecycle events
 
 using namespace std;
 
@@ -45,7 +45,6 @@ void Application::run() {
    this->init();
    while (!this->shouldQuit()) {
       log_life("--------------------==[ LOOP ]==--------------------");
-
       // Game Update
       double delta_time;
       this->timer.reset();
@@ -53,8 +52,12 @@ void Application::run() {
          this->update(delta_time);
       }
 
+      delta_time = 0.01;
+
+      //actos
+      this->actors(delta_time);
       //Physics
-      this->physics();
+      this->physics(delta_time);
 
       // Render
       if (this->getType() == CLIENT) {
@@ -105,14 +108,14 @@ void Application::update(double delta_time) {
 
 }
 
-void Application::actors() {
+void Application::actors(double delta_time) {
    assert(this->actor_engine != nullptr);
-   this->actor_engine->execute();
+   this->actor_engine->execute(delta_time);
 }
 
-void Application::physics() {
+void Application::physics(double delta_time) {
    assert(this->physics_engine != nullptr);
-   this->physics_engine->execute();
+   this->physics_engine->execute(delta_time);
 }
 
 void Application::render() {

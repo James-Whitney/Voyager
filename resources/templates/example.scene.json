@@ -4,16 +4,21 @@
          "name": "ship",
          "components": [
             {
+               "type": "RENDER",
+               "uber": 0,
+               "shape": 0
+            },
+            {
                "type": "PHYSICS",
                "collisionShape": 
                {
                   "type": "box",
-                  "scale": [1, 1, 1]
+                  "scale": [0.5, 0.5, 0.5]
                },
                "mass": 1.0,
                "position": [0, 0, 0],
                "velocity": [0, 0, 0],
-               "damping": [0.15, 0.15],
+               "damping": [1.0, 1.0],
                "ship": true
             }
          ]
@@ -30,7 +35,7 @@
                   "height": 1.0
                },
                "mass": 1.0,
-               "position": [0, 1, 0],
+               "position": [0, 10, 0],
                "velocity": [0, 0, 0],
                "player": true
             }
@@ -49,11 +54,12 @@
                "collisionShape": 
                {
                   "type": "box",
-                  "scale": [1, 1, 1]
+                  "scale": [0.5, 0.5, 0.5]
                },
-               "mass": 1.0,
+               "mass": 5.0,
                "position": [5, 0, 0],
-               "velocity": [0, 0, 0]
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
             }
          ]
       },

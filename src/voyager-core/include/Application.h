@@ -73,8 +73,8 @@ private:
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update
    void render();                   // render the scene
-   void physics();                  // run the physics engine
-   void actors();                   // run the actors engine
+   void physics(double delta_time); // run the physics engine
+   void actors(double delta_time);  // run the actors engine
    void shutdown();                 // called once at the end
 
    bool shouldQuit();

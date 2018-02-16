@@ -15,13 +15,13 @@
 
 #include "ShipComponent.h"
 
-class PlayerComponent : public Component {
+class PlayerComponent : public ActorComponent {
 
 public:
 
    void setCamera(std::shared_ptr<Camera> camera) { this->camera = camera; }
    void setWindow(std::shared_ptr<WindowManager> window) { this->window = window; }
-   void setShip(std::shared_ptr<Ship> ship) { this->ship = ship; }
+   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
    void setPhysics(std::shared_ptr<PhysicsComponent> physicsComponent) { this->physicsComponent = physicsComponent; }
 
    glm::vec3 getPosition();
@@ -39,7 +39,7 @@ private:
 
    std::shared_ptr<WindowManager> window;
    std::shared_ptr<Camera> camera;
-   std::shared_ptr<Ship> ship;
+   std::shared_ptr<ShipComponent> ship;
 
    double prev_xPos = 0;
    double prev_yPos = 0;

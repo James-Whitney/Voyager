@@ -8,11 +8,11 @@
 
 #include "PhysicsComponent.h"
 
+#include <iostream>
+
 class PhysicsEngine : public Engine {
 
 public:
-
-   PhysicsEngine();
 
    void init();
    void initConfigs();
@@ -31,6 +31,9 @@ public:
    void addEntity();
 
    void updateEntityTransforms();
+
+
+   void registerComponent(std::shared_ptr<Component> component);
 
 
 protected:

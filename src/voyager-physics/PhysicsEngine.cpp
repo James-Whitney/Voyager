@@ -1,10 +1,6 @@
 #include "include/PhysicsEngine.h"
 
-PhysicsEngine::PhysicsEngine() {
-
-}
-
-void PhysicsEngine::initConfigs() {
+void PhysicsEngine::init() {
    //the broadphase, i dont know what tis thing does
    broadphase = new btDbvtBroadphase();
    //thing that decides how things collides
@@ -13,28 +9,24 @@ void PhysicsEngine::initConfigs() {
    dispatcher = new btCollisionDispatcher(collisionConfiguration);
    //this thing does the collison checking, there is aparallel version somewhere
    solver = new btSequentialImpulseConstraintSolver();
-}
 
-void PhysicsEngine::initWorld() {
+   //World setup
    world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
    world->setGravity(btVector3(0, 0, 0));
-}
-
-void PhysicsEngine::init() {
-   initConfigs();
-   initWorld();
 }
 
 
 void PhysicsEngine::execute(double delta_time) {
    ///-----stepsimulation_start-----
-   //fprintf(stderr, "dt: %f\n", delta_time);
-   world->stepSimulation(0.1, 2);
+   //cout << "Num of Objects: " << world->getNumCollisionObjects() << endl;
+   //cout << "Time: " << delta_time << endl;
+   world->stepSimulation(delta_time, 2);
 
    for (int i = 0; i < components.size(); i++) {
+      //cout << "Updating Pcom: " << i << endl;
       components[i]->update(delta_time);
    }
-   //fprintf(stderr, "Num of Objects: %d\n", world->getNumCollisionObjects());
+   
    //print positions of all objects
    /*
    for (int j = world->getNumCollisionObjects() - 1; j >= 0; j--) {
@@ -51,10 +43,11 @@ void PhysicsEngine::execute(double delta_time) {
    }*/
 
 }
-void registerComponent(std::shared_ptr<Component> component) {
-   std::shared_ptr<PhysicsComponent> physicsComponent = static_pointer_cast<PhysicsComponent>(component);
-   collisionShapes.push_back(physicsComponent.get()->get_collisionShape());
-   world->addRigidBody(physicsComponent.get()->getBody());
+void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {
+   this->components.push_back(component);
+   std::shared_ptr<PhysicsComponent> physicsComponent = std::static_pointer_cast<PhysicsComponent>(component);
+   collisionShapes.push_back(physicsComponent->get_collisionShape());
+   world->addRigidBody(physicsComponent->getBody());
 }
 
 void PhysicsEngine::removeComponent(PhysicsComponent* component) {

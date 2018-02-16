@@ -1,4 +1,9 @@
 #include "include/ShipComponent.h"
+#include <iostream>
+
+void ShipComponent::init() {
+   
+}
 
 void ShipComponent::update(double delta_time) {
    moveShip(delta_time);
@@ -8,10 +13,10 @@ void ShipComponent::moveShip(float delta_time) {
    float deltaPos = 0;
    float deltaAngle = 0;
 
-   const float turnSpeed = 1.0;
-   const float flightSpeed = 1.0;
+   const float turnSpeed = 5000.0;
+   const float flightSpeed = 50000.0;
 
-   physicsComponent->getBody()->applyDamping(0.5);
+   physicsComponent->getBody()->applyDamping(delta_time);
 
    // Move forward
    if (glfwGetKey(window->getHandle(), GLFW_KEY_UP ) == GLFW_PRESS) {
@@ -32,20 +37,22 @@ void ShipComponent::moveShip(float delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_RIGHT ) == GLFW_PRESS) {
       deltaAngle -= turnSpeed * delta_time;
    }
-   btQuaternion btQuad = transform->getRotation();
-      btScalar yaw = btQuad.getAngle();
+   btQuaternion btQuad = entity->getTransform()->getRotation();
+   btScalar yaw = btQuad.getAngle();
+   cout << "Yaw: " << yaw << endl;
    //apply force for forward/backward movement
-   if (deltaPos != 0) {
-      
-      btVector3 currDir = btVector3( sin(yaw), 0, cos(yaw)) * flightSpeed * deltaPos;
+   if (deltaPos != 0.0) {
+      btVector3 currDir = btVector3(1.0, 0, 0);
+      currDir = currDir.rotate(btVector3(0, 1.0, 0), yaw) * deltaPos;
       physicsComponent->getBody()->applyCentralForce(currDir);
       
    }
    //apply torque for turning
-   if (deltaAngle != 0) {
+   if (deltaAngle != 0.0) {
       physicsComponent->getBody()->applyTorque(btVector3(0,deltaAngle,0));
    }
-   printf("Angle: %f\n", yaw);   
+   //physicsComponent->getBody()->applyTorque(btVector3(0,1,0));
+   //cout << "DeltaPos: " << deltaPos << " DeltaAngle: " << deltaAngle << " Yaw: " << yaw << endl; 
 
    
    //fprintf(stderr, "Ship_Angle: %f\n", yaw);

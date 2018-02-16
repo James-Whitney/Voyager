@@ -1,8 +1,5 @@
 #include "include/ApplicationMaker.h"
 
-#include <voyager-physics/include/PhysicsEngine.h>
-#include <voyager-render/include/RenderEngine.h>
-
 using namespace std;
 
 shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
@@ -21,12 +18,11 @@ shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
 
    // physics engine
    shared_ptr<PhysicsEngine> physics = make_shared<PhysicsEngine>();
+   physics->init();
    app->setPhysicsEngine(static_pointer_cast<Engine>(physics));
 
    //actor engine
-   shared_ptr<ActorEngine> actors = make_shared<ActorsEngine>();
-   //actors->setCamera(camera);
-   actors->setWindow(app->getWindowManager());
+   shared_ptr<ActorEngine> actors = make_shared<ActorEngine>();
    app->setActorEngine(static_pointer_cast<Engine>(actors));
 
    // done

@@ -6,9 +6,11 @@
 #include <voyager-core/include/WindowManager.h>
 #include <bullet/src/btBulletDynamicsCommon.h>
 
+#include "ActorComponent.h"
+
 #include <voyager-physics/include/PhysicsComponent.h>
 
-class ShipComponent : public Component {
+class ShipComponent : public ActorComponent {
 
 public:
 

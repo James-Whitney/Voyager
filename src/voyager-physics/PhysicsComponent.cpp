@@ -1,11 +1,12 @@
 #include "include/PhysicsComponent.h"
-
+#include <iostream>
 
 void PhysicsComponent::init() {
 
 }
 
 void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollisionShape *collisionShape, btScalar mass, btVector3 position, btVector3 velocity) {
+
    this->entity = entity;
    //create a dynamic rigidbody
    //btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
@@ -23,18 +24,23 @@ void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollision
       collisionShape->calculateLocalInertia(mass, velocity);
    
    transform->setOrigin(position);
+   
    //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
    btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
+   
    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, collisionShape, velocity);
+   
    this->body = new btRigidBody(rbInfo);
+   
    entity->setTransform(transform);
+   
    //this->body->applyGravity();
    this->body->setSleepingThresholds(btScalar(0.001), btScalar(0.001));
+   
 }
 
 void PhysicsComponent::update(double delta_time) {
    btTransform trans;
    body->getMotionState()->getWorldTransform(trans);
-   std::shared_ptr<btTransform> shared_trans= std::make_shared<btTransform>(trans);
-   entity->setTransform(shared_trans);
+   entity->setTransform(std::make_shared<btTransform>(trans));
 }

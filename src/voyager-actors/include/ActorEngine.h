@@ -10,8 +10,6 @@
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
-#include "ActorComponent.h"
-
 class ActorEngine : public Engine {
 
 public:

@@ -1,5 +1,7 @@
 #include "include/PlayerComponent.h"
 
+#include <iostream>
+
 #define PI 3.1415926
 
 void PlayerComponent::init() {
@@ -7,11 +9,12 @@ void PlayerComponent::init() {
 }
 
 glm::vec3 PlayerComponent::getPosition() {
-   return bulletToGlm(transform->getOrigin());
+   return bulletToGlm(entity->getTransform()->getOrigin());
 }
 
 
 void PlayerComponent::update(double delta_time) {
+   //cout << "Player Update" << endl;
    positionUpdate(delta_time);
    cameraUpdate();
 }
@@ -43,9 +46,9 @@ void PlayerComponent::cameraUpdate() {
 
    camera->move(delta_pitch, delta_yaw);// + deltaShipAngle);
    
-   camera->setPosition(glm::vec3(0, cameraHeight, 0));// + getPosition());
-   glm::vec3 test = camera->getLookAt();
-   //printf(stderr, "getLookAt: %f, %f, %f\n", test.x, test.y, test.z);
+   glm::vec3 playerLoc = bulletToGlm(this->getEntity()->getTransform()->getOrigin());
+   camera->setPosition(playerLoc + glm::vec3(0, cameraHeight, 0));
+
    return;
 }
 

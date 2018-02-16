@@ -10,6 +10,8 @@
 
 #include <voyager-core/include/Entity.h>
 
+using namespace std;
+
 class PhysicsComponent : public Component {
 
 public:
@@ -30,7 +32,6 @@ private:
    //initialized variables, dont change.
 
    btCollisionShape        *collisionShape;
-   btDefaultMotionState    *myMotionState;
    btRigidBody             *body;
 };
 
