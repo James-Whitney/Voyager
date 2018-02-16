@@ -13,6 +13,7 @@ Hud::Hud(GLFWwindow* window, std::string resourcedir) {
    Hud::open();
    startScreen = true;
    glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
+   this->buf[0] = 0;
 }
 // Creates new frame
 void Hud::start() {

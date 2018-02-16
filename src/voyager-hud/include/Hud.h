@@ -4,13 +4,14 @@
 #define VOYAGER_HUD_H_INCLUDED
 
 #include <voyager-utils/include/Texture.h>
+#include <voyager-core/include/WindowManager.h>
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw_gl3.h>
 #include <GLFW/glfw3.h>
 
-#include <rapidjson/rapidjson.h>
-#include <rapidjson/document.h>
+#include <rapidjson/include/rapidjson/rapidjson.h>
+#include <rapidjson/include/rapidjson/document.h>
 
 #include <string>
 #include <vector>
@@ -42,7 +43,7 @@ public:
    int compassIdx;
 
    bool startScreen;
-   
+
    char buf[1024];
 
    // Sets the window to work in and establishes the frame.
@@ -64,6 +65,8 @@ public:
 private:
    // Loads resources/hud.json into doc
    void open();
+
+   std::shared_ptr<GLFWwindow> window;
 
 };
 
