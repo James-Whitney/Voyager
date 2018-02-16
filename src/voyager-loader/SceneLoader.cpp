@@ -209,6 +209,7 @@ shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> enti
 shared_ptr<Component> SceneLoader::parse_shipComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
+   physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    shipComponent->setPhysics(physicsComponent);
    return static_pointer_cast<Component>(shipComponent);
 }

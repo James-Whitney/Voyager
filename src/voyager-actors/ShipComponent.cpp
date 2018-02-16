@@ -1,7 +1,7 @@
 #include "include/ShipComponent.h"
 #include <iostream>
 
-#define PI 3.141592684
+#define PI 3.14159
 
 void ShipComponent::init() {
 
@@ -13,10 +13,12 @@ void ShipComponent::update(double delta_time) {
 
 void ShipComponent::moveShip(float delta_time) {
    float deltaPos = 0;
+   float deltaHeight = 0;
    float deltaAngle = 0;
 
-   const float turnSpeed = 50000.0;
+   const float turnSpeed = 100000.0;
    const float flightSpeed = 50000.0;
+   const float riseSpeed = 50000.0;
 
    physicsComponent->getBody()->applyDamping(delta_time);
 
@@ -30,27 +32,45 @@ void ShipComponent::moveShip(float delta_time) {
       deltaPos -= flightSpeed * delta_time;
    }
 
-   // Move forward
+   // Move left
    if (glfwGetKey(window->getHandle(), GLFW_KEY_LEFT ) == GLFW_PRESS) {
       deltaAngle += turnSpeed * delta_time;
 
    }
-   // Move backward
+   // Move right
    if (glfwGetKey(window->getHandle(), GLFW_KEY_RIGHT ) == GLFW_PRESS) {
       deltaAngle -= turnSpeed * delta_time;
    }
-   btQuaternion btQuad = entity->getTransform()->getRotation();
-   btScalar yaw = btQuad.angleShortestPath(btQuaternion(btVector3(0.0, 1.0, 0.0), 0.0));
 
-   //btScalar yaw = btQuad.getAngle();
-   cout << "Yaw: " << yaw << endl;
+   // move up
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_R ) == GLFW_PRESS) {
+      deltaHeight += riseSpeed * delta_time;
+   }
+
+   // move down
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_F ) == GLFW_PRESS) {
+      deltaHeight -= riseSpeed * delta_time;
+   }
+
+
+   btScalar yaw, pitch, roll;
+   entity->getTransform()->getBasis().getEulerYPR(yaw, pitch, roll);
+   if (yaw != 0.0) {
+      pitch *= -1;
+      deltaPos *= -1;
+   }
 
    //apply force for forward/backward movement
    if (deltaPos != 0.0) {
       btVector3 currDir = btVector3(1.0, 0.0, 0);
-      currDir = currDir.rotate(btVector3(0, 1.0, 0), yaw) * deltaPos;
+      currDir = currDir.rotate(btVector3(0, 1.0, 0), pitch) * deltaPos;
       physicsComponent->getBody()->applyCentralForce(currDir);
 
+   }
+
+   if (deltaHeight != 0.0) {
+      btVector3 moveHeight = btVector3(0.0, 1.0, 0.0) * deltaHeight;
+      physicsComponent->getBody()->applyCentralForce(moveHeight);
    }
    //apply torque for turning
    if (deltaAngle != 0.0) {
