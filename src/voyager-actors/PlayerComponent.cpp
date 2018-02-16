@@ -57,6 +57,9 @@ void PlayerComponent::positionUpdate(float delta_time) {
 
    const float speed = 0.1;
 
+   //physicsComponent->getBody()->setGravity(btVector3(0.0, -100, 0.0));
+   //physicsComponent->getBody()->applyGravity();
+
    glm::vec3 lookDir = camera->getLookAt(false);
    lookDir = glm::vec3(lookDir.x, 0, lookDir.z);
    // Move forward

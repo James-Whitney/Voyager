@@ -5,15 +5,15 @@
 using namespace std;
 
 void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
-   shared_ptr<Renderable> terrainRenderable = static_pointer_cast<Renderable>(terrian->componentAt(0));
+   shared_ptr<Renderable> terrainRenderable = static_pointer_cast<Renderable>(terrain->componentAt(0));
    shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getShape());
 
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
    
    int mapWidth = terrainShape->getMapWidth();
    int mapLength = terrainShape->getMapLength();
-   void* heightData = terrainShape->getHeightData();
-   btScalar heightScale = terrainShape->getScale();
+   vector<unsigned char> heightData = terrainShape->getHeightData();
+   btScalar heightScale = terrainShape->getHeightScale();
    btScalar minHeight = terrainShape->getMinHeight();
    btScalar maxHeight = terrainShape->getMaxHeight();
    btScalar vertexScale = terrainShape->getVertexSpacing();
@@ -22,9 +22,11 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
                                     terrain->getTransform()->getOrigin(),
                                     terrain->getTransform()->getRotation(),
                                     mapWidth,
-                                    mapLength;
+                                    mapLength,
                                     heightData,
                                     heightScale,
+                                    minHeight,
+                                    maxHeight,
                                     vertexScale);
 
    app->getPhysicsEngine()->registerComponent(physicsComponent);

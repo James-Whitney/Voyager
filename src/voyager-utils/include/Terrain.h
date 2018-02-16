@@ -14,6 +14,14 @@ public:
    
    void createShape(std::string heightmap_path, float max_height, float vertex_spacing);
 
+   std::vector<unsigned char> getHeightData();
+   btScalar getHeightScale();
+   btScalar getVertexSpacing();
+   btScalar getMinHeight();
+   btScalar getMaxHeight();
+   int getMapWidth();
+   int getMapLength();
+
 private:
 
    struct vertex {
@@ -39,14 +47,6 @@ private:
    void buildElementBuffer();
    void buildPositionBuffer();
    void buildNormalBuffer();
-
-   void* getHeightData();
-   btScalar getHeightScale();
-   btScalar getVertexSpacing();
-   btScalar getMinHeight();
-   btScalar getMaxHeight();
-   int getMapWidth();
-   int getMapHeight();
 
    float max_height = 0.0f;
    float min_height = 0.0f;

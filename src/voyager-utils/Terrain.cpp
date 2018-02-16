@@ -148,20 +148,21 @@ void Terrain::buildNormalBuffer() {
    }
 }
 
-void* Terrain::getHeightData() {
-   unsigned char buffer[this->heightmap->getPixels().size() * 3];
+std::vector<unsigned char> Terrain::getHeightData() {
 
-   int i = 0;
+   //std::shared_ptr<(unsigned char)[]> buffer();
+   std::vector<unsigned char> buffer;
+
+   //std::shared_ptr<unsigned char> buffer(new unsigned char[this->heightmap->getPixels().size() * 3]);
+
    for (int z = 0; z < this->heightmap->height; z++) {
       for (int x = 0; x < this->heightmap->width; x++) {
          // Get heightmap pixel
          BitMap::pixel p = this->heightmap->getPixel(x, z);
 
-         buffer[i] = p.r;
-         buffer[i + 1] = p.g;
-         buffer[i + 2] = p.b;
-
-         i += 3;
+         buffer.push_back(p.r);
+         buffer.push_back(p.g);
+         buffer.push_back(p.b);
       }
    }
 
@@ -184,6 +185,10 @@ int Terrain::getMapWidth() {
    return this->heightmap->width;
 }
 
-int Terrain::getMapHeight() {
+int Terrain::getMapLength() {
    return this->heightmap->height;
+}
+
+btScalar Terrain::getVertexSpacing() {
+   return this->vertex_spacing;
 }
