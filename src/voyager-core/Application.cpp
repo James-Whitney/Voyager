@@ -4,7 +4,7 @@
 
 #include <voyager-render/include/Renderable.h>
 
-#define _APPLICATION_LOG_LIFECYCLE 1 // set to 1 to log lifecycle events
+#define _APPLICATION_LOG_LIFECYCLE 0 // set to 1 to log lifecycle events
 
 using namespace std;
 

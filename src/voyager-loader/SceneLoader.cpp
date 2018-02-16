@@ -5,7 +5,7 @@
 
 #include <voyager-render/include/Renderable.h>
 
-#define _SCENELOADER_LOG 0 // set to 1 to log as the scene is loading
+#define _SCENELOADER_LOG 1 // set to 1 to log as the scene is loading
 
 using namespace glm;
 using namespace rapidjson;
@@ -23,6 +23,10 @@ shared_ptr<Scene> SceneLoader::load(string path) {
    log("-<Scene>-------[ " + path + " ]---------------");
    Document doc = loadDocument(path);
    shared_ptr<Scene> scene = make_shared<Scene>();
+
+   if (doc.HasMember("terrain")) {
+      this->parse_terrain(scene, doc["terrain"]);
+   }
 
    if (doc.HasMember("shapes") && doc["shapes"].IsArray()) {
       this->parse_shapes(scene, doc["shapes"]);
@@ -42,6 +46,18 @@ shared_ptr<Scene> SceneLoader::load(string path) {
 
 void SceneLoader::store(shared_ptr<Scene> thing, string path) {
    throw "not implemented";
+}
+
+void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
+   cout << this->resource_dir + terrain["heightmap"].GetString() << endl;
+   cout << terrain["height"].GetFloat() << endl;
+   cout << terrain["spacing"].GetFloat() << endl;
+   shared_ptr<Terrain> terrain_shape = make_shared<Terrain>();
+
+   string heightmap_path = this->resource_dir + terrain["heightmap"].GetString();
+   float max_height = terrain["height"].GetFloat();
+   float vertex_spacing = terrain["spacing"].GetFloat();
+   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
 }
 
 void SceneLoader::parse_shapes(shared_ptr<Scene> scene, Value& shapes) {

@@ -1,4 +1,10 @@
 {
+   "terrain": {
+      "heightmap": "/example.heightmap.bmp",
+      "height": 2.0,
+      "spacing": 0.05
+   },
+
    "entities": [
 
       {
