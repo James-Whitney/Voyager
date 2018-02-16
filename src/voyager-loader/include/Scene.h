@@ -5,8 +5,21 @@
 #include <vector>
 
 #include <voyager-core/include/All.h>
+
 #include <voyager-render/include/Uber.h>
+#include <voyager-render/include/Renderable.h>
+#include <voyager-render/include/RenderEngine.h>
+
 #include <voyager-utils/include/Shape.h>
+
+#include <voyager-physics/include/PhysicsComponent.h>
+#include <voyager-actors/include/PlayerComponent.h>
+#include <voyager-actors/include/ShipComponent.h>
+
+
+#include <iostream>
+
+
 
 class Scene {
 

@@ -1,8 +1,6 @@
 #include "include/Scene.h"
 
-#include <iostream>
 
-#include <voyager-render/include/Renderable.h>
 
 using namespace std;
 
@@ -19,8 +17,25 @@ void Scene::apply(shared_ptr<Application> app) {
       if (dynamic_pointer_cast<Renderable>(component)) {
          app->getRenderEngine()->registerComponent(component);
       }
-
+      else if (dynamic_pointer_cast<PhysicsComponent>(component)) {
+         app->getPhysicsEngine()->registerComponent(component);
+      }
+      else if (dynamic_pointer_cast<ActorComponent>(component)) {
+         app->getActorEngine()->registerComponent(component);
+      }
    }
+
+   //init ship
+   shared_ptr<Entity> ship = this->entities.at(0);
+   shared_ptr<ShipComponent> shipComponent = static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
+   shipComponent->setWindow(app->getWindowManager());
+
+   //init player
+   shared_ptr<Entity> player = this->entities.at(1);
+   shared_ptr<PlayerComponent> playerComponent = static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
+   playerComponent->setWindow(app->getWindowManager());
+   playerComponent->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
+   playerComponent->setShip(shipComponent);
 
 }
 
