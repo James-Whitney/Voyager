@@ -4,7 +4,7 @@
 
 #include <voyager-render/include/Renderable.h>
 
-#define _APPLICATION_LOG_LIFECYCLE 1 // set to 1 to log lifecycle events
+#define _APPLICATION_LOG_LIFECYCLE 0 // set to 1 to log lifecycle events
 
 using namespace std;
 
@@ -22,10 +22,19 @@ void Application::keyCallback(GLFWwindow *window, int key, int scancode, int act
    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
       glfwSetWindowShouldClose(window, GL_TRUE);
    }
+   if (static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->inputScreen()) {
+      static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->guiKeyCallback(window, key, scancode, action, mods);
+   } else {
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+   }
 }
 
 void Application::mouseCallback(GLFWwindow *window, int button, int action, int mods) {
-
+   if (static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->inputScreen()) {
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+   } else {
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+   }
 }
 
 void Application::cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {
@@ -43,16 +52,21 @@ void Application::resizeCallback(GLFWwindow *window, int in_width, int in_height
 void Application::run() {
 
    this->init();
-
    while (!this->shouldQuit()) {
       log_life("--------------------==[ LOOP ]==--------------------");
-
       // Game Update
       double delta_time;
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
          this->update(delta_time);
       }
+
+      delta_time = 0.01;
+
+      //actos
+      this->actors(delta_time);
+      //Physics
+      this->physics(delta_time);
 
       // Render
       if (this->getType() == CLIENT) {
@@ -101,6 +115,16 @@ void Application::update(double delta_time) {
       e.second->update(delta_time);
    }
 
+}
+
+void Application::actors(double delta_time) {
+   assert(this->actor_engine != nullptr);
+   this->actor_engine->execute(delta_time);
+}
+
+void Application::physics(double delta_time) {
+   assert(this->physics_engine != nullptr);
+   this->physics_engine->execute(delta_time);
 }
 
 void Application::render() {

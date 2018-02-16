@@ -1,12 +1,62 @@
 {
-   "entities": [
+   "terrain": {
+      "heightmap": "/example.heightmap.bmp",
+      "height": 10.0,
+      "spacing": 1.0
+   },
 
+   "entities": [
       {
-         "name": "first box",
+         "name": "ship",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "shape": 2
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [5.0, 0.125, 2.5]
+               },
+               "mass": 1.0,
+               "position": [0, 0, 0],
+               "axis": [0, 1, 0],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0],
+               "ship": true
+            }
+         ]
+      },
+      {
+         "name": "player",
+         "components": [
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "capsule",
+                  "radius": 1.0,
+                  "height": 1.0
+               },
+               "mass": 1.0,
+               "position": [0, 10, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "player": true
+            }
+         ]
+      },
+      {
+         "name": "terrain",
          "transform": {
-            "scale": [1, 1, 1],
-            "position": [-2, 0, 10],
-            "rotation": [0, 0, 0]
+            "position": [-200, -10, -200],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
          },
          "components": [
             {
@@ -16,19 +66,43 @@
             }
          ]
       },
-
       {
-         "name": "second box",
-         "transform": {
-            "scale": [1, 1, 1],
-            "position": [2, 0, 10],
-            "rotation": [0, 0, 0]
-         },
+         "name": "first box",
          "components": [
             {
                "type": "RENDER",
                "uber": 1,
-               "shape": 0
+               "shape": 1
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [5, 0, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
+      },
+
+      {
+         "name": "second box",
+         "transform": {
+            "position": [-2, 0, 10],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "shape": 1
             }
          ]
       }
@@ -38,10 +112,21 @@
    "shapes": [
       {
          "path": "/cube.obj"
+      },
+      {
+         "path": "/ship.obj"
       }
    ],
 
    "ubers": [
+      {
+         "type": "COOK_TORRANCE",
+         "opacity": 1,
+         "ambient": [0.13, 0.13, 0.14],
+         "roughness": 0.3,
+         "f0": 0.8,
+         "k": 0.3
+      },
       {
          "type": "SIMPLE",
          "ambient": [0.02, 0.04, 0.2],
