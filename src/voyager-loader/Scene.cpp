@@ -4,6 +4,35 @@
 
 using namespace std;
 
+void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
+   shared_ptr<Renderable> terrainRenderable = static_pointer_cast<Renderable>(terrian->componentAt(0));
+   shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getShape());
+
+   shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
+   
+   int mapWidth = terrainShape->getMapWidth();
+   int mapLength = terrainShape->getMapLength();
+   void* heightData = terrainShape->getHeightData();
+   btScalar heightScale = terrainShape->getScale();
+   btScalar minHeight = terrainShape->getMinHeight();
+   btScalar maxHeight = terrainShape->getMaxHeight();
+   btScalar vertexScale = terrainShape->getVertexSpacing();
+
+   physicsComponent->initHeightMap( terrain,
+                                    terrain->getTransform()->getOrigin(),
+                                    terrain->getTransform()->getRotation(),
+                                    mapWidth,
+                                    mapLength;
+                                    heightData,
+                                    heightScale,
+                                    vertexScale);
+
+   app->getPhysicsEngine()->registerComponent(physicsComponent);
+   
+   
+
+}
+
 void Scene::apply(shared_ptr<Application> app) {
 
    for (int i = 0; i < this->entities.size(); ++i) {
@@ -24,14 +53,19 @@ void Scene::apply(shared_ptr<Application> app) {
          app->getActorEngine()->registerComponent(component);
       }
    }
+   //init HeightMap
+   shared_ptr<Entity> terrain = this->entities.at(0);
+   initTerrain(app, terrain);
+
+
 
    //init ship
-   shared_ptr<Entity> ship = this->entities.at(0);
+   shared_ptr<Entity> ship = this->entities.at(1);
    shared_ptr<ShipComponent> shipComponent = static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
    shipComponent->setWindow(app->getWindowManager());
 
    //init player
-   shared_ptr<Entity> player = this->entities.at(1);
+   shared_ptr<Entity> player = this->entities.at(2);
    shared_ptr<PlayerComponent> playerComponent = static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
    playerComponent->setWindow(app->getWindowManager());
    playerComponent->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());

@@ -7,6 +7,21 @@
 
    "entities": [
       {
+         "name": "terrain",
+         "transform": {
+            "position": [-200, -10, -200],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 0,
+               "shape": 0
+            }
+         ]
+      },
+      {
          "name": "ship",
          "components": [
             {
@@ -48,21 +63,6 @@
                "rotation": 0.0,
                "velocity": [0, 0, 0],
                "player": true
-            }
-         ]
-      },
-      {
-         "name": "terrain",
-         "transform": {
-            "position": [-200, -10, -200],
-            "axis": [0, 0, 1],
-            "rotation": 0.0
-         },
-         "components": [
-            {
-               "type": "RENDER",
-               "uber": 0,
-               "shape": 0
             }
          ]
       },
