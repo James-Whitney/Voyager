@@ -11,6 +11,8 @@
 
 #include <voyager-utils/include/GLSL.h>
 #include <voyager-utils/include/Time.h>
+//#include <voyager-utils/include/IdMap.h>
+#include <voyager-render/include/RenderEngine.h>
 
 #include "ApplicationType.h"
 #include "Component.h"
@@ -42,6 +44,9 @@ public:
    std::shared_ptr<Engine> getPhysicsEngine() { return this->physics_engine; }
    void setPhysicsEngine(std::shared_ptr<Engine> physics_engine) { this->physics_engine = physics_engine; }
 
+   std::shared_ptr<Engine> getActorEngine() { return this->actor_engine; }
+   void setActorEngine(std::shared_ptr<Engine> actor_engine) { this->actor_engine = actor_engine; }
+
    std::unordered_map<long, std::shared_ptr<Entity> > getThings() { return this->things; }
 
    // event callbacks
@@ -65,10 +70,13 @@ private:
 
    std::shared_ptr<Engine> render_engine;
    std::shared_ptr<Engine> physics_engine;
+   std::shared_ptr<Engine> actor_engine;
 
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update
    void render();                   // render the scene
+   void physics(double delta_time); // run the physics engine
+   void actors(double delta_time);  // run the actors engine
    void shutdown();                 // called once at the end
 
    bool shouldQuit();
