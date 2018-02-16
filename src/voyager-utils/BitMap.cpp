@@ -10,7 +10,6 @@ void BitMap::load(std::string path) {
    }
 
    std::streampos file_size = input_file.tellg();
-   std::cout << "size: " << file_size << std::endl;
    
    // Read the file header
    BitMap::fileHeader file_header;

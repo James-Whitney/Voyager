@@ -73,6 +73,13 @@ void main() {
       color = vec4(1, 0, 0, 1); // NOT IMPLEMENTED
       break;
 
+   /* --=[ Normal Shading ]=------------------------------------------------- */
+   case 3:
+      normal = normalize(fragNor);
+      vec3 ncolor = 0.5 * normal + 0.5;
+      color = vec4(ncolor, 1.0);
+      break;
+
    /* --=[ Default Shading ]=------------------------------------------------ */
    default:
       vec3 Dcolor, Scolor;

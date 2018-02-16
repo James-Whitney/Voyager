@@ -5,7 +5,7 @@
 
 #include <voyager-render/include/Renderable.h>
 
-#define _SCENELOADER_LOG 1 // set to 1 to log as the scene is loading
+#define _SCENELOADER_LOG 0 // set to 1 to log as the scene is loading
 
 using namespace glm;
 using namespace rapidjson;
@@ -49,14 +49,11 @@ void SceneLoader::store(shared_ptr<Scene> thing, string path) {
 }
 
 void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
-   cout << this->resource_dir + terrain["heightmap"].GetString() << endl;
-   cout << terrain["height"].GetFloat() << endl;
-   cout << terrain["spacing"].GetFloat() << endl;
    shared_ptr<Terrain> terrain_shape = make_shared<Terrain>();
-
    string heightmap_path = this->resource_dir + terrain["heightmap"].GetString();
    float max_height = terrain["height"].GetFloat();
    float vertex_spacing = terrain["spacing"].GetFloat();
+
    terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
    terrain_shape->measure();
    scene->shapes.push_back(terrain_shape);
@@ -111,6 +108,8 @@ void SceneLoader::parse_ubers(shared_ptr<Scene> scene, Value& ubers) {
             ubers[i]["f0"].GetFloat(),
             ubers[i]["k"].GetFloat()
          );
+      } else if (type == "NORMAL") {
+         uber = make_shared<NormalUber>();
       } else {
          cerr << "Unknown shape type: " << type << endl;
          continue;
