@@ -24,6 +24,10 @@ shared_ptr<Scene> SceneLoader::load(string path) {
    Document doc = loadDocument(path);
    shared_ptr<Scene> scene = make_shared<Scene>();
 
+   if (doc.HasMember("terrain")) {
+      this->parse_terrain(scene, doc["terrain"]);
+   }
+
    if (doc.HasMember("shapes") && doc["shapes"].IsArray()) {
       this->parse_shapes(scene, doc["shapes"]);
    }
@@ -42,6 +46,17 @@ shared_ptr<Scene> SceneLoader::load(string path) {
 
 void SceneLoader::store(shared_ptr<Scene> thing, string path) {
    throw "not implemented";
+}
+
+void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
+   shared_ptr<Terrain> terrain_shape = make_shared<Terrain>();
+   string heightmap_path = this->resource_dir + terrain["heightmap"].GetString();
+   float max_height = terrain["height"].GetFloat();
+   float vertex_spacing = terrain["spacing"].GetFloat();
+
+   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
+   terrain_shape->measure();
+   scene->shapes.push_back(terrain_shape);
 }
 
 void SceneLoader::parse_shapes(shared_ptr<Scene> scene, Value& shapes) {
@@ -93,6 +108,8 @@ void SceneLoader::parse_ubers(shared_ptr<Scene> scene, Value& ubers) {
             ubers[i]["f0"].GetFloat(),
             ubers[i]["k"].GetFloat()
          );
+      } else if (type == "NORMAL") {
+         uber = make_shared<NormalUber>();
       } else {
          cerr << "Unknown shape type: " << type << endl;
          continue;

@@ -19,7 +19,6 @@ void SimpleUber::setUniforms(shared_ptr<Program> prog) {
 }
 
 BlinnPhongUber::BlinnPhongUber() {
-
 }
 
 void BlinnPhongUber::setUniforms(shared_ptr<Program> prog) {
@@ -47,4 +46,10 @@ void CookTorranceUber::setUniforms(shared_ptr<Program> prog) {
    glUniform1f(prog->getUniform("roughnessValue"), this->roughness);
    glUniform1f(prog->getUniform("F0"), this->f0);
    glUniform1f(prog->getUniform("K"), this->k);
+}
+
+NormalUber::NormalUber() {}
+
+void NormalUber::setUniforms(shared_ptr<Program> prog) {
+   glUniform1ui(prog->getUniform("uberMode"), this->mode);
 }

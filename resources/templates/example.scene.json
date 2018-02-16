@@ -1,12 +1,18 @@
 {
+   "terrain": {
+      "heightmap": "/example.heightmap.bmp",
+      "height": 2.0,
+      "spacing": 0.05
+   },
+
    "entities": [
       {
          "name": "ship",
          "components": [
             {
                "type": "RENDER",
-               "uber": 0,
-               "shape": 0
+               "uber": 1,
+               "shape": 1
             },
             {
                "type": "PHYSICS",
@@ -42,12 +48,27 @@
          ]
       },
       {
-         "name": "first box",
+         "name": "terrain",
+         "transform": {
+            "position": [-10, -3, 2],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
          "components": [
             {
                "type": "RENDER",
                "uber": 0,
                "shape": 0
+            }
+         ]
+      },
+      {
+         "name": "first box",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "shape": 1
             },
             {
                "type": "PHYSICS",
@@ -74,8 +95,8 @@
          "components": [
             {
                "type": "RENDER",
-               "uber": 1,
-               "shape": 0
+               "uber": 2,
+               "shape": 1
             }
          ]
       }
@@ -89,6 +110,14 @@
    ],
 
    "ubers": [
+      {
+         "type": "COOK_TORRANCE",
+         "opacity": 1,
+         "ambient": [0.13, 0.13, 0.14],
+         "roughness": 0.3,
+         "f0": 0.8,
+         "k": 0.3
+      },
       {
          "type": "SIMPLE",
          "ambient": [0.02, 0.04, 0.2],
