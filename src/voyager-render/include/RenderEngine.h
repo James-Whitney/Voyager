@@ -40,6 +40,8 @@ public:
       this->window = window;
    }
 
+   std::shared_ptr<Hud> getHud() { return this->hud; }
+
    virtual void init();
    virtual void execute(double delta_time = 0);
 
