@@ -5,6 +5,30 @@ void PhysicsComponent::init() {
 
 }
 
+void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<unsigned char> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace) {
+   this->entity = entity;
+
+   std::shared_ptr<btTransform> transform = entity->getTransform();
+
+   btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
+
+   this->collisionShape = new btHeightfieldTerrainShape(mapWidth,
+                                                         mapLength,
+                                                         (void *)(&heightfieldData[0]),
+                                                         heightScale,
+                                                         minHeight,
+                                                         maxHeight,
+                                                         1, PHY_UCHAR, false);
+   
+   collisionShape->setLocalScaling(btVector3(1.0, vertexSpace, 10.0));
+
+   btRigidBody::btRigidBodyConstructionInfo rbInfo(btScalar(0.0), myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
+
+   this->body = new btRigidBody(rbInfo);   
+                                          
+}
+
+
 void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollisionShape *collisionShape, btScalar mass, btVector3 position, btQuaternion rotation, btVector3 velocity) {
 
    this->entity = entity;
