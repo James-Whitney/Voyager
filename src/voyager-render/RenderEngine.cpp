@@ -78,7 +78,10 @@ void RenderEngine::execute(double delta_time) {
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
 
+   vec4 planes[6];
+   ExtractVFPlanes(&planes, P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
+      if ()
       this->render(static_pointer_cast<Renderable>(this->components.at(i)));
    }
 
