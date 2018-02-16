@@ -38,7 +38,6 @@ private:
    void buildElementBuffer();
    void buildPositionBuffer();
    void buildNormalBuffer();
-   void buildTextureBuffer();
 
 };
 

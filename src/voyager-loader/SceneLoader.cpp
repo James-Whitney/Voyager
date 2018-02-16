@@ -58,6 +58,8 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    float max_height = terrain["height"].GetFloat();
    float vertex_spacing = terrain["spacing"].GetFloat();
    terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
+   terrain_shape->measure();
+   scene->shapes.push_back(terrain_shape);
 }
 
 void SceneLoader::parse_shapes(shared_ptr<Scene> scene, Value& shapes) {

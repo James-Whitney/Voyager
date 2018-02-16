@@ -5,11 +5,11 @@ void Terrain::createShape(std::string heightmap_path, float max_height, float ve
    this->heightmap->load(heightmap_path);
    this->generateVerticies(max_height, vertex_spacing);
    this->generateFaces();
+   this->computeNormals();
 
    // Build the shape buffers
    this->buildPositionBuffer();
    this->buildNormalBuffer();
-   this->buildTextureBuffer();
    this->buildElementBuffer();
 }
 
@@ -140,21 +140,6 @@ void Terrain::buildNormalBuffer() {
          this->norBuf.push_back(v.normal.x);
          this->norBuf.push_back(v.normal.y);
          this->norBuf.push_back(v.normal.z);
-      }
-   }
-}
-
-void Terrain::buildTextureBuffer() {
-   // Clear existing texture buffer
-   this->texBuf.clear();
-
-   // Build the texture buffer
-   for (int z = 0; z < this->heightmap->height; z++) {
-      for (int x = 0; x < this->heightmap->width; x++) {
-         // TODO: Compute actual texture coordinates
-         this->texBuf.push_back(0.0f);
-         this->texBuf.push_back(0.0f);
-         this->texBuf.push_back(0.0f);
       }
    }
 }
