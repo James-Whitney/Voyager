@@ -6,7 +6,10 @@
 	path = ext/glfw
 	url = https://github.com/glfw/glfw.git
 	ignore = dirty
+[submodule "ext/bullet"]
+	path = ext/bullet
+	url = https://github.com/bulletphysics/bullet3.git
+   ignore = dirty
 [submodule "ext/rapidjson"]
 	path = ext/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
-	ignore = dirty
