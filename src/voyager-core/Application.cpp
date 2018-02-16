@@ -22,10 +22,19 @@ void Application::keyCallback(GLFWwindow *window, int key, int scancode, int act
    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
       glfwSetWindowShouldClose(window, GL_TRUE);
    }
+   if (static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->inputScreen()) {
+      static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->guiKeyCallback(window, key, scancode, action, mods);
+   } else {
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+   }
 }
 
 void Application::mouseCallback(GLFWwindow *window, int button, int action, int mods) {
-
+   if (static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->inputScreen()) {
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+   } else {
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+   }
 }
 
 void Application::cursorPosCallback(GLFWwindow *window, double xpos, double ypos) {

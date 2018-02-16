@@ -4,7 +4,7 @@
 #define PI 3.141592684
 
 void ShipComponent::init() {
-   
+
 }
 
 void ShipComponent::update(double delta_time) {
@@ -23,7 +23,7 @@ void ShipComponent::moveShip(float delta_time) {
    // Move forward
    if (glfwGetKey(window->getHandle(), GLFW_KEY_UP ) == GLFW_PRESS) {
       deltaPos += flightSpeed * delta_time;
-      
+
    }
    // Move backward
    if (glfwGetKey(window->getHandle(), GLFW_KEY_DOWN ) == GLFW_PRESS) {
@@ -33,7 +33,7 @@ void ShipComponent::moveShip(float delta_time) {
    // Move forward
    if (glfwGetKey(window->getHandle(), GLFW_KEY_LEFT ) == GLFW_PRESS) {
       deltaAngle += turnSpeed * delta_time;
-      
+
    }
    // Move backward
    if (glfwGetKey(window->getHandle(), GLFW_KEY_RIGHT ) == GLFW_PRESS) {
@@ -50,22 +50,22 @@ void ShipComponent::moveShip(float delta_time) {
       btVector3 currDir = btVector3(1.0, 0.0, 0);
       currDir = currDir.rotate(btVector3(0, 1.0, 0), yaw) * deltaPos;
       physicsComponent->getBody()->applyCentralForce(currDir);
-      
+
    }
    //apply torque for turning
    if (deltaAngle != 0.0) {
       physicsComponent->getBody()->applyTorque(btVector3(0,deltaAngle,0));
    }
    //physicsComponent->getBody()->applyTorque(btVector3(0,1,0));
-   //cout << "DeltaPos: " << deltaPos << " DeltaAngle: " << deltaAngle << " Yaw: " << yaw << endl; 
+   //cout << "DeltaPos: " << deltaPos << " DeltaAngle: " << deltaAngle << " Yaw: " << yaw << endl;
 
-   
+
    //fprintf(stderr, "Ship_Angle: %f\n", yaw);
    //fprintf(stderr, "getLinearSleepingThreshold : %f\n", physicsComponent->getBody()->getLinearSleepingThreshold());
    //fprintf(stderr, "getAngularSleepingThreshold: %f\n", physicsComponent->getBody()->getAngularSleepingThreshold());
 
 
-	
+
 /*
    btVector3 bullet_force = deltaPos * transform->getRotation();
    physicsComponent->getBody()->applyCentralForce(bullet_force);
