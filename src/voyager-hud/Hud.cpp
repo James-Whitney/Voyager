@@ -41,7 +41,7 @@ void Hud::open() {
 
 void Hud::startMenu() {
    Hud::start();
-   std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
+   //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
    ImGui::SetNextWindowPos(ImVec2(0.5*Hud::width, 0.5*Hud::height), 0, ImVec2(0.5f,0.5f));
    ImGui::SetNextWindowSize(ImVec2(0,0), 0);
    ImGui::SetNextWindowBgAlpha(0.0f);

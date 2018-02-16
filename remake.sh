@@ -5,5 +5,5 @@ if [ -d build ]; then
 fi
 mkdir build
 cd build
-cmake .. && make
+cmake .. && make -j4
 

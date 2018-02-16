@@ -3,4 +3,4 @@
 cd build
 make
 cd ..
-./build/bin/voyager-client
+./build/bin/voyager-client $1

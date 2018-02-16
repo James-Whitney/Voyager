@@ -39,8 +39,7 @@ void RenderEngine::init() {
       this->components.at(i)->init();
    }
 
-   // TODO: add hud back in
-   // this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -87,11 +86,13 @@ void RenderEngine::execute(double delta_time) {
    M->popMatrix();
    P->popMatrix();
 
+
    if (hud->startScreen) {
       hud->startMenu();
    } else {
       hud->run();
    }
+
    this->program->unbind();
 
    glfwSwapBuffers(this->window->getHandle());
