@@ -209,6 +209,7 @@ shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> enti
 shared_ptr<Component> SceneLoader::parse_shipComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
+   physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    shipComponent->setPhysics(physicsComponent);
    return static_pointer_cast<Component>(shipComponent);
 }
@@ -247,12 +248,19 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Enti
                                   pos[1].GetFloat(),
                                   pos[2].GetFloat());
 
+   Value& axis = component["axis"];
+   Value& rotation = component["rotation"];
+   btQuaternion btQuad = btQuaternion(btVector3(axis[0].GetFloat(),
+                                                axis[1].GetFloat(),
+                                                axis[2].GetFloat()),
+                                                rotation.GetFloat());       
+
    Value& vel = component["velocity"];
    btVector3 velocity = btVector3(vel[0].GetFloat(),
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
 
-   physicsComponent->initRigidBody(entity, collisionShape, mass, position, velocity);
+   physicsComponent->initRigidBody(entity, collisionShape, mass, position, btQuad, velocity);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;
 }

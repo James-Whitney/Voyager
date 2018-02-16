@@ -5,7 +5,7 @@ void PhysicsComponent::init() {
 
 }
 
-void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollisionShape *collisionShape, btScalar mass, btVector3 position, btVector3 velocity) {
+void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollisionShape *collisionShape, btScalar mass, btVector3 position, btQuaternion rotation, btVector3 velocity) {
 
    this->entity = entity;
    //create a dynamic rigidbody
@@ -24,6 +24,7 @@ void PhysicsComponent::initRigidBody(std::shared_ptr<Entity> entity, btCollision
       collisionShape->calculateLocalInertia(mass, velocity);
    
    transform->setOrigin(position);
+   transform->setRotation(rotation);
    
    //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
    btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
