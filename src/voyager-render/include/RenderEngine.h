@@ -17,6 +17,7 @@
 
 #include "Camera.h"
 #include "Renderable.h"
+#include "ViewFrustumCulling.h"
 
 class RenderEngine : public Engine {
 
