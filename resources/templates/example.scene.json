@@ -9,7 +9,7 @@
       {
          "name": "terrain",
          "transform": {
-            "position": [-200, -10, -200],
+            "position": [-50, -15, -50],
             "axis": [0, 0, 1],
             "rotation": 0.0
          },
