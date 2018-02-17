@@ -29,6 +29,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
                                     maxHeight,
                                     vertexScale);
 
+   terrain->add(physicsComponent);
    app->getPhysicsEngine()->registerComponent(physicsComponent);
    
    

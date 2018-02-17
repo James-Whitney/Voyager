@@ -8,21 +8,31 @@ void PhysicsComponent::init() {
 void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<unsigned char> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace) {
    this->entity = entity;
 
-   std::shared_ptr<btTransform> transform = entity->getTransform();
+   /*
+   std::shared_ptr<btTransform> transform = std::make_shared<btTransform>();
+   transform->setIdentity();
+   transform->setOrigin(entity->getTransform()->getOrigin());
+   transform->setRotation(entity->getTransform()->getRotation());
+   */
+  std::shared_ptr<btTransform> transform = entity->getTransform();
 
    btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
 
-   this->collisionShape = new btHeightfieldTerrainShape(mapWidth,
+   this->collisionShape = new btHeightfieldTerrainShape( mapWidth,
                                                          mapLength,
                                                          (void *)(&heightfieldData[0]),
                                                          heightScale,
                                                          minHeight,
                                                          maxHeight,
                                                          1, PHY_UCHAR, false);
-   
-   collisionShape->setLocalScaling(btVector3(1.0, vertexSpace, 10.0));
 
-   btRigidBody::btRigidBodyConstructionInfo rbInfo(btScalar(0.0), myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
+   //btHeightfieldTerrainShape *heightFieldShape = new btHeightfieldTerrainShape(mapWidth, mapLength, (void *)(&heightfieldData[0]), 1, -1024, 1016, 2, PHY_UCHAR, true);
+
+   //btVector3 localScale = btVector3(mapWidth / 127.0, mapLength / 127.0, 8);
+   btVector3 localScale = btVector3(0.25, 0.25, 0.25);
+   collisionShape->setLocalScaling(localScale);
+
+   btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
 
    this->body = new btRigidBody(rbInfo);   
                                           

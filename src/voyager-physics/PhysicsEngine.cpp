@@ -10,8 +10,12 @@ void PhysicsEngine::init() {
    //this thing does the collison checking, there is aparallel version somewhere
    solver = new btSequentialImpulseConstraintSolver();
 
+   btVector3 worldMin(-1000,-1000,-1000);
+	btVector3 worldMax(1000,1000,1000);
+	btAxisSweep3* overlappingPairCache = new btAxisSweep3(worldMin,worldMax);
+
    //World setup
-   world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+   world = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
    world->setGravity(btVector3(0, 0, 0));
 }
 
