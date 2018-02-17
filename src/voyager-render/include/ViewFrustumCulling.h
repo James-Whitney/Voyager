@@ -1,8 +1,11 @@
-vec4 Left, Right, Bottom, Top, Near, Far;
-vec4 planes[6];
+#include "Renderable.h"
+#include <voyager-utils/include/Shape.h>
+#include <glm/glm/gtc/type_ptr.hpp>
 
-void ExtractVFPlanes(mat4 P, mat4 V)
+void ExtractVFPlanes(mat4 *planes, mat4 P, mat4 V)
 {
+   vec4 Left, Right, Bottom, Top, Near, Far;
+
    /* composite matrix */
    mat4 comp = P * V;
    vec3 n; //use to pull out normal
@@ -59,7 +62,7 @@ float DistToPlane(float A, float B, float C, float D, vec3 point)
 }
 
 //returns 1 to CULL
-int ViewFrustCull(vec3 center, float radius)
+int ViewFrustCull(mat4 planes, vec3 center, float radius)
 {
    float dist;
 
@@ -72,4 +75,10 @@ int ViewFrustCull(vec3 center, float radius)
       }
    }
    return 0;
+}
+
+vec3 getCenterRenderable(std::shared_ptr<Renderable> renderable) {
+   glm::vec3 min = renderable->getShape()->min;
+   glm::vec3 max = renderable->getShape()->max;
+   return vec3((min.x+max.x)/2.0f,(min.y+max.y)/2.0f,(min.z+max.z)/2.0f)
 }

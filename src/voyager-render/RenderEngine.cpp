@@ -1,4 +1,5 @@
 #include "include/RenderEngine.h"
+#include "include/ViewFrustCulling.h"
 
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
@@ -78,7 +79,10 @@ void RenderEngine::execute(double delta_time) {
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
 
+   vec4 planes[6];
+   ExtractVFPlanes(&planes, P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
+      if (ViewFrustCull(planes, static_pointer_cast<Renderable>(this->components.at(i)->)
       this->render(static_pointer_cast<Renderable>(this->components.at(i)));
    }
 
