@@ -82,7 +82,7 @@ void RenderEngine::execute(double delta_time) {
    vec4 planes[6];
    ExtractVFPlanes(&planes, P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
-      if (ViewFrustCull(planes, static_pointer_cast<Renderable>(this->components.at(i)->)
+      if (ViewFrustCull(planes, getCenterRenderable(static_pointer_cast<Renderable>(this->components.at(i))))
       this->render(static_pointer_cast<Renderable>(this->components.at(i)));
    }
 

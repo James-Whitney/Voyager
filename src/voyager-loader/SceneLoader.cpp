@@ -24,6 +24,10 @@ shared_ptr<Scene> SceneLoader::load(string path) {
    Document doc = loadDocument(path);
    shared_ptr<Scene> scene = make_shared<Scene>();
 
+   if (doc.HasMember("terrain")) {
+      this->parse_terrain(scene, doc["terrain"]);
+   }
+
    if (doc.HasMember("shapes") && doc["shapes"].IsArray()) {
       this->parse_shapes(scene, doc["shapes"]);
    }
@@ -42,6 +46,17 @@ shared_ptr<Scene> SceneLoader::load(string path) {
 
 void SceneLoader::store(shared_ptr<Scene> thing, string path) {
    throw "not implemented";
+}
+
+void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
+   shared_ptr<Terrain> terrain_shape = make_shared<Terrain>();
+   string heightmap_path = this->resource_dir + terrain["heightmap"].GetString();
+   float max_height = terrain["height"].GetFloat();
+   float vertex_spacing = terrain["spacing"].GetFloat();
+
+   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
+   terrain_shape->measure();
+   scene->shapes.push_back(terrain_shape);
 }
 
 void SceneLoader::parse_shapes(shared_ptr<Scene> scene, Value& shapes) {
@@ -93,6 +108,8 @@ void SceneLoader::parse_ubers(shared_ptr<Scene> scene, Value& ubers) {
             ubers[i]["f0"].GetFloat(),
             ubers[i]["k"].GetFloat()
          );
+      } else if (type == "NORMAL") {
+         uber = make_shared<NormalUber>();
       } else {
          cerr << "Unknown shape type: " << type << endl;
          continue;
@@ -192,6 +209,7 @@ shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> enti
 shared_ptr<Component> SceneLoader::parse_shipComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
+   physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    shipComponent->setPhysics(physicsComponent);
    return static_pointer_cast<Component>(shipComponent);
 }
@@ -230,12 +248,19 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Enti
                                   pos[1].GetFloat(),
                                   pos[2].GetFloat());
 
+   Value& axis = component["axis"];
+   Value& rotation = component["rotation"];
+   btQuaternion btQuad = btQuaternion(btVector3(axis[0].GetFloat(),
+                                                axis[1].GetFloat(),
+                                                axis[2].GetFloat()),
+                                                rotation.GetFloat());       
+
    Value& vel = component["velocity"];
    btVector3 velocity = btVector3(vel[0].GetFloat(),
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
 
-   physicsComponent->initRigidBody(entity, collisionShape, mass, position, velocity);
+   physicsComponent->initRigidBody(entity, collisionShape, mass, position, btQuad, velocity);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;
 }

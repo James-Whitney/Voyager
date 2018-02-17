@@ -1,22 +1,30 @@
 {
+   "terrain": {
+      "heightmap": "/example.heightmap.bmp",
+      "height": 10.0,
+      "spacing": 1.0
+   },
+
    "entities": [
       {
          "name": "ship",
          "components": [
             {
                "type": "RENDER",
-               "uber": 0,
-               "shape": 0
+               "uber": 1,
+               "shape": 2
             },
             {
                "type": "PHYSICS",
                "collisionShape": 
                {
                   "type": "box",
-                  "scale": [0.5, 0.5, 0.5]
+                  "scale": [5.0, 0.125, 2.5]
                },
                "mass": 1.0,
                "position": [0, 0, 0],
+               "axis": [0, 1, 0],
+               "rotation": 0.0,
                "velocity": [0, 0, 0],
                "damping": [1.0, 1.0],
                "ship": true
@@ -36,8 +44,25 @@
                },
                "mass": 1.0,
                "position": [0, 10, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
                "velocity": [0, 0, 0],
                "player": true
+            }
+         ]
+      },
+      {
+         "name": "terrain",
+         "transform": {
+            "position": [-200, -10, -200],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 0,
+               "shape": 0
             }
          ]
       },
@@ -46,8 +71,8 @@
          "components": [
             {
                "type": "RENDER",
-               "uber": 0,
-               "shape": 0
+               "uber": 1,
+               "shape": 1
             },
             {
                "type": "PHYSICS",
@@ -58,6 +83,8 @@
                },
                "mass": 5.0,
                "position": [5, 0, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
                "velocity": [0, 0, 0],
                "damping": [0.1, 0.1]
             }
@@ -74,8 +101,8 @@
          "components": [
             {
                "type": "RENDER",
-               "uber": 1,
-               "shape": 0
+               "uber": 2,
+               "shape": 1
             }
          ]
       }
@@ -85,10 +112,21 @@
    "shapes": [
       {
          "path": "/cube.obj"
+      },
+      {
+         "path": "/ship.obj"
       }
    ],
 
    "ubers": [
+      {
+         "type": "COOK_TORRANCE",
+         "opacity": 1,
+         "ambient": [0.13, 0.13, 0.14],
+         "roughness": 0.3,
+         "f0": 0.8,
+         "k": 0.3
+      },
       {
          "type": "SIMPLE",
          "ambient": [0.02, 0.04, 0.2],

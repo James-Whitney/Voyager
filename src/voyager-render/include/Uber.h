@@ -12,6 +12,7 @@ enum UberMode {
    UBER_MODE_SIMPLE = 0, // simple shading
    UBER_MODE_COOK_TORRANCE = 1, // cook-torrance
    UBER_MODE_BLINN_PHONG = 2, // blinn-phong (NOT IMPLEMENTED)
+   UBER_MODE_NORMAL = 3, // normal shading
 };
 
 class Uber {
@@ -77,7 +78,19 @@ private:
 
 };
 
+class NormalUber : public Uber {
 
+public:
+
+   NormalUber();
+
+   UberMode mode = UBER_MODE_NORMAL;
+
+   virtual void setUniforms(std::shared_ptr<Program> prog);
+
+private:
+
+};
 
 
 #endif
