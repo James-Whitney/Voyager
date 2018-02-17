@@ -56,25 +56,23 @@ void Application::run() {
       log_life("--------------------==[ LOOP ]==--------------------");
       // Game Update
       double delta_time;
+      //this->timer.tick(&delta_time);
+      
+
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
          this->update(delta_time);
+         //actos
+         this->actors(delta_time);
+         //Physics
+         this->physics(delta_time);
       }
-
-      delta_time = 0.01;
-
-      //actos
-      this->actors(delta_time);
-      //Physics
-      this->physics(delta_time);
 
       // Render
       if (this->getType() == CLIENT) {
          this->render();
       }
-
    }
-
    this->shutdown();
 
 }

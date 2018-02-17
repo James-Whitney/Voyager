@@ -178,7 +178,7 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          else if ( components[i].HasMember("ship") ) {
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
          }
-      } 
+      }
       else {
          cerr << "Unknown component type: " << type << endl;
          continue;

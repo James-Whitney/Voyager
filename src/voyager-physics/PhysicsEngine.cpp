@@ -32,7 +32,7 @@ void PhysicsEngine::execute(double delta_time) {
    }
    
    //print positions of all objects
-   /*
+   
    for (int j = world->getNumCollisionObjects() - 1; j >= 0; j--) {
       btCollisionObject* obj = world->getCollisionObjectArray()[j];
       btRigidBody* body = btRigidBody::upcast(obj);
@@ -44,7 +44,7 @@ void PhysicsEngine::execute(double delta_time) {
          trans = obj->getWorldTransform();
       }
       printf("Obj Pos: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-   }*/
+   }
 
 }
 void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {
