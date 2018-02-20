@@ -16,9 +16,9 @@ void ShipComponent::moveShip(float delta_time) {
    float deltaHeight = 0;
    float deltaAngle = 0;
 
-   const float turnSpeed = 100000.0;
-   const float flightSpeed = 50000.0;
-   const float riseSpeed = 50000.0;
+   const float turnSpeed = 200.0;
+   const float flightSpeed = 200.0;
+   const float riseSpeed = 200.0;
 
    physicsComponent->getBody()->applyDamping(delta_time);
 
