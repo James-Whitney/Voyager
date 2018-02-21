@@ -72,21 +72,28 @@ public:
       return A*point.x + B*point.y + C*point.z + D;
    }
 
+   float CalcCenter(vec3 min, vec3 max) {
+      float x = pow((max.x-min.x),2.0f);
+      float y = pow((max.y-min.y),2.0f);
+      float z = pow((max.z-min.z),2.0f);
+      return sqrt(x+y+z);
+   }
+
    int ViewFrustCull(std::shared_ptr<Renderable> renderable) {
       vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
 
       vec3 min = renderable->getShape()->min;
       vec3 max = renderable->getShape()->max;
-      float radius = 2.0f;
+      float radius = CalcCenter(min,max);
       float dist;
 
       for (int i = 0; i < 6; i++) {
          dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
          if (dist < radius) {
-            return 1;
+            return 0;
          }
       }
-      return 0;
+      return 1;
    }
 };
 
