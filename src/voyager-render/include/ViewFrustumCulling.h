@@ -84,7 +84,7 @@ public:
 
       vec3 min = renderable->getShape()->min;
       vec3 max = renderable->getShape()->max;
-      float radius = 1.5f;//CalcCenter(min,max);
+      float radius = 0.01f;//CalcCenter(min,max);
       float dist;
 
       for (int i = 0; i < 6; i++) {
