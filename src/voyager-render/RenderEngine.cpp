@@ -1,5 +1,6 @@
 #include "include/RenderEngine.h"
-#include "include/ViewFrustumCulling.h"
+#include "include/ViewFrustCulling.h"
+
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
 using namespace glm;
@@ -78,12 +79,11 @@ void RenderEngine::execute(double delta_time) {
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
 
-   VFC vfc;
-   vfc.ExtractVFPlanes(P->topMatrix(), V->topMatrix());
+   vec4 planes[6];
+   ExtractVFPlanes(&planes, P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
-      if (vfc.ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)))) {
-         this->render(static_pointer_cast<Renderable>(this->components.at(i)));
-      }
+      if (ViewFrustCull(planes, getCenterRenderable(static_pointer_cast<Renderable>(this->components.at(i))))
+      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
    }
 
    V->popMatrix();
