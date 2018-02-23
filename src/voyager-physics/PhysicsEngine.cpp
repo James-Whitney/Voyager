@@ -10,8 +10,12 @@ void PhysicsEngine::init() {
    //this thing does the collison checking, there is aparallel version somewhere
    solver = new btSequentialImpulseConstraintSolver();
 
+   btVector3 worldMin(-1000,-1000,-1000);
+	btVector3 worldMax(1000,1000,1000);
+	btAxisSweep3* overlappingPairCache = new btAxisSweep3(worldMin,worldMax);
+
    //World setup
-   world = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+   world = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
    world->setGravity(btVector3(0, 0, 0));
 }
 
@@ -28,7 +32,7 @@ void PhysicsEngine::execute(double delta_time) {
    }
    
    //print positions of all objects
-   /*
+   
    for (int j = world->getNumCollisionObjects() - 1; j >= 0; j--) {
       btCollisionObject* obj = world->getCollisionObjectArray()[j];
       btRigidBody* body = btRigidBody::upcast(obj);
@@ -40,7 +44,7 @@ void PhysicsEngine::execute(double delta_time) {
          trans = obj->getWorldTransform();
       }
       printf("Obj Pos: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-   }*/
+   }
 
 }
 void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {

@@ -55,24 +55,29 @@ void PlayerComponent::cameraUpdate() {
 void PlayerComponent::positionUpdate(float delta_time) {
    glm::vec3 movement = glm::vec3(0,0,0);
 
-   const float speed = 0.1;
+   const float speed = 150.0;
+
+   physicsComponent->getBody()->applyDamping(delta_time);
+
+   //physicsComponent->getBody()->setGravity(btVector3(0.0, -100, 0.0));
+   //physicsComponent->getBody()->applyGravity();
 
    glm::vec3 lookDir = camera->getLookAt(false);
    lookDir = glm::vec3(lookDir.x, 0, lookDir.z);
    // Move forward
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_W ) == GLFW_PRESS){
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_W ) == GLFW_PRESS) {
       movement += lookDir;
    }
    // Move backward
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_S ) == GLFW_PRESS){
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_S ) == GLFW_PRESS) {
       movement -= lookDir;
    }
    // Strafe right
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_A ) == GLFW_PRESS){
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_A ) == GLFW_PRESS) {
       movement -= glm::normalize(glm::cross( lookDir, glm::vec3(0, 1, 0)));
    }
    // Strafe left
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_D ) == GLFW_PRESS){
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_D ) == GLFW_PRESS) {
       movement += glm::normalize(glm::cross( lookDir, glm::vec3(0, 1, 0)));
    }
    /*
@@ -90,7 +95,7 @@ void PlayerComponent::positionUpdate(float delta_time) {
    }
    movement *= delta_time * speed;
    btVector3 bullet_force = glmToBullet(movement);
-   physicsComponent->getBody()->setLinearVelocity(bullet_force);
+   physicsComponent->getBody()->applyCentralForce(bullet_force);
 /*
    glm::vec3 pos = transform->getOrigin() + movement;
    if(pos.x > 1)

@@ -1,11 +1,26 @@
 {
    "terrain": {
-      "heightmap": "/example.heightmap.bmp",
-      "height": 10.0,
-      "spacing": 1.0
+      "heightmap": "/heightmap.bmp",
+      "height": 40.0,
+      "spacing": 0.25
    },
 
    "entities": [
+      {
+         "name": "terrain",
+         "transform": {
+            "position": [-50, -15, -50],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 0,
+               "shape": 0
+            }
+         ]
+      },
       {
          "name": "ship",
          "components": [
@@ -47,66 +62,11 @@
                "axis": [0, 0, 1],
                "rotation": 0.0,
                "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0],
                "player": true
             }
          ]
-      },
-      {
-         "name": "terrain",
-         "transform": {
-            "position": [-200, -10, -200],
-            "axis": [0, 0, 1],
-            "rotation": 0.0
-         },
-         "components": [
-            {
-               "type": "RENDER",
-               "uber": 0,
-               "shape": 0
-            }
-         ]
-      },
-      {
-         "name": "first box",
-         "components": [
-            {
-               "type": "RENDER",
-               "uber": 1,
-               "shape": 1
-            },
-            {
-               "type": "PHYSICS",
-               "collisionShape": 
-               {
-                  "type": "box",
-                  "scale": [0.5, 0.5, 0.5]
-               },
-               "mass": 5.0,
-               "position": [5, 0, 0],
-               "axis": [0, 0, 1],
-               "rotation": 0.0,
-               "velocity": [0, 0, 0],
-               "damping": [0.1, 0.1]
-            }
-         ]
-      },
-
-      {
-         "name": "second box",
-         "transform": {
-            "position": [-2, 0, 10],
-            "axis": [0, 0, 1],
-            "rotation": 0.0
-         },
-         "components": [
-            {
-               "type": "RENDER",
-               "uber": 2,
-               "shape": 1
-            }
-         ]
       }
-
    ],
 
    "shapes": [
@@ -139,6 +99,9 @@
          "roughness": 0.3,
          "f0": 0.8,
          "k": 0.3
+      },
+      {
+         "type": "NORMAL"
       }
    ]
 

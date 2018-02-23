@@ -6,12 +6,21 @@
 #include "BitMap.h"
 
 #include <glm/glm/gtc/type_ptr.hpp>
+#include <bullet/src/btBulletDynamicsCommon.h>
 
 class Terrain : public Shape {
 
 public:
    
    void createShape(std::string heightmap_path, float max_height, float vertex_spacing);
+
+   std::vector<unsigned char> getHeightData();
+   btScalar getHeightScale();
+   btScalar getVertexSpacing();
+   btScalar getMinHeight();
+   btScalar getMaxHeight();
+   int getMapWidth();
+   int getMapLength();
 
 private:
 
@@ -39,6 +48,9 @@ private:
    void buildPositionBuffer();
    void buildNormalBuffer();
 
+   float max_height = 0.0f;
+   float min_height = 0.0f;
+   float vertex_spacing = 0.0f;
 };
 
 #endif

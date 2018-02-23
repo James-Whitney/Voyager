@@ -1,6 +1,10 @@
 #include "include/Terrain.h"
 
 void Terrain::createShape(std::string heightmap_path, float max_height, float vertex_spacing) {
+   this->max_height = max_height;
+   this->min_height = 0;
+   this->vertex_spacing = vertex_spacing;
+   
    // Generate terrain from heightmap
    this->heightmap->load(heightmap_path);
    this->generateVerticies(max_height, vertex_spacing);
@@ -142,4 +146,49 @@ void Terrain::buildNormalBuffer() {
          this->norBuf.push_back(v.normal.z);
       }
    }
+}
+
+std::vector<unsigned char> Terrain::getHeightData() {
+
+   //std::shared_ptr<(unsigned char)[]> buffer();
+   std::vector<unsigned char> buffer;
+
+   //std::shared_ptr<unsigned char> buffer(new unsigned char[this->heightmap->getPixels().size() * 3]);
+
+   for (int z = 0; z < this->heightmap->height; z++) {
+      for (int x = 0; x < this->heightmap->width; x++) {
+         // Get heightmap pixel
+         BitMap::pixel p = this->heightmap->getPixel(x, z);
+
+         buffer.push_back(p.r);
+         buffer.push_back(p.g);
+         buffer.push_back(p.b);
+      }
+   }
+
+   return buffer;
+}
+
+btScalar Terrain::getHeightScale() {
+   return btScalar(this->max_height);
+}
+
+btScalar Terrain::getMinHeight() {
+   return btScalar(this->min_height);
+}
+
+btScalar Terrain::getMaxHeight() {
+   return btScalar(this->max_height);
+}
+
+int Terrain::getMapWidth() {
+   return this->heightmap->width;
+}
+
+int Terrain::getMapLength() {
+   return this->heightmap->height;
+}
+
+btScalar Terrain::getVertexSpacing() {
+   return this->vertex_spacing;
 }

@@ -5,6 +5,7 @@
 #include <glm/glm/gtc/type_ptr.hpp>
 
 #include <bullet/src/btBulletDynamicsCommon.h>
+#include <bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 
 #include <voyager-core/include/Component.h>
 
@@ -17,6 +18,8 @@ class PhysicsComponent : public Component {
 public:
    void init();
    void update(double delta_time);
+
+   void initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<unsigned char> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace);
 
    void initRigidBody(std::shared_ptr<Entity> entity, 
                                        btCollisionShape *collisionShape, 
