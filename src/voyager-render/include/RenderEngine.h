@@ -53,12 +53,15 @@ protected:
    std::shared_ptr<Program> program;
    std::shared_ptr<WindowManager> window;
    std::shared_ptr<Hud> hud;
+   GLuint depthBufferId;
+   GLuint depthTextureId;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 
    // virtual void setMaterial(std::shared_ptr<Program> prog, glm::vec3 amb,
    //    glm::vec3 dif);
 
+   void initShadows();
 };
 
 #endif

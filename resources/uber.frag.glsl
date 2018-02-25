@@ -2,6 +2,7 @@
 
 in vec3 fragNor;
 in vec3 WPos;
+in vec4 shadowCoord;
 
 layout(location = 0) out vec4 color;
 
@@ -11,6 +12,8 @@ uniform vec3 MatAmb;
 uniform vec3 MatDif;
 
 uniform uint uberMode;
+uniform int shadowMode;
+uniform sampler2D depthTexture;
 
 // Used for Cook Torrance
 uniform float opacity;
@@ -88,5 +91,18 @@ void main() {
       color = vec4(Dcolor, 1.0);
 
 
+   }
+
+   if (shadowMode > 0) {
+       vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+       color = vec4(shift.z, 0.0, 0.0, 1.0);
+   } else {
+        vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+        float depth = texture(depthTexture, shift.xy).r;
+
+        float bias = 0.005;
+        if (depth < (shift.z - bias)) {
+           color = 0.5 * color;
+        }
    }
 }
