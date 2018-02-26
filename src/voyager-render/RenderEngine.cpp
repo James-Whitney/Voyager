@@ -4,6 +4,44 @@
 
 using namespace glm;
 using namespace std;
+void RenderEngine::initShadows() {
+   glGenFramebuffers(1, &this->depthBufferId);
+   glBindFramebuffer(GL_FRAMEBUFFER, depthBufferId);
+
+   //set up texture
+   glGenTextures(1, &this->depthTextureId);
+   glBindTexture(GL_TEXTURE_2D, this->depthTextureId);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+   int width, height;
+   glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width,
+      height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+   //bind texture to framebuffer
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 
+    this->depthTextureId, 0);
+
+    // Set up depth
+    GLuint rboDepthID;
+    glGenRenderbuffers(1, &rboDepthID);
+    glBindRenderbuffer(GL_RENDERBUFFER, rboDepthID);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
+    width, height);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+    GL_RENDERBUFFER, rboDepthID);
+
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+    {
+        cout << "Error setting up frame buffer - exiting" << endl;
+        exit(0);
+    }
+}
 
 void RenderEngine::init() {
    this->program = make_shared<Program>();
@@ -25,6 +63,10 @@ void RenderEngine::init() {
    program->addUniform("MatAmb");
    program->addUniform("MatDif");
    program->addUniform("lightPos");
+   program->addUniform("shadowV");
+   program->addUniform("shadowP");
+   program->addUniform("depthTexture");
+   program->addUniform("shadowMode");
    program->addUniform("lightColor");
    program->addUniform("uberMode");
    program->addUniform("opacity");
@@ -40,6 +82,7 @@ void RenderEngine::init() {
    }
 
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+   this->initShadows();
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -53,11 +96,31 @@ void RenderEngine::execute(double delta_time) {
    float aspect = width / (float)height;
 
    glViewport(0, 0, width, height);
-   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
+   
+   mat4 cam = glm::lookAt(vec3(0, 35 , 0), vec3(0, 0, 0), vec3(1, 0, 0));
+   mat4 ortho = glm::ortho(-50.f, 50.f, -50.f, 50.f, 5.f, 55.f);
+
+   glUniformMatrix4fv(this->program->getUniform("shadowP"), 1, GL_FALSE,
+      value_ptr(ortho));
+   glUniformMatrix4fv(this->program->getUniform("shadowV"), 1, GL_FALSE,
+      value_ptr(cam));
+ 
+   // Render the shadows for all the objects to the depth texture
+   glBindFramebuffer(GL_FRAMEBUFFER, this->depthBufferId);
+   glClear(GL_DEPTH_BUFFER_BIT);
+
+   glUniform1i(this->program->getUniform("shadowMode"), 1);
+   for (int i = 0; i < this->components.size(); ++i) {
+      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
+   }
+
+   // Bind the depth texture to the uniform "depthTexture"
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, this->depthTextureId);
+   glUniform1i(this->program->getUniform("depthTexture"), 0);
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
@@ -73,11 +136,16 @@ void RenderEngine::execute(double delta_time) {
       value_ptr(P->topMatrix()));
    glUniformMatrix4fv(this->program->getUniform("V"), 1, GL_FALSE,
       value_ptr(V->topMatrix()));
-
+  
    // TODO: remove hardcoding light position and color
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
+   
+   // Render the components to the screen
+   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+   glUniform1i(this->program->getUniform("shadowMode"), 0);
    for (int i = 0; i < this->components.size(); ++i) {
       this->render(static_pointer_cast<Renderable>(this->components.at(i)));
    }

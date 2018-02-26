@@ -7,11 +7,24 @@ uniform mat4 P;
 uniform mat4 V;
 uniform mat4 M;
 
+uniform mat4 shadowP;
+uniform mat4 shadowV;
+uniform int shadowMode;
+
 out vec3 fragNor;
 out vec3 WPos;
+out vec4 shadowCoord;
 
 void main() {
-   gl_Position = P * V * M * vertPos;
+
+   if (shadowMode > 0) {
+       gl_Position = shadowP * shadowV * M * vertPos;
+   } else {
+       gl_Position = P * V * M * vertPos;
+   }
+
    fragNor = (V * M * vec4(vertNor, 0.0)).xyz;
    WPos = vec3(V * M * vertPos);
+
+   shadowCoord = shadowP * shadowV * M * vertPos;
 }
