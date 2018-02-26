@@ -72,11 +72,17 @@ public:
       return A*point.x + B*point.y + C*point.z + D;
    }
 
-   float CalcCenter(vec3 min, vec3 max) {
-      float x = pow((max.x-min.x),2.0f);
-      float y = pow((max.y-min.y),2.0f);
-      float z = pow((max.z-min.z),2.0f);
-      return sqrt(x+y+z);
+   void generateCorners(std::vector<vec3> *pts, vec3 min, vec3 max) {
+      // Front face
+      pts->push_back(vec3(min.x,min.y,min.z));
+      pts->push_back(vec3(min.x,max.y,min.z));
+      pts->push_back(vec3(max.x,max.y,min.z));
+      pts->push_back(vec3(max.x,min.y,min.z));
+      // Back face
+      pts->push_back(vec3(min.x,min.y,max.z));
+      pts->push_back(vec3(min.x,max.y,max.z));
+      pts->push_back(vec3(max.x,max.y,max.z));
+      pts->push_back(vec3(max.x,min.y,max.z));
    }
 
    int ViewFrustCull(std::shared_ptr<Renderable> renderable) {
@@ -84,16 +90,19 @@ public:
 
       vec3 min = renderable->getShape()->min;
       vec3 max = renderable->getShape()->max;
-      float radius = 1.5f;//CalcCenter(min,max);
+      std::vector<vec3> corners;
+      generateCorners(&corners, min, max);
       float dist;
 
       for (int i = 0; i < 6; i++) {
-         dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
-         if (dist < radius) {
-            return 0;
+         for (int p = 0; p < 8; p++) {
+            dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, corners[p]);
+            if (dist < 0) {
+               return 1;
+            }
          }
       }
-      return 1;
+      return 0;
    }
 };
 
