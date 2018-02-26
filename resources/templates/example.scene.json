@@ -17,7 +17,7 @@
             {
                "type": "RENDER",
                "uber": 0,
-               "shape": 0
+               "mesh": 0
             }
          ]
       },
@@ -27,11 +27,11 @@
             {
                "type": "RENDER",
                "uber": 1,
-               "shape": 2
+               "mesh": 2
             },
             {
                "type": "PHYSICS",
-               "collisionShape": 
+               "collisionShape":
                {
                   "type": "box",
                   "scale": [5.0, 0.125, 2.5]
@@ -51,7 +51,7 @@
          "components": [
             {
                "type": "PHYSICS",
-               "collisionShape": 
+               "collisionShape":
                {
                   "type": "capsule",
                   "radius": 1.0,
@@ -66,15 +66,42 @@
                "player": true
             }
          ]
+      },
+      {
+         "name": "ship_model",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "mesh": 3
+            },
+            {
+               "type": "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [0.5, 0.5, 0.5]
+               },
+               "mass": 5.0,
+               "position": [20, 0, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1]
+            }
+         ]
       }
    ],
 
-   "shapes": [
+   "meshes": [
       {
          "path": "/cube.obj"
       },
       {
          "path": "/ship.obj"
+      },
+      {
+         "path": "/ship_light.obj"
       }
    ],
 

@@ -110,5 +110,7 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
    glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(bulletToGlm(*trans.get())));
 
-   renderable->getShape()->draw(this->program);
+   for (std::shared_ptr<Shape> shape : renderable->getMesh()) {
+      shape->draw(this->program);
+   }
 }

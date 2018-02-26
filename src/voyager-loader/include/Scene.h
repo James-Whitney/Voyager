@@ -29,7 +29,7 @@ public:
 
    std::vector< std::shared_ptr<Component> > components;
 
-   std::vector< std::shared_ptr<Shape> > shapes;
+   std::vector< std::vector< std::shared_ptr<Shape> > > meshes;
 
    std::vector< std::shared_ptr<Uber> > ubers;
 
