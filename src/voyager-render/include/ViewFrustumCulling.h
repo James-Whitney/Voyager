@@ -85,21 +85,28 @@ public:
       pts->push_back(vec3(max.x,min.y,max.z));
    }
 
+   float calcRadius(vec3 min, vec3 max) {
+      double x = pow((max.x-min.x),2);
+      double y = pow((max.y-min.y),2);
+      double z = pow((max.z-min.z),2);
+      return (float)sqrt(x+y+z)/2.0f;
+   }
+
    int ViewFrustCull(std::shared_ptr<Renderable> renderable) {
-      vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
+      //vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
 
       vec3 min = renderable->getShape()->min;
       vec3 max = renderable->getShape()->max;
-      std::vector<vec3> corners;
-      generateCorners(&corners, min, max);
+      vec3 center = vec3((min.x+max.x)/2.0f,(min.y+max.y)/2.0f,(min.z+max.z)/2.0f);
+      float radius = calcRadius(min, max);
+      //std::vector<vec3> corners;
+      //generateCorners(&corners, min, max);
       float dist;
 
       for (int i = 0; i < 6; i++) {
-         for (int p = 0; p < 8; p++) {
-            dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, corners[p]);
-            if (dist < 0) {
-               return 1;
-            }
+         dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
+         if (dist < radius) {
+            return 1;
          }
       }
       return 0;
