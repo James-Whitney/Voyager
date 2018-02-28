@@ -26,6 +26,12 @@ public:
    void init();
    void update(double delta_time);
 
+   btScalar getMaxVertThrottle() { return this->max_vertThrottle; }
+   btScalar getMinVertThrottle() { return this->min_vertThrottle; }
+   btScalar getMaxForwardThrottle() { return this->max_forwardThrottle; }
+   btScalar getMinForwardThrottle() { return this->min_forwardThrottle; }
+   btScalar* getVertThrottle() { return &(this->vertThrottle); }
+   btScalar* getForwardThrottle() { return &(this->forwardThrottle); }
 
 private:
 

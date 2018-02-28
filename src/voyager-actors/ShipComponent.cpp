@@ -112,7 +112,7 @@ void ShipComponent::moveShip(float delta_time) {
       physicsComponent->getBody()->applyTorque(btVector3(0,deltaAngle,0));
    }
 
-   printf("F: %f H: %f Y: %f\n", forwardThrottle, vertThrottle, yaw);
+   //printf("F: %f H: %f Y: %f\n", forwardThrottle, vertThrottle, yaw);
    //physicsComponent->getBody()->applyTorque(btVector3(0,1,0));
    //cout << "DeltaPos: " << deltaPos << " DeltaAngle: " << deltaAngle << " Yaw: " << yaw << endl;
 

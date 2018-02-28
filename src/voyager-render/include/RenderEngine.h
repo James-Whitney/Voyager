@@ -13,6 +13,8 @@
 #include <voyager-utils/include/BulletToGlm.h>
 #include <voyager-hud/include/Hud.h>
 
+#include <voyager-actors/include/ShipComponent.h>
+
 #include <bullet/src/btBulletDynamicsCommon.h>
 
 #include "Camera.h"
@@ -40,6 +42,9 @@ public:
       this->window = window;
    }
 
+   std::shared_ptr<ShipComponent> getShip() { return this->ship; }
+   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
+
    std::shared_ptr<Hud> getHud() { return this->hud; }
 
    virtual void init();
@@ -55,6 +60,8 @@ protected:
    std::shared_ptr<Hud> hud;
    GLuint depthBufferId;
    GLuint depthTextureId;
+
+   std::shared_ptr<ShipComponent> ship;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 

@@ -157,6 +157,7 @@ void RenderEngine::execute(double delta_time) {
       hud->startMenu();
    } else {
       hud->run();
+      hud->shipStats(ship);
    }
 
    this->program->unbind();

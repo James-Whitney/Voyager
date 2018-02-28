@@ -56,7 +56,7 @@ void PlayerComponent::cameraUpdate() {
 
    //fprintf(stderr, "delta_pitch: %f, delta_yaw: %f\n", delta_pitch, delta_yaw);
    camera->move(delta_pitch, delta_yaw + deltaPlayerAngle);// + deltaShipAngle);
-   printf("PLAYERANGLE: %f\n", playerAngle);
+   //printf("PLAYERANGLE: %f\n", playerAngle);
    
    glm::vec3 playerLoc = bulletToGlm(this->getEntity()->getTransform()->getOrigin());
    camera->setPosition(playerLoc + glm::vec3(0, cameraHeight, 0));

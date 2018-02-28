@@ -63,6 +63,7 @@ void Scene::apply(shared_ptr<Application> app) {
       static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
    shipComponent->setWindow(app->getWindowManager());
    static_pointer_cast<PhysicsEngine>(app->getPhysicsEngine())->setShip(shipComponent);
+   static_pointer_cast<RenderEngine>(app->getRenderEngine())->setShip(shipComponent);
    //shipComponent->getPhysics()->getBody()->setGravity(btVector3(0, 1, 0));
 
    //init player
