@@ -35,7 +35,7 @@ private:
    std::string resource_dir;
 
    void parse_terrain(std::shared_ptr<Scene> scene, rapidjson::Value& terrain);
-   void parse_shapes(std::shared_ptr<Scene> scene, rapidjson::Value& shapes);
+   void parse_meshes(std::shared_ptr<Scene> scene, rapidjson::Value& meshes);
    void parse_ubers(std::shared_ptr<Scene> scene, rapidjson::Value& ubers);
    void parse_entities(std::shared_ptr<Scene> scene, rapidjson::Value& entities);
    void parse_components(std::shared_ptr<Scene> scene, std::shared_ptr<Entity> entity,

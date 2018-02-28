@@ -18,9 +18,8 @@ public:
    std::shared_ptr<Uber> getUber() { return this->uber; }
    void setUber(std::shared_ptr<Uber> uber) { this->uber = uber; }
 
-   std::shared_ptr<Shape> getShape() { return this->shape; }
-   void setShape(std::shared_ptr<Shape> shape) { this->shape = shape; }
-   void setShape(std::string obj_path);
+   std::vector<std::shared_ptr<Shape>> getMesh() { return this->mesh; }
+   void setMesh(std::vector<std::shared_ptr<Shape>> mesh) { this->mesh = mesh; }
 
    virtual void init();
    virtual void update(double delta_time);
@@ -28,7 +27,7 @@ public:
 private:
 
    std::shared_ptr<Uber> uber;
-   std::shared_ptr<Shape> shape;
+   std::vector<std::shared_ptr<Shape>> mesh;
 
 };
 

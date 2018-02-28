@@ -18,7 +18,7 @@
             {
                "type": "RENDER",
                "uber": 0,
-               "shape": 0
+               "mesh": 0
             }
          ]
       },
@@ -28,7 +28,7 @@
             {
                "type": "RENDER",
                "uber": 1,
-               "shape": 1
+               "mesh": 1
             },
             {
                "type": "PHYSICS",
@@ -102,7 +102,7 @@
             {
                "type": "RENDER",
                "uber": 2,
-               "shape": 1
+               "mesh": 1
             },
             {
                "type": "PHYSICS",
@@ -129,7 +129,7 @@
             {
                "type": "RENDER",
                "uber": 2,
-               "shape": 1
+               "mesh": 1
             },
             {
                "type": "PHYSICS",
@@ -156,7 +156,7 @@
             {
                "type": "RENDER",
                "uber": 2,
-               "shape": 1
+               "mesh": 1
             },
             {
                "type": "PHYSICS",
@@ -183,7 +183,7 @@
             {
                "type": "RENDER",
                "uber": 2,
-               "shape": 1
+               "mesh": 1
             },
             {
                "type": "PHYSICS",
@@ -210,7 +210,7 @@
             {
                "type": "RENDER",
                "uber": 2,
-               "shape": 1
+               "mesh": 1
             },
             {
                "type": "PHYSICS",
@@ -233,12 +233,15 @@
       }
    ],
 
-   "shapes": [
+   "meshes": [
       {
          "path": "/cube.obj"
       },
       {
          "path": "/ship.obj"
+      },
+      {
+         "path": "/ship_light.obj"
       }
    ],
 

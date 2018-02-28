@@ -6,7 +6,7 @@ using namespace std;
 
 void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
    shared_ptr<Renderable> terrainRenderable = static_pointer_cast<Renderable>(terrain->componentAt(0));
-   shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getShape());
+   shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getMesh().at(0));
 
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
    
@@ -79,7 +79,7 @@ void Scene::apply(shared_ptr<Application> app) {
 
 void Scene::dump() {
    cout << "<Scene>" << endl;
-   cout << this->shapes.size() << " shapes" << endl;
+   cout << this->meshes.size() << " meshes" << endl;
    cout << this->ubers.size() << " ubers" << endl;
    cout << this->entities.size() << " entities" << endl;
    cout << this->components.size() << " components" << endl;

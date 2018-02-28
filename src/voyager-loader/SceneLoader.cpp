@@ -28,8 +28,8 @@ shared_ptr<Scene> SceneLoader::load(string path) {
       this->parse_terrain(scene, doc["terrain"]);
    }
 
-   if (doc.HasMember("shapes") && doc["shapes"].IsArray()) {
-      this->parse_shapes(scene, doc["shapes"]);
+   if (doc.HasMember("meshes") && doc["meshes"].IsArray()) {
+      this->parse_meshes(scene, doc["meshes"]);
    }
 
    if (doc.HasMember("ubers") && doc["ubers"].IsArray()) {
@@ -56,28 +56,37 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
 
    terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
    terrain_shape->measure();
-   scene->shapes.push_back(terrain_shape);
+
+   vector<shared_ptr<Shape>> mesh;
+   mesh.push_back(terrain_shape);
+   scene->meshes.push_back(mesh);
 }
 
-void SceneLoader::parse_shapes(shared_ptr<Scene> scene, Value& shapes) {
-   log("Shapes:");
-   vector<tinyobj::shape_t> obj_shape;
+void SceneLoader::parse_meshes(shared_ptr<Scene> scene, Value& meshes) {
+   log("Meshes:");
+   vector<tinyobj::shape_t> obj_shapes;
    vector<tinyobj::material_t> obj_mat;
    string err;
 
-   for (SizeType i = 0; i < shapes.Size(); ++i) {
-      string shape_path = this->resource_dir + shapes[i]["path"].GetString();
+   for (SizeType i = 0; i < meshes.Size(); ++i) {
+      string mesh_path = this->resource_dir + meshes[i]["path"].GetString();
       stringstream ss;
-      ss << "\t" << i << ": " << shape_path;
+      ss << "\t" << i << ": " << mesh_path;
       log(ss.str());
 
-      if (!tinyobj::LoadObj(obj_shape, obj_mat, err, shape_path.c_str())) {
-         cerr << "Failed to load " << shape_path << ": " << err << endl;
+      if (!tinyobj::LoadObj(obj_shapes, obj_mat, err, mesh_path.c_str())) {
+         cerr << "Failed to load " << mesh_path << ": " << err << endl;
       } else {
-         shared_ptr<Shape> shape = make_shared<Shape>();
-         shape->createShape(obj_shape[0]);
-         shape->measure();
-         scene->shapes.push_back(shape);
+         vector<shared_ptr<Shape>> mesh;
+
+         for (tinyobj::shape_t obj_shape : obj_shapes) {
+            shared_ptr<Shape> shape = make_shared<Shape>();
+            shape->createShape(obj_shape);
+            shape->measure();
+            mesh.push_back(shape);
+         }
+
+         scene->meshes.push_back(mesh);
       }
    }
 }
@@ -196,8 +205,8 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
 shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Value& component) {
    shared_ptr<Renderable> renderable = make_shared<Renderable>();
 
-   int index = component["shape"].GetInt();
-   renderable->setShape(scene->shapes[index]);
+   int index = component["mesh"].GetInt();
+   renderable->setMesh(scene->meshes[index]);
 
    index = component["uber"].GetInt();
    renderable->setUber(scene->ubers[index]);
