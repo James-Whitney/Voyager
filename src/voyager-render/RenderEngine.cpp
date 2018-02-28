@@ -79,11 +79,10 @@ void RenderEngine::execute(double delta_time) {
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
 
-   VFC vfc;// = new VFC();
+   VFC vfc;
    vfc.ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
-      if (!vfc.ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)))) {
-      //if (true) {
+      if (vfc.ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)))) {
          this->render(static_pointer_cast<Renderable>(this->components.at(i)));
       }
    }
