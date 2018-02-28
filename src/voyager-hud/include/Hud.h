@@ -57,6 +57,8 @@ public:
    // Loops through doc array and generates the widgests specified by the json file
    void generate();
 
+   void dynamicTextbox(const char *titlebar, const char *txt, int x_pos, int y_pos, int r = 0, int g = 0, int b = 0, int a = 1);
+
    void startMenu();
 
    void guiKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);

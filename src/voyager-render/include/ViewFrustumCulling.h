@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <voyager-utils/include/BulletToGlm.h>
 #include <bullet/src/btBulletDynamicsCommon.h>
+#include <voyager-hud/include/Hud.h>
 
 #include <math.h>
 
@@ -92,16 +93,21 @@ public:
       return (float)sqrt(x+y+z)/2.0f;
    }
 
-   int ViewFrustCull(std::shared_ptr<Renderable> renderable) {
-      //vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
+   int ViewFrustCull(std::shared_ptr<Renderable> renderable, std::shared_ptr<Hud> hud, int i) {
+      vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
 
       vec3 min = renderable->getShape()->min;
       vec3 max = renderable->getShape()->max;
-      vec3 center = vec3((min.x+max.x)/2.0f,(min.y+max.y)/2.0f,(min.z+max.z)/2.0f);
       float radius = calcRadius(min, max);
       //std::vector<vec3> corners;
       //generateCorners(&corners, min, max);
       float dist;
+      if (i == 2) {
+         char buff[1024];
+         sprintf(buff, "Center: (%.3f %.3f %.3f)\nRadius: %.3f\n",
+         center.x, center.z, center.z, radius);
+         hud->dynamicTextbox("box1 stuff", buff, hud->width*0.75, hud->height*0.5, 1, 1, 1, 1);
+      }
 
       for (int i = 0; i < 6; i++) {
          dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
