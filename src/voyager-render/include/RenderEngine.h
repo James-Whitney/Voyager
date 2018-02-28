@@ -8,9 +8,12 @@
 #include <voyager-core/include/Engine.h>
 #include <voyager-core/include/Entity.h>
 #include <voyager-core/include/WindowManager.h>
+
 #include <voyager-utils/include/MatrixStack.h>
 #include <voyager-utils/include/Program.h>
 #include <voyager-utils/include/BulletToGlm.h>
+#include <voyager-utils/include/Terrain.h>
+
 #include <voyager-hud/include/Hud.h>
 
 #include <voyager-actors/include/ShipComponent.h>

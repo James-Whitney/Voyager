@@ -55,6 +55,7 @@ void Scene::apply(shared_ptr<Application> app) {
    }
    //init HeightMap
    shared_ptr<Entity> terrain = this->entities.at(0);
+
    initTerrain(app, terrain);
 
    //init ship

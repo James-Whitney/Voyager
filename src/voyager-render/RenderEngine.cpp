@@ -99,9 +99,25 @@ void RenderEngine::execute(double delta_time) {
 
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
-   
-   mat4 cam = glm::lookAt(vec3(0, 35 , 0), vec3(0, 0, 0), vec3(1, 0, 0));
-   mat4 ortho = glm::ortho(-50.f, 50.f, -50.f, 50.f, 5.f, 55.f);
+
+   std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
+   float maxHeight = terrain->getMaxHeight();
+
+   btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))->getEntity()->getTransform()->getOrigin();
+
+   cout << terrPos.getX() << " " << terrPos.getY() << " " << terrPos.getZ() << endl;
+   cout << maxHeight << endl;
+
+   vec3 min = vec3(terrPos.getX(), terrPos.getY(), terrPos.getZ());
+   vec3 max = vec3(-terrPos.getX(), terrPos.getY() + maxHeight, -terrPos.getZ());
+
+   float midX = min.x + max.x / 2;
+   float midZ = min.z + max.z / 2;
+
+   cout << "min: " << min.y << " " << max.y << endl;
+
+   mat4 cam = glm::lookAt(vec3(midX, max.y + 1 , midX), vec3(midX, min.y, midZ), vec3(1, 0, 0));
+   mat4 ortho = glm::ortho(min.x, max.x, min.z, max.z, 1.f, max.y - min.y + 1);
 
    glUniformMatrix4fv(this->program->getUniform("shadowP"), 1, GL_FALSE,
       value_ptr(ortho));
