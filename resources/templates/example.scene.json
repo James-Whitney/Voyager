@@ -31,7 +31,7 @@
             },
             {
                "type": "PHYSICS",
-               "collisionShape": 
+               "collisionShape":
                {
                   "type": "box",
                   "scale": [5.0, 0.125, 2.5]
@@ -51,7 +51,7 @@
          "components": [
             {
                "type": "PHYSICS",
-               "collisionShape": 
+               "collisionShape":
                {
                   "type": "capsule",
                   "radius": 1.0,
@@ -64,6 +64,30 @@
                "velocity": [0, 0, 0],
                "damping": [1.0, 1.0],
                "player": true
+            }
+         ]
+      },
+      {
+         "name": "box1",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [5, 0, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
             }
          ]
       }

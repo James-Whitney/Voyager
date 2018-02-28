@@ -79,6 +79,8 @@ void RenderEngine::execute(double delta_time) {
    glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
 
+   if (!hud->startScreen) { hud->start(); }
+
    VFC vfc;
    vfc.ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
@@ -95,7 +97,7 @@ void RenderEngine::execute(double delta_time) {
    if (hud->startScreen) {
       hud->startMenu();
    } else {
-      hud->run();
+      hud->render; //hud->run();
    }
 
    this->program->unbind();
