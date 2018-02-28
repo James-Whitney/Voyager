@@ -82,7 +82,8 @@ void RenderEngine::execute(double delta_time) {
    VFC vfc;// = new VFC();
    vfc.ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (int i = 0; i < this->components.size(); ++i) {
-      if (vfc.ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)))) {
+      if (!vfc.ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)))) {
+      //if (true) {
          this->render(static_pointer_cast<Renderable>(this->components.at(i)));
       }
    }
