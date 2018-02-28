@@ -38,6 +38,7 @@ private:
    void parse_meshes(std::shared_ptr<Scene> scene, rapidjson::Value& meshes);
    void parse_ubers(std::shared_ptr<Scene> scene, rapidjson::Value& ubers);
    void parse_entities(std::shared_ptr<Scene> scene, rapidjson::Value& entities);
+   std::shared_ptr<Entity> parse_entity(std::shared_ptr<Scene> scene, rapidjson::Value& json, int tabs = 0);
    void parse_components(std::shared_ptr<Scene> scene, std::shared_ptr<Entity> entity,
       rapidjson::Value& components);
 
