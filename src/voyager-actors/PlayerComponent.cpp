@@ -12,11 +12,22 @@ glm::vec3 PlayerComponent::getPosition() {
    return bulletToGlm(entity->getTransform()->getOrigin());
 }
 
+btScalar PlayerComponent::getRotation() {
+   btScalar yaw, pitch, roll;
+   entity->getTransform()->getBasis().getEulerYPR(yaw, pitch, roll);
+   //printf("Y: %f P: %f R: %f\n", yaw, pitch, roll);
+   if (yaw != 0.0) {
+      pitch *= -1;
+      pitch += yaw;
+   }
+   return btScalar(pitch);
+}
 
 void PlayerComponent::update(double delta_time) {
    //cout << "Player Update" << endl;
    positionUpdate(delta_time);
    cameraUpdate();
+   
 }
 
 void PlayerComponent::cameraUpdate() {
@@ -25,7 +36,7 @@ void PlayerComponent::cameraUpdate() {
    float delta_pitch, delta_yaw;
    int width, height;
 
-   const float cameraHeight = 1.0;
+   const float cameraHeight = 2.0;
 
    glfwGetFramebufferSize(window->getHandle(), &width, &height);
    glfwGetCursorPos(window->getHandle(), &curr_xPos, &curr_yPos);
@@ -38,13 +49,14 @@ void PlayerComponent::cameraUpdate() {
    delta_pitch = delta_yPos / (height * 2);
    delta_yaw = delta_xPos / width;
 
+
+   double playerAngle = getRotation();
+   double deltaPlayerAngle = playerAngle - prev_playerAngle;
+   prev_playerAngle = playerAngle;
+
    //fprintf(stderr, "delta_pitch: %f, delta_yaw: %f\n", delta_pitch, delta_yaw);
-
-   //float ship_angle = ship->getShipAngle();
-   //float deltaShipAngle = ship_angle - prev_shipAngle;
-   //prev_shipAngle = ship_angle;
-
-   camera->move(delta_pitch, delta_yaw);// + deltaShipAngle);
+   camera->move(delta_pitch, delta_yaw + deltaPlayerAngle);// + deltaShipAngle);
+   printf("PLAYERANGLE: %f\n", playerAngle);
    
    glm::vec3 playerLoc = bulletToGlm(this->getEntity()->getTransform()->getOrigin());
    camera->setPosition(playerLoc + glm::vec3(0, cameraHeight, 0));
@@ -55,12 +67,10 @@ void PlayerComponent::cameraUpdate() {
 void PlayerComponent::positionUpdate(float delta_time) {
    glm::vec3 movement = glm::vec3(0,0,0);
 
-   const float speed = 150.0;
+   const float speed = 50000;
 
-   physicsComponent->getBody()->applyDamping(delta_time);
-
-   //physicsComponent->getBody()->setGravity(btVector3(0.0, -100, 0.0));
-   //physicsComponent->getBody()->applyGravity();
+   physicsComponent->getBody()->applyGravity();
+   
 
    glm::vec3 lookDir = camera->getLookAt(false);
    lookDir = glm::vec3(lookDir.x, 0, lookDir.z);
@@ -80,33 +90,27 @@ void PlayerComponent::positionUpdate(float delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_D ) == GLFW_PRESS) {
       movement += glm::normalize(glm::cross( lookDir, glm::vec3(0, 1, 0)));
    }
-   /*
    //Space goes up
-   if(glfwGetKey(window->getHandle(), GLFW_KEY_SPACE ) == GLFW_PRESS){
-      movement += Y_AXIS * deltaTime;
-   }
+   /*
    //Shift goes down
    if(glfwGetKey(window->getHandle(), GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS){
       movement -= Y_AXIS * deltaTime;
    }*/
-   if(length(movement) > 0)
+   
+   if(length(movement) != 0)
    {
+      //cout << "MOVING" << endl;
       movement = glm::normalize(movement);
+      movement *= (delta_time * speed);
+      btVector3 bullet_force = glmToBullet(movement).rotate(btVector3(0, 1, 0), -(ship->getRotation()));
+      physicsComponent->getBody()->applyCentralForce(bullet_force);
    }
-   movement *= delta_time * speed;
-   btVector3 bullet_force = glmToBullet(movement);
-   physicsComponent->getBody()->applyCentralForce(bullet_force);
-/*
-   glm::vec3 pos = transform->getOrigin() + movement;
-   if(pos.x > 1)
-      pos.x = 1;
-   if(pos.x < -1)
-      pos.x = -1;
-   if(pos.z > 1)
-      pos.z = 1;
-   if(pos.z < -1)
-      pos.z = -1;
-   setTransform(std::make_shared<Transform>
-   (pos, glm::vec3(0, 0, 0), 0, 0, 0));
-   */
+   else {
+      //cout << "DAMPING" << endl;
+      physicsComponent->getBody()->applyDamping(delta_time);
+   }
+   
+   //physicsComponent->getBody()->setLinearVelocity(bullet_force);
+
+   //physicsComponent->getBody()->setAngularVelocity(ship->getPhysics()->getBody()->getAngularVelocity());
 }

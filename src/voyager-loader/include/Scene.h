@@ -13,6 +13,8 @@
 #include <voyager-utils/include/Terrain.h>
 
 #include <voyager-physics/include/PhysicsComponent.h>
+#include <voyager-physics/include/PhysicsEngine.h>
+
 #include <voyager-actors/include/PlayerComponent.h>
 #include <voyager-actors/include/ShipComponent.h>
 

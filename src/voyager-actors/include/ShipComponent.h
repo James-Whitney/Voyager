@@ -10,18 +10,33 @@
 
 #include <voyager-physics/include/PhysicsComponent.h>
 
+class PhysicsComponent;
+
 class ShipComponent : public ActorComponent {
 
 public:
 
    void setWindow(std::shared_ptr<WindowManager> window) { this->window = window; }
    void setPhysics(std::shared_ptr<PhysicsComponent> physicsComponent) { this->physicsComponent = physicsComponent; }
+   std::shared_ptr<PhysicsComponent> getPhysics() { return physicsComponent; }
+
+   btScalar getRotation();
+   btVector3 getRotationVector();
 
    void init();
    void update(double delta_time);
 
 
 private:
+
+   const btScalar max_vertThrottle = 100;
+   const btScalar min_vertThrottle = -100;
+
+   const btScalar max_forwardThrottle = 100;
+   const btScalar min_forwardThrottle = -100;
+
+   btScalar vertThrottle = 0;
+   btScalar forwardThrottle = 0;
 
    std::shared_ptr<PhysicsComponent> physicsComponent;
    void moveShip(float delta_time);

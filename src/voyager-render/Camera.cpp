@@ -24,10 +24,10 @@ void Camera::move(float deltaPitch, float deltaYaw) {
 }
 
 void Camera::setView(float aspect, shared_ptr<MatrixStack> P,
-      shared_ptr<MatrixStack> MV) {
+      shared_ptr<MatrixStack> V) {
 
    P->perspective(this->fov_y, aspect, this->z_near, this->z_far);
-   MV->lookAt(this->pos, this->getLookAt(), this->up);
+   V->lookAt(this->pos, this->getLookAt(), this->up);
 }
 
 void Camera::dump() {

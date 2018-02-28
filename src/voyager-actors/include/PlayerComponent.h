@@ -24,6 +24,10 @@ public:
    void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
    void setPhysics(std::shared_ptr<PhysicsComponent> physicsComponent) { this->physicsComponent = physicsComponent; }
 
+   std::shared_ptr<PhysicsComponent> getPhysics() { return physicsComponent; }
+
+   btScalar getRotation();
+
    glm::vec3 getPosition();
 
    void init();
@@ -41,8 +45,14 @@ private:
    std::shared_ptr<Camera> camera;
    std::shared_ptr<ShipComponent> ship;
 
+   bool isFalling = true;
+
    double prev_xPos = 0;
    double prev_yPos = 0;
+
+   double prev_playerAngle = 0;
+
+   double prev_shipAngle = 0;
 
 };
 

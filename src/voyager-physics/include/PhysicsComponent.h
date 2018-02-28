@@ -8,8 +8,13 @@
 #include <bullet/src/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h>
 
 #include <voyager-core/include/Component.h>
-
 #include <voyager-core/include/Entity.h>
+
+#include <voyager-actors/include/ShipComponent.h>
+
+class ShipComponent;
+
+
 
 using namespace std;
 
@@ -21,20 +26,26 @@ public:
 
    void initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<unsigned char> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace);
 
-   void initRigidBody(std::shared_ptr<Entity> entity, 
-                                       btCollisionShape *collisionShape, 
-                                       btScalar mass, 
-                                       btVector3 position, 
-                                       btQuaternion rotation, 
-                                       btVector3 velocity);
-
+   void initRigidBody(  int world, 
+                        std::shared_ptr<Entity> entity, 
+                        btCollisionShape *collisionShape, 
+                        btScalar mass, 
+                        btVector3 position, 
+                        btQuaternion rotation, 
+                        btVector3 velocity,
+                        btScalar friction);                
 
    btCollisionShape* get_collisionShape() {return collisionShape;}
-   btRigidBody* getBody() { return body; }
+   btRigidBody*      getBody() { return body; }
+
+   int getWorldIndex() { return world; }
+
+   void updatePosition(std::shared_ptr<ShipComponent> ship);
 
 private:
 
    //initialized variables, dont change.
+   int                     world;
 
    btCollisionShape        *collisionShape;
    btRigidBody             *body;

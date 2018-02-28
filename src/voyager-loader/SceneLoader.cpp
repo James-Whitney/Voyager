@@ -131,6 +131,13 @@ void SceneLoader::parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> en
                                                 axis[1].GetFloat(),
                                                 axis[2].GetFloat()),
                                                 rotation.GetFloat());
+
+   Value& scale_ = transform["scale"];
+   shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(scale_[0].GetFloat(),
+                                                                  scale_[1].GetFloat(),
+                                                                  scale_[2].GetFloat()));
+   entity->setScale(scale);
+
    btTrans->setIdentity();
    btTrans->setOrigin(pos);
    btTrans->setRotation(btQuad);
@@ -202,6 +209,7 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
 shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
    shared_ptr<PlayerComponent> playerComponent = make_shared<PlayerComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
+   physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    playerComponent->setPhysics(physicsComponent);
    return static_pointer_cast<Component>(playerComponent);
 }
@@ -218,6 +226,9 @@ shared_ptr<Component> SceneLoader::parse_shipComponent(shared_ptr<Entity> entity
 shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Entity> entity, shared_ptr<Scene> scene, Value& component) {
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
 
+   Value& world_ = component["world"];
+   int world = world_.GetInt();
+
    btScalar lin_damp = btScalar(0.0);
    btScalar ang_damp = btScalar(0.0);
    
@@ -225,6 +236,9 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Enti
       lin_damp = btScalar(component["damping"][0].GetFloat());
       ang_damp = btScalar(component["damping"][1].GetFloat());
    }
+
+   Value& fric = component["friction"];
+   btScalar friction = btScalar(fric.GetFloat());
    
    btCollisionShape* collisionShape;
 
@@ -247,6 +261,15 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Enti
    btVector3 position = btVector3(pos[0].GetFloat(),
                                   pos[1].GetFloat(),
                                   pos[2].GetFloat());
+                                 
+   Value& scale_ = component["scale"];
+   shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat()));
+   //scale = btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat());
+   
+   /*btVector3 scale = btVector3(  scale_[0].GetFloat(),
+                                 scale_[1].GetFloat(),
+                                 scale_[2].GetFloat());*/
+   entity->setScale(scale);
 
    Value& axis = component["axis"];
    Value& rotation = component["rotation"];
@@ -260,7 +283,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Enti
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
 
-   physicsComponent->initRigidBody(entity, collisionShape, mass, position, btQuad, velocity);
+   physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;
 }

@@ -19,7 +19,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    btScalar vertexScale = terrainShape->getVertexSpacing();
 
    physicsComponent->initHeightMap( terrain,
-                                    terrain->getTransform()->getOrigin(),
+                                    btVector3(0, 0, 0),
                                     terrain->getTransform()->getRotation(),
                                     mapWidth,
                                     mapLength,
@@ -31,9 +31,6 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
 
    terrain->add(physicsComponent);
    app->getPhysicsEngine()->registerComponent(physicsComponent);
-   
-   
-
 }
 
 void Scene::apply(shared_ptr<Application> app) {
@@ -62,15 +59,21 @@ void Scene::apply(shared_ptr<Application> app) {
 
    //init ship
    shared_ptr<Entity> ship = this->entities.at(1);
-   shared_ptr<ShipComponent> shipComponent = static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
+   shared_ptr<ShipComponent> shipComponent = 
+      static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
    shipComponent->setWindow(app->getWindowManager());
+   static_pointer_cast<PhysicsEngine>(app->getPhysicsEngine())->setShip(shipComponent);
+   //shipComponent->getPhysics()->getBody()->setGravity(btVector3(0, 1, 0));
 
    //init player
    shared_ptr<Entity> player = this->entities.at(2);
-   shared_ptr<PlayerComponent> playerComponent = static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
+   shared_ptr<PlayerComponent> playerComponent = 
+      static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
    playerComponent->setWindow(app->getWindowManager());
    playerComponent->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
    playerComponent->setShip(shipComponent);
+   //playerComponent->getPhysics()->getBody()->setGravity(btVector3(0, -9.8, 0));
+
 
 }
 

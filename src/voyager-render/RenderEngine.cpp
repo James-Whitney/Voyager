@@ -61,10 +61,9 @@ void RenderEngine::execute(double delta_time) {
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
-   shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
+   
 
    P->pushMatrix();
-   M->pushMatrix();
    V->pushMatrix();
 
    this->camera->setView(aspect, P, V);
@@ -83,7 +82,6 @@ void RenderEngine::execute(double delta_time) {
    }
 
    V->popMatrix();
-   M->popMatrix();
    P->popMatrix();
 
 
@@ -106,9 +104,18 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    cout << "\trendering component " << renderable->getId() << endl;
 #endif
 
-   renderable->getUber()->setUniforms(this->program);
-   std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
-   glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(bulletToGlm(*trans.get())));
+   shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
+   M->pushMatrix();
+   {
+      std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
+      M->loadMatrix(bulletToGlm(*trans.get()));
+      std::shared_ptr<btVector3> scale = renderable->getEntity()->getScale();
+      M->scale(bulletToGlm(*scale.get()) * 2.0f);
 
-   renderable->getShape()->draw(this->program);
+      renderable->getUber()->setUniforms(this->program);
+      glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
+
+      renderable->getShape()->draw(this->program);
+   }
+   M->popMatrix();
 }
