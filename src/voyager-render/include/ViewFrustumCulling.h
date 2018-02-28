@@ -73,6 +73,7 @@ public:
       return A*point.x + B*point.y + C*point.z + D;
    }
 
+/*
    void generateCorners(std::vector<vec3> *pts, vec3 min, vec3 max) {
       // Front face
       pts->push_back(vec3(min.x,min.y,min.z));
@@ -92,16 +93,18 @@ public:
       double z = pow((max.z-min.z),2);
       return (float)sqrt(x+y+z)/2.0f;
    }
+*/
 
    int ViewFrustCull(std::shared_ptr<Renderable> renderable, std::shared_ptr<Hud> hud, int i) {
       vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
 
-      vec3 min = renderable->getShape()->min;
-      vec3 max = renderable->getShape()->max;
-      float radius = calcRadius(min, max);
+      Shape *shape = renderable->getShape();
+      vec3 min = shape->min;
+      vec3 max = shape->max;
+      float radius = shape->radius; //calcRadius(min, max);
       //std::vector<vec3> corners;
       //generateCorners(&corners, min, max);
-      float dist;
+
       if (i == 2) {
          char buff[1024];
          sprintf(buff, "Center: (%.3f %.3f %.3f)\nRadius: %.3f\n",
@@ -109,6 +112,7 @@ public:
          hud->dynamicTextbox("box1 stuff", buff, hud->width*0.75, hud->height*0.5, 1, 1, 1, 1);
       }
 
+      float dist;
       for (int i = 0; i < 6; i++) {
          dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
          if (dist < radius) {
