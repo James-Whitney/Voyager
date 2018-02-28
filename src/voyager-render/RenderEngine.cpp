@@ -36,7 +36,7 @@ void RenderEngine::init() {
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
 
-   this->vfc - make_shared<VFC>();
+   this->vfc = make_shared<VFC>();
 
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
@@ -87,15 +87,15 @@ void RenderEngine::execute(double delta_time) {
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    char buff[1024];
    sprintf(buff, "L: (%.3f %.3f %.3f %.3f)\nR: (%.3f %.3f %.3f %.3f)\nB: (%.3f %.3f %.3f %.3f)\nT: (%.3f %.3f %.3f %.3f)\nN: (%.3f %.3f %.3f %.3f)\nF: (%.3f %.3f %.3f %.3f)\n",
-      vfc.planes[0].x, vfc.planes[0].y, vfc.planes[0].z, vfc.planes[0].w,
-      vfc.planes[1].x, vfc.planes[1].y, vfc.planes[1].z, vfc.planes[1].w,
-      vfc.planes[2].x, vfc.planes[2].y, vfc.planes[2].z, vfc.planes[2].w,
-      vfc.planes[3].x, vfc.planes[3].y, vfc.planes[3].z, vfc.planes[3].w,
-      vfc.planes[4].x, vfc.planes[4].y, vfc.planes[4].z, vfc.planes[4].w,
-      vfc.planes[5].x, vfc.planes[5].y, vfc.planes[5].z, vfc.planes[5].w);
+      vfc->planes[0].x, vfc->planes[0].y, vfc->planes[0].z, vfc->planes[0].w,
+      vfc->planes[1].x, vfc->planes[1].y, vfc->planes[1].z, vfc->planes[1].w,
+      vfc->planes[2].x, vfc->planes[2].y, vfc->planes[2].z, vfc->planes[2].w,
+      vfc->planes[3].x, vfc->planes[3].y, vfc->planes[3].z, vfc->planes[3].w,
+      vfc->planes[4].x, vfc->planes[4].y, vfc->planes[4].z, vfc->planes[4].w,
+      vfc->planes[5].x, vfc->planes[5].y, vfc->planes[5].z, vfc->planes[5].w);
    hud->dynamicTextbox("VFCplanes", buff, hud->width*0.25, hud->height*0.5, 1, 1, 1, 1);
    for (int i = 0; i < this->components.size(); ++i) {
-      if (this->vfc->ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)), hud, i)) {
+      if (!this->vfc->ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)), hud, i)) {
          this->render(static_pointer_cast<Renderable>(this->components.at(i)));
       }
    }
