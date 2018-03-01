@@ -1,5 +1,5 @@
 #include "include/RenderEngine.h"
-#include "include/ViewFrustumCulling.h"
+#include "include/VFCobj.h"
 
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
@@ -39,7 +39,7 @@ void RenderEngine::init() {
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
    }
-   this->vfc = make_shared<VFC>();
+   this->vfc = make_shared<VFCobj>(&this->components);
 
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
 }

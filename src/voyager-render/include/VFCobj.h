@@ -1,6 +1,6 @@
 #pragma once
-#ifndef VOYAGER_VIEWFRUSTUMCULLING_H
-#define VOYAGER_VIEWFRUSTUMCULLING_H
+#ifndef VOYAGER_VFC_OBJ_H
+#define VOYAGER_VFC_OBJ_H
 
 #include <glad/glad.h>
 #include <voyager-utils/include/BulletToGlm.h>
@@ -9,17 +9,36 @@
 
 #include <math.h>
 
+#include "VFCbox.h"
+#include "VFCoct.h"
+
 using namespace glm;
 
-class VFC {
+class VFCobj {
 public:
    vec4 Left, Right, Bottom, Top, Near, Far;
    vec4 planes[6];
 
+   VFCoct *tree;
 
+   VFCobj(std::vector< std::shared_ptr<Component> > *objs) {
+      std::shared_ptr<Renderable> curObj;
+      std::vector< std::shared_ptr<VFCbox> > boxes;
+      for (int i = 0; i < objs->size(); ++i) {
+         curObj = std::static_pointer_cast<Renderable>(objs->at(i));
 
-   VFC() { }
-   
+         vec3 center = bulletToGlm(curObj->getEntity()->getTransform()->getOrigin());
+         vec3 min = curObj->getShape()->min;
+         vec3 max = curObj->getShape()->max;
+         float radius = curObj->getShape()->radius;
+         std::vector<int> idx;
+         idx.push_back(i);
+         boxes.push_back(std::make_shared<VFCbox>(center, min, max, radius, &idx));
+      }
+      this->tree = new VFCoct(boxes);
+
+   }
+
    void ExtractVFPlanes(mat4 P, mat4 V) {
       /* composite matrix */
       mat4 comp = P * V;

@@ -17,7 +17,7 @@
 
 #include "Camera.h"
 #include "Renderable.h"
-#include "ViewFrustumCulling.h"
+#include "VFCobj.h"
 
 class RenderEngine : public Engine {
 
@@ -42,7 +42,7 @@ public:
    }
 
    std::shared_ptr<Hud> getHud() { return this->hud; }
-   std::shared_ptr<VFC> getVfc() { return this->vfc; }
+   std::shared_ptr<VFCobj> getVfc() { return this->vfc; }
 
    virtual void init();
    virtual void execute(double delta_time = 0);
@@ -55,7 +55,7 @@ protected:
    std::shared_ptr<Program> program;
    std::shared_ptr<WindowManager> window;
    std::shared_ptr<Hud> hud;
-   std::shared_ptr<VFC> vfc;
+   std::shared_ptr<VFCobj> vfc;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 
