@@ -82,9 +82,12 @@ void RenderEngine::execute(double delta_time) {
    hud->start();
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
+   std::cout << "~~~~~~~~~~~\nRendering: ";
    for (auto &idx : this->vfc->ViewFrustCull()) {
       this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+      std::cout << idx << " ";
    }
+   std::cout << std::endl;
 
    V->popMatrix();
    M->popMatrix();

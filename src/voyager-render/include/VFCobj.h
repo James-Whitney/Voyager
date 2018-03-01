@@ -112,13 +112,12 @@ public:
    }
 
    void CullTree(std::shared_ptr<VFCoct> curTree, std::vector<int> *rmvIdx) {
-      bool checknext = true;
+      bool checknext = false;
       float dist;
       for (int i = 0; i < 6; i++) {
          dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, curTree->box->center);
-         if (dist > curTree->box->radius) {
-            for (auto &i : curTree->box->idxs) { rmvIdx->push_back(i); }
-            checknext = false;
+         if (dist < curTree->box->radius) {
+            checknext = true;
             break;
          }
       }
@@ -126,6 +125,8 @@ public:
          for (auto &child : curTree->children) {
             if (NULL != child) { CullTree(child, rmvIdx); }
          }
+      } else {
+         for (auto &i : curTree->box->idxs) { rmvIdx->push_back(i); }
       }
    }
 
