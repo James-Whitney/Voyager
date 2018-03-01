@@ -56,13 +56,7 @@ void Application::run() {
       log_life("--------------------==[ LOOP ]==--------------------");
       // Game Update
       double delta_time;
-<<<<<<< HEAD
       this->network_engine->execute(delta_time);
-=======
-      //this->timer.tick(&delta_time);
-      
-
->>>>>>> vfc
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
          this->update(delta_time);
