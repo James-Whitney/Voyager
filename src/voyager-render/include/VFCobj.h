@@ -22,9 +22,11 @@ public:
    std::shared_ptr<VFCoct> tree;
 
    VFCobj(std::vector< std::shared_ptr<Component> > *objs) {
+      std::cout << "Creating objs" << std::endl;
+
       std::shared_ptr<Renderable> curObj;
       std::vector< std::shared_ptr<VFCbox> > boxes;
-      for (int i = 0; i < objs->size(); ++i) {
+      for (int i = 1; i < objs->size(); ++i) {
          curObj = std::static_pointer_cast<Renderable>(objs->at(i));
          vec3 center = bulletToGlm(curObj->getEntity()->getTransform()->getOrigin());
          vec3 min = curObj->getShape()->min;
@@ -34,6 +36,9 @@ public:
          idx.push_back(i);
          boxes.push_back(std::make_shared<VFCbox>(center, min, max, radius, &idx));
       }
+
+      std::cout << "Creating Octree with " << boxes.size() << " boxes" << std::endl;
+
       this->tree = std::make_shared<VFCoct>(boxes);
    }
 

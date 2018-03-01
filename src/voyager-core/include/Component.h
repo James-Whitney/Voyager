@@ -27,7 +27,7 @@ protected:
 
    long id;
    std::shared_ptr<Entity> entity;
-   bool active = true;
+   bool active;
 
 };
 

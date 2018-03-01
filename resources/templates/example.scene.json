@@ -90,6 +90,174 @@
                "damping": [1.0, 1.0]
             }
          ]
+      },
+      {
+         "name": "box2",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [0, 0, 5],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
+      },
+      {
+         "name": "box3",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [0, 0, -5],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
+      },
+      {
+         "name": "box4",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [-5, 0, 0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
+      },
+      {
+         "name": "box5",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [-5, 0, -5],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
+      },
+      {
+         "name": "box6",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [5, 0, 5],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
+      },
+      {
+         "name": "box7",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [5, 0, -5],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
+      },
+      {
+         "name": "box8",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber" : 1,
+               "shape" : 1
+            },
+            {
+               "type" : "PHYSICS",
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale" : [0.5,0.5,0.5]
+               },
+               "mass": 5.0,
+               "position": [-5, 0, 5],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [1.0, 1.0]
+            }
+         ]
       }
    ],
 
