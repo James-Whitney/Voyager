@@ -84,6 +84,7 @@ void RenderEngine::execute(double delta_time) {
    hud->start();
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
+   /*
    char buff[1024];
    sprintf(buff, "L: (%.3f %.3f %.3f %.3f)\nR: (%.3f %.3f %.3f %.3f)\nB: (%.3f %.3f %.3f %.3f)\nT: (%.3f %.3f %.3f %.3f)\nN: (%.3f %.3f %.3f %.3f)\nF: (%.3f %.3f %.3f %.3f)\n",
       vfc->planes[0].x, vfc->planes[0].y, vfc->planes[0].z, vfc->planes[0].w,
@@ -97,6 +98,11 @@ void RenderEngine::execute(double delta_time) {
       if (!this->vfc->ViewFrustCull(static_pointer_cast<Renderable>(this->components.at(i)), hud, i)) {
          this->render(static_pointer_cast<Renderable>(this->components.at(i)));
       }
+   }
+   */
+
+   for (auto &idx : this->vfc->ViewFrustCull()) {
+      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
    }
 
 

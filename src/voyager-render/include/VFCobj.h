@@ -19,14 +19,13 @@ public:
    vec4 Left, Right, Bottom, Top, Near, Far;
    vec4 planes[6];
 
-   VFCoct *tree;
+   std::shared_ptr<VFCoct> tree;
 
    VFCobj(std::vector< std::shared_ptr<Component> > *objs) {
       std::shared_ptr<Renderable> curObj;
       std::vector< std::shared_ptr<VFCbox> > boxes;
       for (int i = 0; i < objs->size(); ++i) {
          curObj = std::static_pointer_cast<Renderable>(objs->at(i));
-
          vec3 center = bulletToGlm(curObj->getEntity()->getTransform()->getOrigin());
          vec3 min = curObj->getShape()->min;
          vec3 max = curObj->getShape()->max;
@@ -35,12 +34,10 @@ public:
          idx.push_back(i);
          boxes.push_back(std::make_shared<VFCbox>(center, min, max, radius, &idx));
       }
-      this->tree = new VFCoct(boxes);
-
+      this->tree = std::make_shared<VFCoct>(boxes);
    }
 
    void ExtractVFPlanes(mat4 P, mat4 V) {
-      /* composite matrix */
       mat4 comp = P * V;
 
       this->Left.x = comp[0][3] + comp[0][0];
@@ -86,24 +83,17 @@ public:
       this->planes[5] = this->Far;
    }
 
-
-   /* helper function to compute distance to the plane */
    float DistToPlane(float A, float B, float C, float D, vec3 point) {
       return (A*point.x) + (B*point.y) + (C*point.z) + D;
    }
 
+   std::vector<int> ViewFrustCull() {
+      vec3 center = this->tree->box->center;
+      float radius = this->tree->box->radius;
+      std::vector<int> idxs;
 
-   int ViewFrustCull(std::shared_ptr<Renderable> renderable, std::shared_ptr<Hud> hud, int i) {
-      vec3 center = bulletToGlm(renderable->getEntity()->getTransform()->getOrigin());
-      float radius = renderable->getShape()->radius;
-
-      if (i == 2) {
-         char buff[1024];
-         sprintf(buff, "Center: (%.3f %.3f %.3f)\nRadius: %.3f\n",
-         center.x, center.z, center.z, radius);
-         hud->dynamicTextbox("box1 stuff", buff, hud->width*0.75, hud->height*0.5, 1, 1, 1, 1);
-      }
-
+      CullTree(this->tree, &idxs);
+      /*
       float dist;
       for (int i = 0; i < 6; i++) {
          dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
@@ -112,7 +102,28 @@ public:
          }
       }
       return 0;
+      */
+      return idxs;
    }
+
+   void CullTree(std::shared_ptr<VFCoct> curTree, std::vector<int> *rmvIdx) {
+      bool checknext = true;
+      float dist;
+      for (int i = 0; i < 6; i++) {
+         dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, curTree->box->center);
+         if (dist > curTree->box->radius) {
+            for (auto &i : curTree->box->idxs) { rmvIdx->push_back(i); }
+            checknext = false;
+            break;
+         }
+      }
+      if (checknext) {
+         for (auto &child : curTree->children) {
+            if (NULL != child) { CullTree(child, rmvIdx); }
+         }
+      }
+   }
+
 
 };
 

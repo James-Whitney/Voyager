@@ -19,7 +19,11 @@ public:
    VFCoct(std::vector< std::shared_ptr<VFCbox> > box) {
       for (auto &b : box) { this->objs.push_back(b); }
       generateBox();
-      generateChildren();
+      if (this->objs.size() > 1) {
+         generateChildren();
+      } else {
+         for (auto &child : this->children) { child = NULL; }
+      }
    }
 
    void generateBox() {
@@ -87,14 +91,15 @@ public:
             ppp.push_back(box);
          }
       }
-      this->children[0] = std::make_shared<VFCoct>(nnn);
-      this->children[1] = std::make_shared<VFCoct>(nnp);
-      this->children[2] = std::make_shared<VFCoct>(npn);
-      this->children[3] = std::make_shared<VFCoct>(npp);
-      this->children[4] = std::make_shared<VFCoct>(pnn);
-      this->children[5] = std::make_shared<VFCoct>(pnp);
-      this->children[6] = std::make_shared<VFCoct>(ppn);
-      this->children[7] = std::make_shared<VFCoct>(ppp);
+
+      nnn.size() > 0 ? this->children[0] = std::make_shared<VFCoct>(nnn) : this->children[0] = NULL;
+      nnp.size() > 0 ? this->children[1] = std::make_shared<VFCoct>(nnp) : this->children[1] = NULL;
+      npn.size() > 0 ? this->children[2] = std::make_shared<VFCoct>(npn) : this->children[2] = NULL;
+      npp.size() > 0 ? this->children[3] = std::make_shared<VFCoct>(npp) : this->children[3] = NULL;
+      pnn.size() > 0 ? this->children[4] = std::make_shared<VFCoct>(pnn) : this->children[4] = NULL;
+      pnp.size() > 0 ? this->children[5] = std::make_shared<VFCoct>(pnp) : this->children[5] = NULL;
+      ppn.size() > 0 ? this->children[6] = std::make_shared<VFCoct>(ppn) : this->children[6] = NULL;
+      ppp.size() > 0 ? this->children[7] = std::make_shared<VFCoct>(ppp) : this->children[7] = NULL;
    }
 
 };
