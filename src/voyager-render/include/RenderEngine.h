@@ -10,11 +10,14 @@
 #include <voyager-core/include/WindowManager.h>
 #include <voyager-utils/include/MatrixStack.h>
 #include <voyager-utils/include/Program.h>
+#include <voyager-utils/include/BulletToGlm.h>
 #include <voyager-hud/include/Hud.h>
-#include <voyager-utils/include/Transform.h>
+
+#include <bullet/src/btBulletDynamicsCommon.h>
 
 #include "Camera.h"
 #include "Renderable.h"
+#include "VFCobj.h"
 
 class RenderEngine : public Engine {
 
@@ -38,6 +41,9 @@ public:
       this->window = window;
    }
 
+   std::shared_ptr<Hud> getHud() { return this->hud; }
+   std::shared_ptr<VFCobj> getVfc() { return this->vfc; }
+
    virtual void init();
    virtual void execute(double delta_time = 0);
 
@@ -49,9 +55,9 @@ protected:
    std::shared_ptr<Program> program;
    std::shared_ptr<WindowManager> window;
    std::shared_ptr<Hud> hud;
+   std::shared_ptr<VFCobj> vfc;
 
-   virtual void render(std::shared_ptr<Renderable> renderable,
-      std::shared_ptr<MatrixStack> MV);
+   virtual void render(std::shared_ptr<Renderable> renderable);
 
    // virtual void setMaterial(std::shared_ptr<Program> prog, glm::vec3 amb,
    //    glm::vec3 dif);

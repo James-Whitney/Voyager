@@ -1,10 +1,10 @@
+#include <iostream>
 #include <memory>
 #include <string>
 
-#include <voyager-core/include/Application.h>
-#include <voyager-core/include/ApplicationType.h>
-#include <voyager-core/include/Entity.h>
+#include <voyager-core/include/All.h>
 
+<<<<<<< HEAD
 #include <voyager-render/include/RenderEngine.h>
 #include <voyager-render/include/Uber.h>
 
@@ -14,6 +14,13 @@
 
 #include <voyager-actors/include/Player.h>
 #include <voyager-actors/include/Ship.h>
+=======
+#include <voyager-loader/include/VoyagerConfigLoader.h>
+#include <voyager-loader/include/ApplicationMaker.h>
+#include <voyager-loader/include/Scene.h>
+#include <voyager-loader/include/SceneLoader.h>
+#include <voyager-utils/include/Time.h>
+>>>>>>> vfc
 
 #define RESOURCE_DIR "resources/"
 #define WINDOW_WIDTH 1024
@@ -22,13 +29,9 @@
 using namespace glm;
 using namespace std;
 
-shared_ptr<Entity> make_box(string resource_dir);
-shared_ptr<Ship> make_ship(string resource_dir);
-shared_ptr<Player> make_player(string resource_dir);
-
-
 int main(int argc, char *argv[]) {
 
+<<<<<<< HEAD
    // initialize the application
    shared_ptr<Application> app = make_shared<Application>(CLIENT, RESOURCE_DIR);
 
@@ -145,3 +148,28 @@ shared_ptr<Entity> make_box(string resource_dir) {
 
    return result;
 }
+=======
+   // Get the path to the config file
+   if (argc < 2) {
+      cerr << "No config file specified, please pass the path to the config file on the command line" << endl;
+      exit(1);
+   }
+   string config_path(argv[1]);
+
+   // make the application
+   VoyagerConfigLoader config_loader;
+   shared_ptr<VoyagerConfig> config = config_loader.load(config_path);
+   shared_ptr<Application> app = make_application(config);
+   // load the scene
+   double start_scene_load = currentTimeMs();
+   SceneLoader scene_loader(config->getResourceDir());
+   shared_ptr<Scene> scene = scene_loader.load(config->getResourceDir()
+      + "/templates/example.scene.json");
+   scene->apply(app);
+   scene = nullptr;
+   cout << "Scene loaded in " << currentTimeMs() - start_scene_load << "ms" << endl;
+
+   // run it
+   app->run();
+}
+>>>>>>> vfc

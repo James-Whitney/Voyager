@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include <voyager-utils/include/Transform.h>
+#include <bullet/src/btBulletDynamicsCommon.h>
 
 #include "Component.h"
 
@@ -20,8 +20,8 @@ public:
 
    long getId() { return this->id; }
 
-   std::shared_ptr<Transform> getTransform() { return this->transform; }
-   void setTransform(std::shared_ptr<Transform> transform) {
+   std::shared_ptr<btTransform> getTransform() { return this->transform; }
+   void setTransform(std::shared_ptr<btTransform> transform) {
       this->transform = transform;
    }
 
@@ -29,13 +29,14 @@ public:
 
    virtual void add(std::shared_ptr<Component> component);
    virtual std::shared_ptr<Component> componentAt(int i);
+   virtual int numComponents();
    virtual bool remove(std::shared_ptr<Component> component);
 
 protected:
 
    long id;
 
-   std::shared_ptr<Transform> transform;
+   std::shared_ptr<btTransform> transform;
 
 };
 

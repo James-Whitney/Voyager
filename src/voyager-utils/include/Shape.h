@@ -23,8 +23,9 @@ public:
 
 	glm::vec3 min = glm::vec3(0);
 	glm::vec3 max = glm::vec3(0);
+   float radius = 0;
 
-private:
+protected:
 
 	std::vector<unsigned int> eleBuf;
 	std::vector<float> posBuf;

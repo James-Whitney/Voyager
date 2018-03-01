@@ -50,6 +50,7 @@ void Shape::measure()
    max.x = maxX;
    max.y = maxY;
    max.z = maxZ;
+   radius = (float)sqrt(pow((max.x-min.x),2)+pow((max.y-min.y),2)+pow((max.z-min.z),2))/2.0f;
 }
 
 void Shape::init()

@@ -15,6 +15,7 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+<<<<<<< HEAD
    shared_ptr<Application> app = make_shared<Application>(SERVER, RESOURCE_DIR);
    //Application app(SERVER, RESOURCE_DIR);
 
@@ -22,4 +23,11 @@ int main(int argc, char *argv[]) {
    shared_ptr<ServerNetworkEngine> networkEngine = make_shared<ServerNetworkEngine>();
    app->setNetworkEngine(static_pointer_cast<Engine>(networkEngine));
    app->run();
+=======
+   // TODO: maybe don't have a separate server executable?
+   // just adjust behavior based on the application config
+
+   // Application app(SERVER, RESOURCE_DIR);
+   // app.run();
+>>>>>>> vfc
 }
