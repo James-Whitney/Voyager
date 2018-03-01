@@ -36,11 +36,10 @@ void RenderEngine::init() {
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
 
-   this->vfc = make_shared<VFC>();
-
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
    }
+   this->vfc = make_shared<VFC>();
 
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
 }
