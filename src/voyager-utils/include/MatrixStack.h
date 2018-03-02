@@ -24,6 +24,9 @@ class MatrixStack
    //  Sets the top matrix to be the identity
    void loadIdentity();
 
+   // loads given matrix
+   void loadMatrix(const glm::mat4 &matrix);
+
    // glMultMatrix(): Right multiplies the top matrix
    void multMatrix(const glm::mat4 &matrix);
 

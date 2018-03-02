@@ -99,9 +99,25 @@ void RenderEngine::execute(double delta_time) {
 
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
-   
-   mat4 cam = glm::lookAt(vec3(0, 35 , 0), vec3(0, 0, 0), vec3(1, 0, 0));
-   mat4 ortho = glm::ortho(-50.f, 50.f, -50.f, 50.f, 5.f, 55.f);
+
+   std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
+   float maxHeight = terrain->getMaxHeight();
+
+   btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))->getEntity()->getTransform()->getOrigin();
+
+   //cout << terrPos.getX() << " " << terrPos.getY() << " " << terrPos.getZ() << endl;
+   //cout << maxHeight << endl;
+
+   vec3 min = vec3(terrPos.getX(), terrPos.getY(), terrPos.getZ());
+   vec3 max = vec3(-terrPos.getX(), terrPos.getY() + maxHeight, -terrPos.getZ());
+
+   float midX = min.x + max.x / 2;
+   float midZ = min.z + max.z / 2;
+
+   //cout << "min: " << min.y << " " << max.y << endl;
+
+   mat4 cam = glm::lookAt(vec3(midX, max.y + 1 , midX), vec3(midX, min.y, midZ), vec3(1, 0, 0));
+   mat4 ortho = glm::ortho(min.x, max.x, min.z, max.z, 1.f, max.y - min.y + 1);
 
    glUniformMatrix4fv(this->program->getUniform("shadowP"), 1, GL_FALSE,
       value_ptr(ortho));
@@ -124,10 +140,9 @@ void RenderEngine::execute(double delta_time) {
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
-   shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
+   
 
    P->pushMatrix();
-   M->pushMatrix();
    V->pushMatrix();
 
    this->camera->setView(aspect, P, V);
@@ -151,7 +166,6 @@ void RenderEngine::execute(double delta_time) {
    }
 
    V->popMatrix();
-   M->popMatrix();
    P->popMatrix();
 
 
@@ -159,6 +173,7 @@ void RenderEngine::execute(double delta_time) {
       hud->startMenu();
    } else {
       hud->run();
+      hud->shipStats(helm);
    }
 
    this->program->unbind();
@@ -174,11 +189,20 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    cout << "\trendering component " << renderable->getId() << endl;
 #endif
 
-   renderable->getUber()->setUniforms(this->program);
-   std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
-   glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(bulletToGlm(*trans.get())));
+   shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
+   M->pushMatrix();
+   {
+      std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
+      M->loadMatrix(bulletToGlm(*trans.get()));
+      std::shared_ptr<btVector3> scale = renderable->getEntity()->getScale();
+      M->scale(bulletToGlm(*scale.get()) * 2.0f);
 
-   for (std::shared_ptr<Shape> shape : renderable->getMesh()) {
-      shape->draw(this->program);
+      renderable->getUber()->setUniforms(this->program);
+      glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
+
+      for (std::shared_ptr<Shape> shape : renderable->getMesh()) {
+         shape->draw(this->program);
+      }
    }
+   M->popMatrix();
 }

@@ -8,10 +8,15 @@
 #include <voyager-core/include/Engine.h>
 #include <voyager-core/include/Entity.h>
 #include <voyager-core/include/WindowManager.h>
+
 #include <voyager-utils/include/MatrixStack.h>
 #include <voyager-utils/include/Program.h>
 #include <voyager-utils/include/BulletToGlm.h>
+#include <voyager-utils/include/Terrain.h>
+
 #include <voyager-hud/include/Hud.h>
+
+#include <voyager-actors/include/ShipComponent.h>
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
@@ -40,6 +45,9 @@ public:
       this->window = window;
    }
 
+   std::shared_ptr<HelmComponent> getHelm() { return this->helm; }
+   void setHelm(std::shared_ptr<HelmComponent> helm) { this->helm = helm; }
+
    std::shared_ptr<Hud> getHud() { return this->hud; }
 
    virtual void init();
@@ -55,6 +63,8 @@ protected:
    std::shared_ptr<Hud> hud;
    GLuint depthBufferId;
    GLuint depthTextureId;
+
+   std::shared_ptr<HelmComponent> helm;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 

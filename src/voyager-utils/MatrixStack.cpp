@@ -30,6 +30,12 @@ void MatrixStack::loadIdentity()
 	top = glm::mat4(1.f);
 }
 
+void MatrixStack::loadMatrix(const glm::mat4 &matrix)
+{
+   glm::mat4 &top = stack.top();
+   top = matrix;
+}
+
 void MatrixStack::perspective(float fovy, float aspect, float zNear, float zFar)
 {
 	glm::mat4 &top = stack.top();

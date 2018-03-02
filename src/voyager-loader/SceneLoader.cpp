@@ -131,7 +131,7 @@ void SceneLoader::parse_ubers(shared_ptr<Scene> scene, Value& ubers) {
 void SceneLoader::parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> entity, Value& transform) {
    shared_ptr<btTransform> btTrans = make_shared<btTransform>();
    Value& position = transform["position"];
-   btVector3 pos = btVector3(position[0].GetFloat(), 
+   btVector3 pos = btVector3(position[0].GetFloat(),
                              position[1].GetFloat(),
                              position[2].GetFloat());
    Value& axis = transform["axis"];
@@ -140,6 +140,13 @@ void SceneLoader::parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> en
                                                 axis[1].GetFloat(),
                                                 axis[2].GetFloat()),
                                                 rotation.GetFloat());
+
+   Value& scale_ = transform["scale"];
+   shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(scale_[0].GetFloat(),
+                                                                  scale_[1].GetFloat(),
+                                                                  scale_[2].GetFloat()));
+   entity->setScale(scale);
+
    btTrans->setIdentity();
    btTrans->setOrigin(pos);
    btTrans->setRotation(btQuad);
@@ -149,22 +156,44 @@ void SceneLoader::parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> en
 void SceneLoader::parse_entities(shared_ptr<Scene> scene, Value& entities) {
    log("Entities And Components:");
    for (SizeType i = 0; i < entities.Size(); ++i) {
-      stringstream ss;
-      ss << "\t" << i << ": " << entities[i]["name"].GetString();
-      log(ss.str());
+      this->parse_entity(scene, entities[i], 1);
+   }
+}
 
-      shared_ptr<Entity> entity = make_shared<Entity>();
-      if (entities[i].HasMember("transform")) {
-         this->parse_transform(scene, entity, entities[i]["transform"]);
-      }
-      if (entities[i].HasMember("components") && entities[i]["components"].IsArray()) {
-         this->parse_components(scene, entity, entities[i]["components"]);
-      }
-      scene->entities.push_back(entity);
-      for (int j = 0; j < entity->numComponents(); ++j) {
-         scene->components.push_back(entity->componentAt(j));
+shared_ptr<Entity> SceneLoader::parse_entity(shared_ptr<Scene> scene, rapidjson::Value& json, int tabs) {
+   stringstream ss;
+   while (tabs-- > 0) ss << '\t';
+   ss << "entity: " << json["name"].GetString();
+   log(ss.str());
+
+   shared_ptr<Entity> entity = make_shared<Entity>();
+
+   // transform
+   if (json.HasMember("transform")) {
+      this->parse_transform(scene, entity, json["transform"]);
+   }
+
+   // components
+   if (json.HasMember("components") && json["components"].IsArray()) {
+      this->parse_components(scene, entity, json["components"]);
+   }
+
+   // add to scene
+   scene->entities.push_back(entity);
+   for (int i = 0; i < entity->numComponents(); ++i) {
+      scene->components.push_back(entity->componentAt(i));
+   }
+
+   // any children?
+   if (json.HasMember("children") && json["children"].IsArray()) {
+      for (int i = 0; i < json["children"].GetArray().Size(); ++i) {
+         shared_ptr<Entity> child = this->parse_entity(scene, json["children"][i], tabs + 1);
+         entity->addChild(child);
+         child->setParent(entity);
       }
    }
+
+   return entity;
 }
 
 void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> entity,
@@ -188,6 +217,12 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
          }
       }
+      else if (type == "STATION") {
+         string subType = components[i]["sub-type"].GetString();
+         if (subType == "HELM") {
+            entity->add(this->parse_helmComponent(entity, scene, components[i]));
+         }
+      }
       else {
          cerr << "Unknown component type: " << type << endl;
          continue;
@@ -208,32 +243,61 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
 }
 
 
-shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
+shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity, 
+                                                            shared_ptr<PhysicsComponent> physicsComponent, 
+                                                            shared_ptr<Scene> scene, 
+                                                            Value& component) {
+
    shared_ptr<PlayerComponent> playerComponent = make_shared<PlayerComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
+   physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    playerComponent->setPhysics(physicsComponent);
    return static_pointer_cast<Component>(playerComponent);
 }
 
-shared_ptr<Component> SceneLoader::parse_shipComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
+shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> entity, 
+                                                         shared_ptr<PhysicsComponent> physicsComponent, 
+                                                         shared_ptr<Scene> scene, 
+                                                         Value& component) {
+
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
    physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    shipComponent->setPhysics(physicsComponent);
+   shipComponent->setSpeed(component["speed"].GetFloat());
    return static_pointer_cast<Component>(shipComponent);
 }
 
 
-shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Entity> entity, shared_ptr<Scene> scene, Value& component) {
+shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity, 
+                                                            shared_ptr<Scene> scene, 
+                                                            Value& component) {
+
+   shared_ptr<HelmComponent> helmComponent = make_shared<HelmComponent>();
+   helmComponent->setCameraHeight(2.0);
+   helmComponent->setTurnSpeed(component["turnSpeed"].GetFloat());
+   helmComponent->setRiseSpeed(component["riseSpeed"].GetFloat());
+   return helmComponent;
+}
+shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity, 
+                                                                  shared_ptr<Scene> scene, 
+                                                                  Value& component) {
+
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
+
+   Value& world_ = component["world"];
+   int world = world_.GetInt();
 
    btScalar lin_damp = btScalar(0.0);
    btScalar ang_damp = btScalar(0.0);
-   
+
    if (component.HasMember("damping") && component["damping"].IsArray()) {
       lin_damp = btScalar(component["damping"][0].GetFloat());
       ang_damp = btScalar(component["damping"][1].GetFloat());
    }
+
+   Value& fric = component["friction"];
+   btScalar friction = btScalar(fric.GetFloat());
    
    btCollisionShape* collisionShape;
 
@@ -256,20 +320,29 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Enti
    btVector3 position = btVector3(pos[0].GetFloat(),
                                   pos[1].GetFloat(),
                                   pos[2].GetFloat());
+                                 
+   Value& scale_ = component["scale"];
+   shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat()));
+   //scale = btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat());
+   
+   /*btVector3 scale = btVector3(  scale_[0].GetFloat(),
+                                 scale_[1].GetFloat(),
+                                 scale_[2].GetFloat());*/
+   entity->setScale(scale);
 
    Value& axis = component["axis"];
    Value& rotation = component["rotation"];
    btQuaternion btQuad = btQuaternion(btVector3(axis[0].GetFloat(),
                                                 axis[1].GetFloat(),
                                                 axis[2].GetFloat()),
-                                                rotation.GetFloat());       
+                                                rotation.GetFloat());
 
    Value& vel = component["velocity"];
    btVector3 velocity = btVector3(vel[0].GetFloat(),
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
 
-   physicsComponent->initRigidBody(entity, collisionShape, mass, position, btQuad, velocity);
+   physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;
 }
