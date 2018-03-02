@@ -29,9 +29,9 @@ public:
       for (int i = 1; i < objs->size(); ++i) {
          curObj = std::static_pointer_cast<Renderable>(objs->at(i));
          vec3 center = bulletToGlm(curObj->getEntity()->getTransform()->getOrigin());
-         vec3 min = curObj->getMesh().min;
-         vec3 max = curObj->getMesh().max;
-         float radius = curObj->getMesh().radius;
+         vec3 min = curObj->getMesh().at(0)->min;
+         vec3 max = curObj->getMesh().at(0)->max;
+         float radius = curObj->getMesh().at(0)->radius;
          std::vector<int> idx;
          idx.push_back(i);
          boxes.push_back(std::make_shared<VFCbox>(center, min, max, radius, &idx));
