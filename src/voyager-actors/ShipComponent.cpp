@@ -29,7 +29,10 @@ btVector3 ShipComponent::getRotationVector() {
 
 void ShipComponent::turnShip(btScalar angle) {
    if (angle != 0.0) {
-      physicsComponent->getBody()->applyTorque(btVector3(0,angle,0));
+      if (forwardThrottle < 0) {
+         angle *= -1;
+      }
+      physicsComponent->getBody()->applyTorque(btVector3(0,angle,0)); 
    }
 }
 

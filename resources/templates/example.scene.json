@@ -49,7 +49,7 @@
                "damping": [0.1, 0.1],
                "friction": 1.0,
                "ship": true,
-               "speed": 1000.0
+               "speed": 2500.0
             }
          ]
       },
@@ -221,7 +221,7 @@
                "collisionShape":
                {
                   "type": "box",
-                  "scale": [1.0, 0.5, 1.0]
+                  "scale": [0.1, 0.1, 0.1]
                },
                "mass": 0.0,
                "position": [-7, 0, 0.0],
@@ -235,9 +235,77 @@
             {
                "type": "STATION",
                "sub-type": "HELM",
-               "cameraHeight": 10.0,
+               "cameraHeight": 4.0,
                "turnSpeed": 100000.0,
                "riseSpeed": 50000.0
+            }
+         ]
+      },
+      {
+         "name": "turret0",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1
+            },
+            {
+               "type": "PHYSICS",
+               "world": 0,
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.1, 0.1, 0.1]
+               },
+               "mass": 0.0,
+               "position": [7.0, 0.0, 6.0],
+               "scale": [1.0, 0.5, 1.0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            },
+            {
+               "type": "STATION",
+               "sub-type": "TURRET",
+               "ID": 0,               
+               "bullet-type": 1,
+               "cameraHeight": 2.0
+            }
+         ]
+      },
+      {
+         "name": "turret1",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1
+            },
+            {
+               "type": "PHYSICS",
+               "world": 0,
+               "collisionShape": 
+               {
+                  "type": "box",
+                  "scale": [0.1, 0.1, 0.1]
+               },
+               "mass": 0.0,
+               "position": [7.0, 0.0, -6.0],
+               "scale": [1.0, 0.5, 1.0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            },
+            {
+               "type": "STATION",
+               "sub-type": "TURRET",
+               "ID": 1,
+               "bullet-type": 2,
+               "cameraHeight": 2.0
             }
          ]
       }
