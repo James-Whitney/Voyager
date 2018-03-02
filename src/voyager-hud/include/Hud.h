@@ -13,6 +13,8 @@
 #include <rapidjson/include/rapidjson/rapidjson.h>
 #include <rapidjson/include/rapidjson/document.h>
 
+#include <voyager-actors/include/HelmComponent.h>
+
 #include <string>
 #include <vector>
 
@@ -58,6 +60,8 @@ public:
    void generate();
 
    void startMenu();
+
+   void shipStats(std::shared_ptr<HelmComponent>  ship);
 
    void guiKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
    bool inputScreen() { return this->startScreen; }

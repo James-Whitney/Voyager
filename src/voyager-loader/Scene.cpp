@@ -19,7 +19,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    btScalar vertexScale = terrainShape->getVertexSpacing();
 
    physicsComponent->initHeightMap( terrain,
-                                    terrain->getTransform()->getOrigin(),
+                                    btVector3(0, 0, 0),
                                     terrain->getTransform()->getRotation(),
                                     mapWidth,
                                     mapLength,
@@ -45,6 +45,27 @@ void Scene::apply(shared_ptr<Application> app) {
       app->getThings()[entity->getId()] = entity;
    }
 
+   //init HeightMap
+   shared_ptr<Entity> terrain = this->entities.at(0);
+   initTerrain(app, terrain);
+
+   //init ship
+   shared_ptr<Entity> ship = this->entities.at(1);
+   shared_ptr<ShipComponent> shipComponent = 
+      static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
+   shipComponent->setWindow(app->getWindowManager());
+   static_pointer_cast<PhysicsEngine>(app->getPhysicsEngine())->setShip(shipComponent);
+   //shipComponent->getPhysics()->getBody()->setGravity(btVector3(0, 1, 0));
+
+   //init player
+   shared_ptr<Entity> player = this->entities.at(2);
+   shared_ptr<PlayerComponent> playerComponent = 
+      static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
+   playerComponent->setWindow(app->getWindowManager());
+   playerComponent->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
+   playerComponent->setShip(shipComponent);
+   //playerComponent->getPhysics()->getBody()->setGravity(btVector3(0, -9.8, 0));
+
    for (int i = 0; i < this->components.size(); ++i) {
       shared_ptr<Component> component = this->components.at(i);
 
@@ -55,25 +76,19 @@ void Scene::apply(shared_ptr<Application> app) {
          app->getPhysicsEngine()->registerComponent(component);
       }
       else if (dynamic_pointer_cast<ActorComponent>(component)) {
+         if (dynamic_pointer_cast<StationComponent>(component)) {
+            static_pointer_cast<StationComponent>(component)->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
+         }
+         if (dynamic_pointer_cast<HelmComponent>(component)) {
+            playerComponent->setHelm(static_pointer_cast<StationComponent>(component));
+            std::shared_ptr<HelmComponent> helm = static_pointer_cast<HelmComponent>(component);
+            static_pointer_cast<RenderEngine>(app->getRenderEngine())->setHelm(helm);
+            helm->setShip(shipComponent);
+            helm->setWindow(app->getWindowManager());
+         }
          app->getActorEngine()->registerComponent(component);
       }
    }
-   //init HeightMap
-   shared_ptr<Entity> terrain = this->entities.at(0);
-   initTerrain(app, terrain);
-
-   //init ship
-   shared_ptr<Entity> ship = this->entities.at(1);
-   shared_ptr<ShipComponent> shipComponent = static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
-   shipComponent->setWindow(app->getWindowManager());
-
-   //init player
-   shared_ptr<Entity> player = this->entities.at(2);
-   shared_ptr<PlayerComponent> playerComponent = static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
-   playerComponent->setWindow(app->getWindowManager());
-   playerComponent->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
-   playerComponent->setShip(shipComponent);
-
 }
 
 void Scene::dump() {
