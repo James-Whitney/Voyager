@@ -27,9 +27,8 @@ uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
 
 vec4 cookTorrance(vec3 normal) {
-   vec3 lightDirection = lightPos - wFragPos;
+   vec3 lightDirection = lightPos - WPos;
    float lightDistance = length(lightDirection);
-   lightDirection = normalize(lightDirection);
 
    // do the lighting calculation for each fragment
    float NdotL = max(dot(normal, lightDirection), 0.0);
