@@ -8,6 +8,17 @@ void PlayerComponent::init() {
 
 }
 
+void PlayerComponent::setTurret(std::shared_ptr<StationComponent> turret, int i) {
+   switch (i) {
+      case 0:
+         turret0 = turret;
+      break;
+      case 1:
+         turret1 = turret;
+      break;
+   }
+}
+
 glm::vec3 PlayerComponent::getPosition() {
    return bulletToGlm(entity->getTransform()->getOrigin());
 }
@@ -36,6 +47,22 @@ void PlayerComponent::stationSelectionCheck() {
          mounted->deactivate();
       }
       mounted = helm;
+      mounted->activate();
+   }
+   else if (glfwGetKey(window->getHandle(), GLFW_KEY_3 ) == GLFW_PRESS) {
+      active = false;
+      if (mounted != nullptr) {
+         mounted->deactivate();
+      }
+      mounted = turret0;
+      mounted->activate();
+   }
+   else if (glfwGetKey(window->getHandle(), GLFW_KEY_4 ) == GLFW_PRESS) {
+      active = false;
+      if (mounted != nullptr) {
+         mounted->deactivate();
+      }
+      mounted = turret1;
       mounted->activate();
    }
 }
