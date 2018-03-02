@@ -27,8 +27,9 @@ uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
 
 vec4 cookTorrance(vec3 normal) {
-   vec3 lightDirection = lightPos - WPos;
+   vec3 lightDirection = lightPos - wFragPos;
    float lightDistance = length(lightDirection);
+   lightDirection = normalize(lightDirection);
 
    // do the lighting calculation for each fragment
    float NdotL = max(dot(normal, lightDirection), 0.0);
@@ -135,7 +136,12 @@ void main() {
         vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
         float depth = texture(depthTexture, shift.xy).r;
 
-        float bias = 0.005;
+        vec3 lightDirection = normalize(lightPos - wFragPos);
+        float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
+        bias = clamp(bias, 0.005, 0.1);
+        if (shift.x > 1 || shift.x < 0) {
+            return;
+        }
         if (depth < (shift.z - bias)) {
            color = 0.5 * color;
         }

@@ -66,6 +66,7 @@ protected:
    std::shared_ptr<Hud> hud;
    GLuint depthBufferId;
    GLuint depthTextureId;
+   int depthResolution;
 
    std::string terrainTextureFilename;
    std::shared_ptr<Texture> terrainTexture;
