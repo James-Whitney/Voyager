@@ -13,7 +13,7 @@ public:
    Connection *server;
    std::vector<Networkable> networkables;
 
-   ClientNetworkEngine();
+   ClientNetworkEngine() : NetworkEngine::NetworkEngine(SEND) { }
 
    //void init();
    void execute(double delta_time);

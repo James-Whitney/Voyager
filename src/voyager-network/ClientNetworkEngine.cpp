@@ -1,9 +1,5 @@
 #include "include/ClientNetworkEngine.h"
 
-ClientNetworkEngine::ClientNetworkEngine() : NetworkEngine::NetworkEngine() {
-   status = SEND;
-}
-
 /*
 void ClientNetworkEngine::init() {
    if (this->socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) {

@@ -43,10 +43,12 @@ public:
 
    std::shared_ptr<Engine> getPhysicsEngine() { return this->physics_engine; }
    void setPhysicsEngine(std::shared_ptr<Engine> physics_engine) { this->physics_engine = physics_engine; }
-   void setNetworkEngine(std::shared_ptr<Engine> network_engine) { this->network_engine = network_engine; }
-
+   
    std::shared_ptr<Engine> getActorEngine() { return this->actor_engine; }
    void setActorEngine(std::shared_ptr<Engine> actor_engine) { this->actor_engine = actor_engine; }
+
+   std::shared_ptr<Engine> getNetworkEngine() { return this->network_engine; }
+   void setNetworkEngine(std::shared_ptr<Engine> network_engine) { this->network_engine = network_engine; }
 
    std::unordered_map<long, std::shared_ptr<Entity> > getThings() { return this->things; }
 
@@ -72,6 +74,7 @@ private:
    std::shared_ptr<Engine> render_engine;
    std::shared_ptr<Engine> physics_engine;
    std::shared_ptr<Engine> network_engine;
+   std::shared_ptr<Engine> actor_engine;
 
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update

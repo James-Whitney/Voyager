@@ -7,6 +7,8 @@
 #include "Networkable.h"
 
 #include <voyager-core/include/Engine.h>
+#include <voyager-utils/include/BulletToGlm.h>
+#include <bullet/src/btBulletDynamicsCommon.h>
 
 #include <vector>
 #include <iostream>
@@ -15,32 +17,27 @@ class NetworkEngine : public Engine {
 public:
    Connection *host;
    sf::UdpSocket socket;
-   std::vector<Connection> players;
-   std::vector<Networkable> networkables;
+   int numPlayers;
+   std::vector< std::shared_ptr<Connection> > players;
+   std::vector< std::shared_ptr<Networkable> > networkables;
 
    enum STATUS { SEND, RECEIVE };
    STATUS status;
 
-   enum PACKET {
-      PLAYER,
-      TRANSFORM,
-      CONNECTION,
-      TRANSFORM_LIST
+   enum FLAG {
+      CONNECT_REQEST,
+      CONNECT_ACCEPT,
+      RECEIVE_PLAYER,
+      UPDATE_PLAYERS,
+      UPDATE_SHIP,
+      UPDATE_TRANSFORM
    };
 
-   NetworkEngine() { };
+   NetworkEngine(STATUS s) { this->status = s; };
 
-   //virtual void init() = 0;
-   void init() {
-      if (this->socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) {
-          std::cout << "Error setting up socket." << std::endl;
-      }
-      this->host = new Connection(sf::IpAddress::getLocalAddress(), socket.getLocalPort());
-      std::cout << "Ip Address is " << this->host->getIp().toString()
-         << " on port " << this->host->getPort() << std::endl;
-      connectionSetup();
-      this->socket.setBlocking(false);
-   }
+   void init();
+   sf::Socket::Status sendPacket(sf::Packet *packet, sf::IpAddress receiverIp, unsigned short receiverPort);
+
    virtual void execute(double delta_time) = 0;
 
    virtual void connectionSetup() = 0;

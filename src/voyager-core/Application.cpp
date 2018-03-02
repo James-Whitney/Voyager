@@ -103,7 +103,7 @@ void Application::init() {
       }
       this->render_engine->init();
       this->network_engine->init();
-   } else if ( this->type == SERVER) {
+   } else if ( this->getType() == SERVER) {
       this->network_engine->init();
       cout << "----------==[ I am the " << type << " ]==----------" << endl;
    }
