@@ -6,6 +6,7 @@ using namespace glm;
 using namespace std;
 
 void RenderEngine::initShadows() {
+   this->depthResolution = 2048;
    glGenFramebuffers(1, &this->depthBufferId);
    glBindFramebuffer(GL_FRAMEBUFFER, depthBufferId);
 
@@ -20,8 +21,8 @@ void RenderEngine::initShadows() {
 
    int width, height;
    glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width,
-      height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, depthResolution,
+      depthResolution, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
    //bind texture to framebuffer
    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 
@@ -32,7 +33,7 @@ void RenderEngine::initShadows() {
     glGenRenderbuffers(1, &rboDepthID);
     glBindRenderbuffer(GL_RENDERBUFFER, rboDepthID);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-    width, height);
+     depthResolution, depthResolution);
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
     GL_RENDERBUFFER, rboDepthID);
@@ -116,29 +117,25 @@ void RenderEngine::execute(double delta_time) {
    glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
    float aspect = width / (float)height;
 
-   glViewport(0, 0, width, height);
+   glViewport(0, 0, depthResolution, depthResolution);
 
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
 
    std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
    float maxHeight = terrain->getMaxHeight();
+   float size = maxHeight * 2;
 
-   btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))->getEntity()->getTransform()->getOrigin();
+   btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))
+      ->getEntity()->getTransform()->getOrigin();
+   float minY = terrPos.getY();
 
-   //cout << terrPos.getX() << " " << terrPos.getY() << " " << terrPos.getZ() << endl;
-   //cout << maxHeight << endl;
+   vec3 camPos = this->camera->getPosition();
+   vec3 lightPos = vec3(camPos.x, minY + size, camPos.z);
 
-   vec3 min = vec3(terrPos.getX(), terrPos.getY(), terrPos.getZ());
-   vec3 max = vec3(-terrPos.getX(), terrPos.getY() + maxHeight, -terrPos.getZ());
-
-   float midX = min.x + max.x / 2;
-   float midZ = min.z + max.z / 2;
-
-   //cout << "min: " << min.y << " " << max.y << endl;
-
-   mat4 cam = glm::lookAt(vec3(midX, max.y + 1 , midX), vec3(midX, min.y, midZ), vec3(1, 0, 0));
-   mat4 ortho = glm::ortho(min.x, max.x, min.z, max.z, 1.f, max.y - min.y + 1);
+   mat4 cam = glm::lookAt(lightPos, vec3(camPos.x, minY, camPos.z),
+      vec3(1, 0, 0));
+   mat4 ortho = glm::ortho(-size, size, -size, size, 1.f, size);
 
    glUniformMatrix4fv(this->program->getUniform("shadowP"), 1, GL_FALSE,
       value_ptr(ortho));
@@ -180,10 +177,12 @@ void RenderEngine::execute(double delta_time) {
       value_ptr(V->topMatrix()));
   
    // TODO: remove hardcoding light position and color
-   glUniform3f(this->program->getUniform("lightPos"), 1, 1, 1);
+   glUniform3f(this->program->getUniform("lightPos"),
+      lightPos.x, lightPos.y, lightPos.z);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
    
    // Render the components to the screen
+   glViewport(0, 0, width, height);
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -206,8 +205,6 @@ void RenderEngine::execute(double delta_time) {
    this->program->unbind();
 
    glfwSwapBuffers(this->window->getHandle());
-
-
 }
 
 void RenderEngine::render(shared_ptr<Renderable> renderable) {
