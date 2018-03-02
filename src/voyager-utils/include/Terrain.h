@@ -22,6 +22,9 @@ public:
    int getMapWidth();
    int getMapLength();
 
+   void setTextureFilename(std::string filename);
+   std::string getTexture();
+
 private:
 
    struct vertex {
@@ -51,6 +54,8 @@ private:
    float max_height = 0.0f;
    float min_height = 0.0f;
    float vertex_spacing = 0.0f;
+
+   std::string textureFilename;
 };
 
 #endif

@@ -31,9 +31,9 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
 
    terrain->add(physicsComponent);
    app->getPhysicsEngine()->registerComponent(physicsComponent);
-   
-   
 
+   // Set terrain texture in render engine
+   static_pointer_cast<RenderEngine>(app->getRenderEngine())->setTerrainTexture(terrainShape->getTexture());
 }
 
 void Scene::apply(shared_ptr<Application> app) {

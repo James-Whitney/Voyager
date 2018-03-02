@@ -57,6 +57,9 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
    terrain_shape->measure();
 
+   string texture_path = this->resource_dir + terrain["texture"].GetString();
+   terrain_shape->setTextureFilename(texture_path);
+
    vector<shared_ptr<Shape>> mesh;
    mesh.push_back(terrain_shape);
    scene->meshes.push_back(mesh);
@@ -119,6 +122,15 @@ void SceneLoader::parse_ubers(shared_ptr<Scene> scene, Value& ubers) {
          );
       } else if (type == "NORMAL") {
          uber = make_shared<NormalUber>();
+      } else if (type == "TERRAIN_COOK_TORRANCE") {
+         Value& ambient = ubers[i]["ambient"];
+         uber = make_shared<TerrainCookTorranceUber>(
+            ubers[i]["opacity"].GetFloat(),
+            vec3(ambient[0].GetFloat(), ambient[1].GetFloat(), ambient[2].GetFloat()),
+            ubers[i]["roughness"].GetFloat(),
+            ubers[i]["f0"].GetFloat(),
+            ubers[i]["k"].GetFloat()
+         );
       } else {
          cerr << "Unknown shape type: " << type << endl;
          continue;

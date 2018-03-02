@@ -192,3 +192,11 @@ int Terrain::getMapLength() {
 btScalar Terrain::getVertexSpacing() {
    return this->vertex_spacing;
 }
+
+void Terrain::setTextureFilename(std::string filename) {
+   this->textureFilename = filename;
+}
+
+std::string Terrain::getTexture() {
+   return this->textureFilename;
+}

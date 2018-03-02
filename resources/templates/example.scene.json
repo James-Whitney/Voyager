@@ -2,7 +2,8 @@
    "terrain": {
       "heightmap": "/heightmap.bmp",
       "height": 40.0,
-      "spacing": 0.25
+      "spacing": 0.25,
+      "texture": "/terrain_tex.png"
    },
 
    "entities": [
@@ -16,7 +17,7 @@
          "components": [
             {
                "type": "RENDER",
-               "uber": 0,
+               "uber": 4,
                "mesh": 0
             }
          ]
@@ -129,6 +130,14 @@
       },
       {
          "type": "NORMAL"
+      },
+      {
+         "type": "TERRAIN_COOK_TORRANCE",
+         "opacity": 1,
+         "ambient": [0.5, 0.5, 0.5],
+         "roughness": 0.3,
+         "f0": 0.8,
+         "k": 0.3
       }
    ]
 

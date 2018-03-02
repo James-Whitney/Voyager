@@ -45,6 +45,8 @@ public:
    virtual void init();
    virtual void execute(double delta_time = 0);
 
+   void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
+
 protected:
 
    std::string resource_dir;
@@ -56,12 +58,16 @@ protected:
    GLuint depthBufferId;
    GLuint depthTextureId;
 
+   std::string terrainTextureFilename;
+   std::shared_ptr<Texture> terrainTexture;
+
    virtual void render(std::shared_ptr<Renderable> renderable);
 
    // virtual void setMaterial(std::shared_ptr<Program> prog, glm::vec3 amb,
    //    glm::vec3 dif);
 
    void initShadows();
+   void initTerrainTexture();
 };
 
 #endif
