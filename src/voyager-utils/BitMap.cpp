@@ -61,6 +61,6 @@ std::vector<BitMap::pixel> BitMap::getPixels() {
 }
 
 BitMap::pixel BitMap::getPixel(int x, int y) {
-   int i = (y * this->height + x);
+   int i = (y * this->width + x);
    return pixels.at(i);
 }
