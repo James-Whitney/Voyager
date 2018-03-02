@@ -114,27 +114,14 @@ void PlayerComponent::positionUpdate(float delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_D ) == GLFW_PRESS) {
       movement += glm::normalize(glm::cross( lookDir, glm::vec3(0, 1, 0)));
    }
-   //Space goes up
-   /*
-   //Shift goes down
-   if(glfwGetKey(window->getHandle(), GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS){
-      movement -= Y_AXIS * deltaTime;
-   }*/
-   
-   if(length(movement) != 0)
-   {
-      //cout << "MOVING" << endl;
+
+   if(length(movement) != 0) {
       movement = glm::normalize(movement);
       movement *= (delta_time * speed);
       btVector3 bullet_force = glmToBullet(movement).rotate(btVector3(0, 1, 0), -(ship->getRotation()));
       physicsComponent->getBody()->applyCentralForce(bullet_force);
    }
    else {
-      //cout << "DAMPING" << endl;
       physicsComponent->getBody()->applyDamping(delta_time);
    }
-   
-   //physicsComponent->getBody()->setLinearVelocity(bullet_force);
-
-   //physicsComponent->getBody()->setAngularVelocity(ship->getPhysics()->getBody()->getAngularVelocity());
 }
