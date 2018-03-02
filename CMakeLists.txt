@@ -15,7 +15,7 @@ function(AddExt TargetName)
 
    #bullet
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/bullet/src")
-   target_link_libraries(${TargetName} 
+   target_link_libraries(${TargetName}
    "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Collision/libBullet3Collision.a"
    "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Common/libBullet3Common.a"
    "${PROJECT_SOURCE_DIR}/ext/bullet/src/Bullet3Dynamics/libBullet3Dynamics.a"
@@ -65,6 +65,7 @@ function(LinkVoyagerLibraries TargetName)
    target_link_libraries(${TargetName} voyager-render)
    target_link_libraries(${TargetName} voyager-utils)
    target_link_libraries(${TargetName} voyager-hud)
+   target_link_libraries(${TargetName} voyager-vfc)
 endfunction(LinkVoyagerLibraries)
 
 function(ConfigureBuildProperties TargetName)
@@ -95,6 +96,7 @@ add_subdirectory("src/voyager-physics")
 add_subdirectory("src/voyager-render")
 add_subdirectory("src/voyager-utils")
 add_subdirectory("src/voyager-hud")
+add_subdirectory("src/voyager-vfc")
 
 # Engine Executables
 add_subdirectory("src/voyager-client")

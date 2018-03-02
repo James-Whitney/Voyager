@@ -1,5 +1,4 @@
 #include "include/RenderEngine.h"
-#include "include/VFCobj.h"
 
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
@@ -190,19 +189,19 @@ void RenderEngine::execute(double delta_time) {
 
    hud->start();
 
-   this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
-   std::cout << "~~~~~~~~~~~\nRendering: ";
    glUniform1i(this->program->getUniform("shadowMode"), 0);
+   this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
       this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
-      std::cout << idx << " ";
    }
-   std::cout << std::endl;
+   for (auto &idx : this->vfc->dynamic) {
+      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+   }
 
    V->popMatrix();
    P->popMatrix();
 
-   if (hud->startScreen) { 
+   if (hud->startScreen) {
       hud->startMenu();
    }  else {
       hud->render();

@@ -16,13 +16,15 @@
 
 #include <voyager-hud/include/Hud.h>
 
+//#include "VFCobj.h"
+#include <voyager-vfc/include/VFCobj.h>
+
 #include <voyager-actors/include/ShipComponent.h>
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
 #include "Camera.h"
 #include "Renderable.h"
-#include "VFCobj.h"
 
 class RenderEngine : public Engine {
 

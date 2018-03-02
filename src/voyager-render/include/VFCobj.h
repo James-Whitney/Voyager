@@ -8,6 +8,7 @@
 #include <voyager-hud/include/Hud.h>
 
 #include <math.h>
+#include <set>
 
 #include "VFCbox.h"
 #include "VFCoct.h"
@@ -20,24 +21,29 @@ public:
    vec4 planes[6];
 
    std::shared_ptr<VFCoct> tree;
+   std::vector<int> dynamic;
 
    VFCobj(std::vector< std::shared_ptr<Component> > *objs) {
-      std::cout << "Creating objs" << std::endl;
-
       std::shared_ptr<Renderable> curObj;
+      std::shared_ptr<Shape> curShape;
       std::vector< std::shared_ptr<VFCbox> > boxes;
       for (int i = 1; i < objs->size(); ++i) {
-         curObj = std::static_pointer_cast<Renderable>(objs->at(i));
+         curObj = static_pointer_cast<Renderable>(objs->at(i));
+         //std::cout << "Get Center" << std::endl;
          vec3 center = bulletToGlm(curObj->getEntity()->getTransform()->getOrigin());
-         vec3 min = curObj->getMesh().at(0)->min;
-         vec3 max = curObj->getMesh().at(0)->max;
-         float radius = curObj->getMesh().at(0)->radius;
+         //std::cout << "Calc min" << std::endl;
+         vec3 min = getMeshMin(curObj->getMesh())*bulletToGlm(*curObj->getEntity()->getScale())*2.0f;
+         //std::cout << "Calc max" << std::endl;
+         vec3 max = getMeshMax(curObj->getMesh())*bulletToGlm(*curObj->getEntity()->getScale())*2.0f;
+         //std::cout << "Calc radius" << std::endl;
+         float radius = sqrt(pow((max.x-min.x),2)+
+                             pow((max.y-min.y),2)+
+                             pow((max.z-min.z),2))/2.0f;
          std::vector<int> idx;
          idx.push_back(i);
+         //std::cout << "Create VFCbox" << std::endl;
          boxes.push_back(std::make_shared<VFCbox>(center, min, max, radius, &idx));
       }
-
-      std::cout << "Creating Octree with " << boxes.size() << " boxes" << std::endl;
 
       this->tree = std::make_shared<VFCoct>(boxes);
    }
@@ -95,33 +101,24 @@ public:
    std::vector<int> ViewFrustCull() {
       vec3 center = this->tree->box->center;
       float radius = this->tree->box->radius;
-      std::vector<int> idxs;
+      std::vector<int> cullIdxs;
 
-      CullTree(this->tree, &idxs);
-      /*
-      float dist;
-      for (int i = 0; i < 6; i++) {
-         dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, center);
-         if (dist < -radius) {
-            return 1;
-         }
-      }
-      return 0;
-      */
-      return idxs;
+      CullTree(this->tree, &cullIdxs);
+
+      return getIdxToRender(this->tree->box->idxs, cullIdxs);
    }
 
    void CullTree(std::shared_ptr<VFCoct> curTree, std::vector<int> *rmvIdx) {
-      bool checknext = false;
+      bool keep = true;
       float dist;
       for (int i = 0; i < 6; i++) {
          dist = DistToPlane(this->planes[i].x, this->planes[i].y, this->planes[i].z, this->planes[i].w, curTree->box->center);
-         if (dist < curTree->box->radius) {
-            checknext = true;
+         if (dist < -curTree->box->radius) {
+            keep = false;
             break;
          }
       }
-      if (checknext) {
+      if (keep) {
          for (auto &child : curTree->children) {
             if (NULL != child) { CullTree(child, rmvIdx); }
          }
@@ -129,6 +126,41 @@ public:
          for (auto &i : curTree->box->idxs) { rmvIdx->push_back(i); }
       }
    }
+
+   vec3 getMeshMin(std::vector<std::shared_ptr<Shape>> shapes) {
+      vec3 min = vec3(std::numeric_limits<float>::infinity());
+      for (auto &shape : shapes) {
+         if (isinf(min.x) || shape->min.x < min.x) { min.x = shape->min.x; }
+         if (isinf(min.y) || shape->min.y < min.y) { min.y = shape->min.y; }
+         if (isinf(min.z) || shape->min.z < min.z) { min.z = shape->min.z; }
+      }
+      return min;
+   }
+
+   vec3 getMeshMax(std::vector<std::shared_ptr<Shape>> shapes) {
+      vec3 max = vec3(-1 * std::numeric_limits<float>::infinity());
+      for (auto &shape : shapes) {
+         if (isinf(max.x) || shape->max.x > max.x) { max.x = shape->max.x; }
+         if (isinf(max.y) || shape->max.y > max.y) { max.y = shape->max.y; }
+         if (isinf(max.z) || shape->max.z > max.z) { max.z = shape->max.z; }
+      }
+      return max;
+   }
+
+   //http://www.cplusplus.com/forum/general/22332/#msg116987
+   std::vector<int> getIdxToRender(std::vector<int> &model, std::vector<int> &pattern) {
+      std::set<int> s_model(model.begin(), model.end());
+      std::set<int> s_pattern(pattern.begin(), pattern.end());
+      std::vector<int> result;
+
+      std::set_difference(s_model.begin(), s_model.end(), s_pattern.begin(), s_pattern.end(),
+         std::back_inserter(result));
+
+      result.insert(result.end(), this->dynamic.begin(), this->dynamic.end());
+
+      return result;
+   }
+
 
 
 };
