@@ -35,9 +35,10 @@ private:
    std::string resource_dir;
 
    void parse_terrain(std::shared_ptr<Scene> scene, rapidjson::Value& terrain);
-   void parse_shapes(std::shared_ptr<Scene> scene, rapidjson::Value& shapes);
+   void parse_meshes(std::shared_ptr<Scene> scene, rapidjson::Value& meshes);
    void parse_ubers(std::shared_ptr<Scene> scene, rapidjson::Value& ubers);
    void parse_entities(std::shared_ptr<Scene> scene, rapidjson::Value& entities);
+   std::shared_ptr<Entity> parse_entity(std::shared_ptr<Scene> scene, rapidjson::Value& json, int tabs = 0);
    void parse_components(std::shared_ptr<Scene> scene, std::shared_ptr<Entity> entity,
       rapidjson::Value& components);
 
@@ -45,6 +46,7 @@ private:
    std::shared_ptr<Component> parse_playerComponent(shared_ptr<Entity> entity, std::shared_ptr<PhysicsComponent> physicsComponent, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    std::shared_ptr<Component> parse_shipComponent(shared_ptr<Entity> entity, std::shared_ptr<PhysicsComponent> physicsComponent, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    std::shared_ptr<PhysicsComponent> parse_physicsComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
+   std::shared_ptr<HelmComponent> parse_helmComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    void parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> entity, Value& transform);
 
 };

@@ -13,6 +13,7 @@ enum UberMode {
    UBER_MODE_COOK_TORRANCE = 1, // cook-torrance
    UBER_MODE_BLINN_PHONG = 2, // blinn-phong (NOT IMPLEMENTED)
    UBER_MODE_NORMAL = 3, // normal shading
+   UBER_MODE_TERRAIN_COOK_TORRANCE = 4 // terrain cook-torrance
 };
 
 class Uber {
@@ -92,5 +93,18 @@ private:
 
 };
 
+class TerrainCookTorranceUber : public CookTorranceUber {
+
+public:
+
+   TerrainCookTorranceUber(float opacity, glm::vec3 amb, float roughness, float f0, float k);
+
+   UberMode mode = UBER_MODE_TERRAIN_COOK_TORRANCE;
+
+   virtual void setUniforms(std::shared_ptr<Program> prog);
+
+private:
+
+};
 
 #endif

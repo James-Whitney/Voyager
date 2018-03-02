@@ -13,6 +13,8 @@
 #include <rapidjson/include/rapidjson/rapidjson.h>
 #include <rapidjson/include/rapidjson/document.h>
 
+#include <voyager-actors/include/HelmComponent.h>
+
 #include <string>
 #include <vector>
 
@@ -60,6 +62,8 @@ public:
    void dynamicTextbox(const char *titlebar, const char *txt, int x_pos, int y_pos, int r = 0, int g = 0, int b = 0, int a = 1);
 
    void startMenu();
+
+   void shipStats(std::shared_ptr<HelmComponent>  ship);
 
    void guiKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
    bool inputScreen() { return this->startScreen; }
