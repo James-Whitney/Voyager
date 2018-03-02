@@ -60,6 +60,9 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    string texture_path = this->resource_dir + terrain["texture"].GetString();
    terrain_shape->setTextureFilename(texture_path);
 
+   string normal_map_path = this->resource_dir + terrain["normal_map"].GetString();
+   terrain_shape->setNormalMapFilename(normal_map_path);
+
    vector<shared_ptr<Shape>> mesh;
    mesh.push_back(terrain_shape);
    scene->meshes.push_back(mesh);

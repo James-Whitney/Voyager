@@ -22,8 +22,11 @@ public:
    int getMapWidth();
    int getMapLength();
 
-   void setTextureFilename(std::string filename);
-   std::string getTexture();
+   void setTextureFilename(std::string filename) { this->texture_filename = filename; }
+   void setNormalMapFilename(std::string filename) { this->normal_map_filename = filename; }
+
+   std::string getTexture() { return this->texture_filename; }
+   std::string getNormalMap() { return this->normal_map_filename; }
 
 private:
 
@@ -55,7 +58,8 @@ private:
    float min_height = 0.0f;
    float vertex_spacing = 0.0f;
 
-   std::string textureFilename;
+   std::string texture_filename;
+   std::string normal_map_filename;
 };
 
 #endif

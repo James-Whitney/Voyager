@@ -46,6 +46,7 @@ public:
    virtual void execute(double delta_time = 0);
 
    void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
+   void setTerrainNormalMap(std::string filename) { this->terrainNormalMapFilename = filename; }
 
 protected:
 
@@ -60,6 +61,8 @@ protected:
 
    std::string terrainTextureFilename;
    std::shared_ptr<Texture> terrainTexture;
+   std::string terrainNormalMapFilename;
+   std::shared_ptr<Texture> terrainNormalMap;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 
@@ -67,7 +70,9 @@ protected:
    //    glm::vec3 dif);
 
    void initShadows();
+
    void initTerrainTexture();
+   void initTerrainNormalMap();
 };
 
 #endif

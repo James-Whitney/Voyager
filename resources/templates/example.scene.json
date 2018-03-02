@@ -1,16 +1,17 @@
 {
    "terrain": {
-      "heightmap": "/heightmap.bmp",
+      "heightmap": "/canyon.bmp",
       "height": 40.0,
       "spacing": 0.25,
-      "texture": "/terrain_tex.png"
+      "texture": "/sand_tex.png",
+      "normal_map": "/sand_norm.png"
    },
 
    "entities": [
       {
          "name": "terrain",
          "transform": {
-            "position": [-50, -15, -50],
+            "position": [-25, -15, -50],
             "axis": [0, 0, 1],
             "rotation": 0.0
          },

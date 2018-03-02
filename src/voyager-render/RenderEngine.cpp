@@ -52,6 +52,14 @@ void RenderEngine::initTerrainTexture() {
    this->terrainTexture->setUnit(1);
 }
 
+void RenderEngine::initTerrainNormalMap() {
+   this->terrainNormalMap = std::make_shared<Texture>();
+   this->terrainNormalMap->setFilename(this->terrainNormalMapFilename);
+   this->terrainNormalMap->init();
+   this->terrainNormalMap->setWrapModes(GL_REPEAT, GL_REPEAT);
+   this->terrainNormalMap->setUnit(2);
+}
+
 void RenderEngine::init() {
    this->program = make_shared<Program>();
 
@@ -83,6 +91,7 @@ void RenderEngine::init() {
    program->addUniform("F0");
    program->addUniform("K");
    program->addUniform("terrainTexture");
+   program->addUniform("terrainNormalMap");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
@@ -94,6 +103,7 @@ void RenderEngine::init() {
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
    this->initShadows();
    this->initTerrainTexture();
+   this->initTerrainNormalMap();
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -135,6 +145,9 @@ void RenderEngine::execute(double delta_time) {
 
    // Bind terrain texture
    this->terrainTexture->bind(this->program->getUniform("terrainTexture"));
+
+   // Bind terrain normal map
+   this->terrainNormalMap->bind(this->program->getUniform("terrainNormalMap"));
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();

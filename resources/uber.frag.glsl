@@ -24,10 +24,9 @@ uniform float F0;
 uniform float K;
 
 uniform sampler2D terrainTexture;
+uniform sampler2D terrainNormalMap;
 
-vec4 cookTorrance() {
-   // interpolating normals will change the length, renormalize
-   vec3 normal = normalize(fragNor);
+vec4 cookTorrance(vec3 normal) {
    vec3 lightDirection = lightPos - WPos;
    float lightDistance = length(lightDirection);
 
@@ -76,7 +75,9 @@ void main() {
 
    /* --=[ Cook Torrance ]=-------------------------------------------------- */
    case 1:
-      color = cookTorrance();
+      // interpolating normals will change the length, renormalize
+      normal = normalize(fragNor);
+      color = cookTorrance(normal);
       break;
 
    /* --=[ Blinn-Phong ]=---------------------------------------------------- */
@@ -100,12 +101,21 @@ void main() {
       blending /= vec3(b, b, b);
 
       float scale = 0.1;
-      vec4 xaxis = texture(terrainTexture, wFragPos.yz * scale);
-      vec4 yaxis = texture(terrainTexture, wFragPos.xz * scale);
-      vec4 zaxis = texture(terrainTexture, wFragPos.xy * scale);
-      vec4 tex = xaxis * blending.x + yaxis * blending.y + zaxis * blending.z;
+      vec4 texX = texture(terrainTexture, wFragPos.yz * scale);
+      vec4 texY = texture(terrainTexture, wFragPos.xz * scale);
+      vec4 texZ = texture(terrainTexture, wFragPos.xy * scale);
+      vec4 tex = texX * blending.x + texY * blending.y + texZ * blending.z;
 
-      color = tex * cookTorrance();
+      vec4 normX = texture(terrainNormalMap, wFragPos.yz * scale);
+      vec4 normY = texture(terrainNormalMap, wFragPos.xz * scale);
+      vec4 normZ = texture(terrainNormalMap, wFragPos.xy * scale);
+      vec4 norm = normX * blending.x + normY * blending.y + normZ * blending.z;
+
+      normal = normalize(fragNor);
+      // normal = normalize(norm.xyz * 2.0 - 1.0);
+
+      color = tex * cookTorrance(normal);
+      // color = norm * cookTorrance(normal);
       break;
 
    /* --=[ Default Shading ]=------------------------------------------------ */
