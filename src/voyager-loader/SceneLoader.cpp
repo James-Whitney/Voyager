@@ -237,6 +237,9 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          if (subType == "HELM") {
             entity->add(this->parse_helmComponent(entity, scene, components[i]));
          }
+         else if (subType == "TURRET") {
+            entity->add(this->parse_turretComponent(entity, scene, components[i]));
+         }
       }
       else {
          cerr << "Unknown component type: " << type << endl;
@@ -283,17 +286,30 @@ shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> enti
    return static_pointer_cast<Component>(shipComponent);
 }
 
-
 shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity, 
                                                             shared_ptr<Scene> scene, 
                                                             Value& component) {
 
    shared_ptr<HelmComponent> helmComponent = make_shared<HelmComponent>();
-   helmComponent->setCameraHeight(2.0);
+   helmComponent->setCameraHeight(component["cameraHeight"].GetFloat());
    helmComponent->setTurnSpeed(component["turnSpeed"].GetFloat());
    helmComponent->setRiseSpeed(component["riseSpeed"].GetFloat());
    return helmComponent;
 }
+
+shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity> entity, 
+                                                               shared_ptr<Scene> scene, 
+                                                               Value& component) {
+
+   shared_ptr<TurretComponent> turretComponent = make_shared<TurretComponent>();
+
+   turretComponent->setTurretID(component["ID"].GetInt());
+   turretComponent->setCameraHeight(component["cameraHeight"].GetFloat());
+   turretComponent->setBulletType(component["bullet-type"].GetInt());
+   return turretComponent;
+}
+
+
 shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity, 
                                                                   shared_ptr<Scene> scene, 
                                                                   Value& component) {

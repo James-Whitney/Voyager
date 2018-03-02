@@ -8,6 +8,17 @@ void PlayerComponent::init() {
 
 }
 
+void PlayerComponent::setTurret(std::shared_ptr<StationComponent> turret, int i) {
+   switch (i) {
+      case 0:
+         turret0 = turret;
+      break;
+      case 1:
+         turret1 = turret;
+      break;
+   }
+}
+
 glm::vec3 PlayerComponent::getPosition() {
    return bulletToGlm(entity->getTransform()->getOrigin());
 }
@@ -36,6 +47,22 @@ void PlayerComponent::stationSelectionCheck() {
          mounted->deactivate();
       }
       mounted = helm;
+      mounted->activate();
+   }
+   else if (glfwGetKey(window->getHandle(), GLFW_KEY_3 ) == GLFW_PRESS) {
+      active = false;
+      if (mounted != nullptr) {
+         mounted->deactivate();
+      }
+      mounted = turret0;
+      mounted->activate();
+   }
+   else if (glfwGetKey(window->getHandle(), GLFW_KEY_4 ) == GLFW_PRESS) {
+      active = false;
+      if (mounted != nullptr) {
+         mounted->deactivate();
+      }
+      mounted = turret1;
       mounted->activate();
    }
 }
@@ -87,27 +114,14 @@ void PlayerComponent::positionUpdate(float delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_D ) == GLFW_PRESS) {
       movement += glm::normalize(glm::cross( lookDir, glm::vec3(0, 1, 0)));
    }
-   //Space goes up
-   /*
-   //Shift goes down
-   if(glfwGetKey(window->getHandle(), GLFW_KEY_LEFT_SHIFT ) == GLFW_PRESS){
-      movement -= Y_AXIS * deltaTime;
-   }*/
-   
-   if(length(movement) != 0)
-   {
-      //cout << "MOVING" << endl;
+
+   if(length(movement) != 0) {
       movement = glm::normalize(movement);
       movement *= (delta_time * speed);
       btVector3 bullet_force = glmToBullet(movement).rotate(btVector3(0, 1, 0), -(ship->getRotation()));
       physicsComponent->getBody()->applyCentralForce(bullet_force);
    }
    else {
-      //cout << "DAMPING" << endl;
       physicsComponent->getBody()->applyDamping(delta_time);
    }
-   
-   //physicsComponent->getBody()->setLinearVelocity(bullet_force);
-
-   //physicsComponent->getBody()->setAngularVelocity(ship->getPhysics()->getBody()->getAngularVelocity());
 }

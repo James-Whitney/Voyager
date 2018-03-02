@@ -21,11 +21,11 @@ class PlayerComponent : public ActorComponent {
 public:
 
    void setCamera(std::shared_ptr<Camera> camera) { this->camera = camera; }
-   void setWindow(std::shared_ptr<WindowManager> window) { this->window = window; }
    void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
    void setPhysics(std::shared_ptr<PhysicsComponent> physicsComponent) { this->physicsComponent = physicsComponent; }
 
    void setHelm(std::shared_ptr<StationComponent> helm) { this->helm = helm; }
+   void setTurret(std::shared_ptr<StationComponent> turret, int i);
 
    std::shared_ptr<PhysicsComponent> getPhysics() { return physicsComponent; }
 
@@ -43,12 +43,13 @@ private:
    std::shared_ptr<StationComponent> mounted;
 
    std::shared_ptr<StationComponent> helm;
+   std::shared_ptr<StationComponent> turret0;
+   std::shared_ptr<StationComponent> turret1;
 
    void stationSelectionCheck();
    void cameraUpdate();
    void positionUpdate(float delta_time);
 
-   std::shared_ptr<WindowManager> window;
    std::shared_ptr<Camera> camera;
    std::shared_ptr<ShipComponent> ship;
 

@@ -18,6 +18,7 @@
 #include <voyager-actors/include/PlayerComponent.h>
 #include <voyager-actors/include/ShipComponent.h>
 #include <voyager-actors/include/HelmComponent.h>
+#include <voyager-actors/include/TurretComponent.h>
 
 #include <iostream>
 

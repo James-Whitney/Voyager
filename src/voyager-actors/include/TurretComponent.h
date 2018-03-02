@@ -14,7 +14,14 @@ public:
 
    void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
 
+   void setBulletType(int bullet_type) { this->bullet_type = bullet_type; }
+
+   void setTurretID(int id) { this->id = id; }
+   int getTurretID() { return id; }
+
 private:
+
+   int id;
 
    std::shared_ptr<ShipComponent> ship;
 
