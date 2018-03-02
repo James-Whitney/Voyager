@@ -53,6 +53,9 @@ public:
    virtual void init();
    virtual void execute(double delta_time = 0);
 
+   void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
+   void setTerrainNormalMap(std::string filename) { this->terrainNormalMapFilename = filename; }
+
 protected:
 
    std::string resource_dir;
@@ -64,6 +67,11 @@ protected:
    GLuint depthBufferId;
    GLuint depthTextureId;
 
+   std::string terrainTextureFilename;
+   std::shared_ptr<Texture> terrainTexture;
+   std::string terrainNormalMapFilename;
+   std::shared_ptr<Texture> terrainNormalMap;
+
    std::shared_ptr<HelmComponent> helm;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
@@ -72,6 +80,9 @@ protected:
    //    glm::vec3 dif);
 
    void initShadows();
+
+   void initTerrainTexture();
+   void initTerrainNormalMap();
 };
 
 #endif

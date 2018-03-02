@@ -53,3 +53,11 @@ NormalUber::NormalUber() {}
 void NormalUber::setUniforms(shared_ptr<Program> prog) {
    glUniform1ui(prog->getUniform("uberMode"), this->mode);
 }
+
+TerrainCookTorranceUber::TerrainCookTorranceUber(float opacity, glm::vec3 amb, float roughness, float f0, float k):
+   CookTorranceUber(opacity, amb, roughness, f0, k) {};
+
+void TerrainCookTorranceUber::setUniforms(shared_ptr<Program> prog) {
+   CookTorranceUber::setUniforms(prog);
+   glUniform1ui(prog->getUniform("uberMode"), this->mode);
+}

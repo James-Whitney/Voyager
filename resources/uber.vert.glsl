@@ -12,6 +12,8 @@ uniform mat4 shadowV;
 uniform int shadowMode;
 
 out vec3 fragNor;
+out vec3 wFragNor;
+out vec3 wFragPos;
 out vec3 WPos;
 out vec4 shadowCoord;
 
@@ -24,6 +26,8 @@ void main() {
    }
 
    fragNor = (V * M * vec4(vertNor, 0.0)).xyz;
+   wFragNor = vertNor;
+   wFragPos = vertPos.xyz;
    WPos = vec3(V * M * vertPos);
 
    shadowCoord = shadowP * shadowV * M * vertPos;

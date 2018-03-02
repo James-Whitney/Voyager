@@ -4,6 +4,7 @@
 
 using namespace glm;
 using namespace std;
+
 void RenderEngine::initShadows() {
    glGenFramebuffers(1, &this->depthBufferId);
    glBindFramebuffer(GL_FRAMEBUFFER, depthBufferId);
@@ -43,6 +44,22 @@ void RenderEngine::initShadows() {
     }
 }
 
+void RenderEngine::initTerrainTexture() {
+   this->terrainTexture = std::make_shared<Texture>();
+   this->terrainTexture->setFilename(this->terrainTextureFilename);
+   this->terrainTexture->init();
+   this->terrainTexture->setWrapModes(GL_REPEAT, GL_REPEAT);
+   this->terrainTexture->setUnit(1);
+}
+
+void RenderEngine::initTerrainNormalMap() {
+   this->terrainNormalMap = std::make_shared<Texture>();
+   this->terrainNormalMap->setFilename(this->terrainNormalMapFilename);
+   this->terrainNormalMap->init();
+   this->terrainNormalMap->setWrapModes(GL_REPEAT, GL_REPEAT);
+   this->terrainNormalMap->setUnit(2);
+}
+
 void RenderEngine::init() {
    this->program = make_shared<Program>();
 
@@ -73,6 +90,8 @@ void RenderEngine::init() {
    program->addUniform("roughnessValue");
    program->addUniform("F0");
    program->addUniform("K");
+   program->addUniform("terrainTexture");
+   program->addUniform("terrainNormalMap");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
@@ -83,6 +102,8 @@ void RenderEngine::init() {
 
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
    this->initShadows();
+   this->initTerrainTexture();
+   this->initTerrainNormalMap();
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -137,6 +158,12 @@ void RenderEngine::execute(double delta_time) {
    glActiveTexture(GL_TEXTURE0);
    glBindTexture(GL_TEXTURE_2D, this->depthTextureId);
    glUniform1i(this->program->getUniform("depthTexture"), 0);
+
+   // Bind terrain texture
+   this->terrainTexture->bind(this->program->getUniform("terrainTexture"));
+
+   // Bind terrain normal map
+   this->terrainNormalMap->bind(this->program->getUniform("terrainNormalMap"));
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
