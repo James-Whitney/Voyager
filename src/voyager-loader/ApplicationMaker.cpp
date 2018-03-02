@@ -12,6 +12,7 @@ shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
    shared_ptr<RenderEngine> render = make_shared<RenderEngine>();
    render->setResourceDir(config->getResourceDir());
    shared_ptr<Camera> camera = make_shared<Camera>();
+   camera->setWindow(app->getWindowManager());
    render->setCamera(camera);
    render->setWindow(app->getWindowManager());
    app->setRenderEngine(static_pointer_cast<Engine>(render));

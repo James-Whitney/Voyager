@@ -23,44 +23,41 @@ btScalar PlayerComponent::getRotation() {
    return btScalar(pitch);
 }
 
+void PlayerComponent::stationSelectionCheck() {
+   if (glfwGetKey(window->getHandle(), GLFW_KEY_1 ) == GLFW_PRESS) {
+      active = true;
+      if (mounted != nullptr)
+         mounted->deactivate();  
+      mounted = nullptr;
+   }
+   else if (glfwGetKey(window->getHandle(), GLFW_KEY_2 ) == GLFW_PRESS) {
+      active = false;
+      if (mounted != nullptr) {
+         mounted->deactivate();
+      }
+      mounted = helm;
+      mounted->activate();
+   }
+}
+
 void PlayerComponent::update(double delta_time) {
    //cout << "Player Update" << endl;
-   positionUpdate(delta_time);
-   cameraUpdate();
-   
+   stationSelectionCheck();
+   if (active) {
+      positionUpdate(delta_time);
+      cameraUpdate();
+   }
 }
 
 void PlayerComponent::cameraUpdate() {
-   double delta_xPos, delta_yPos;
-   double curr_xPos, curr_yPos;
-   float delta_pitch, delta_yaw;
-   int width, height;
-
    const float cameraHeight = 2.0;
-
-   glfwGetFramebufferSize(window->getHandle(), &width, &height);
-   glfwGetCursorPos(window->getHandle(), &curr_xPos, &curr_yPos);
-   
-   delta_xPos = prev_xPos - curr_xPos;
-   delta_yPos = prev_yPos - curr_yPos;
-   prev_xPos = curr_xPos;
-   prev_yPos = curr_yPos;
-
-   delta_pitch = delta_yPos / (height * 2);
-   delta_yaw = delta_xPos / width;
-
 
    double playerAngle = getRotation();
    double deltaPlayerAngle = playerAngle - prev_playerAngle;
    prev_playerAngle = playerAngle;
 
-   //fprintf(stderr, "delta_pitch: %f, delta_yaw: %f\n", delta_pitch, delta_yaw);
-   camera->move(delta_pitch, delta_yaw + deltaPlayerAngle);// + deltaShipAngle);
-   //printf("PLAYERANGLE: %f\n", playerAngle);
-   
    glm::vec3 playerLoc = bulletToGlm(this->getEntity()->getTransform()->getOrigin());
-   camera->setPosition(playerLoc + glm::vec3(0, cameraHeight, 0));
-
+   camera->update(playerLoc + glm::vec3(0, cameraHeight, 0), deltaPlayerAngle);
    return;
 }
 

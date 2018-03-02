@@ -26,26 +26,22 @@ public:
    void init();
    void update(double delta_time);
 
-   btScalar getMaxVertThrottle() { return this->max_vertThrottle; }
-   btScalar getMinVertThrottle() { return this->min_vertThrottle; }
-   btScalar getMaxForwardThrottle() { return this->max_forwardThrottle; }
-   btScalar getMinForwardThrottle() { return this->min_forwardThrottle; }
-   btScalar* getVertThrottle() { return &(this->vertThrottle); }
-   btScalar* getForwardThrottle() { return &(this->forwardThrottle); }
+   void turnShip(btScalar angle);
+
+   void raiseShip(btScalar rise);
+
+   void moveShip(float delta_time); 
+
+   void setForwardThrottle(btScalar forwardThrottle) { this->forwardThrottle = forwardThrottle; }
+
+   void setSpeed(btScalar speed) { this->speed = speed; }
 
 private:
 
-   const btScalar max_vertThrottle = 100;
-   const btScalar min_vertThrottle = -100;
+   btScalar speed = 0.0;
 
-   const btScalar max_forwardThrottle = 100;
-   const btScalar min_forwardThrottle = -100;
-
-   btScalar vertThrottle = 0;
-   btScalar forwardThrottle = 0;
-
+   btScalar       forwardThrottle;
    std::shared_ptr<PhysicsComponent> physicsComponent;
-   void moveShip(float delta_time);
 
    std::shared_ptr<WindowManager> window;
 

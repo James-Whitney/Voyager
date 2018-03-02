@@ -17,11 +17,9 @@
 
 #include <voyager-actors/include/PlayerComponent.h>
 #include <voyager-actors/include/ShipComponent.h>
-
+#include <voyager-actors/include/HelmComponent.h>
 
 #include <iostream>
-
-
 
 class Scene {
 

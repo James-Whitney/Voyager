@@ -1,8 +1,8 @@
 {
    "terrain": {
       "heightmap": "/heightmap.bmp",
-      "height": 40.0,
-      "spacing": 0.25
+      "height": 100.0,
+      "spacing": 1.0
    },
 
    "entities": [
@@ -46,7 +46,8 @@
                "velocity": [0, 0, 0],
                "damping": [0.1, 0.1],
                "friction": 1.0,
-               "ship": true
+               "ship": true,
+               "speed": 1000.0
             }
          ]
       },
@@ -228,6 +229,13 @@
                "velocity": [0, 0, 0],
                "damping": [0.0, 0.0],
                "friction": 0.2
+            },
+            {
+               "type": "STATION",
+               "sub-type": "HELM",
+               "cameraHeight": 10.0,
+               "turnSpeed": 100000.0,
+               "riseSpeed": 50000.0
             }
          ]
       }

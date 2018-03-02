@@ -42,7 +42,7 @@ void Hud::open() {
 }
 
 
-void Hud::shipStats(std::shared_ptr<ShipComponent>  ship) {
+void Hud::shipStats(std::shared_ptr<HelmComponent>  ship) {
    Hud::start();
    //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
    ImGui::SetNextWindowPos(ImVec2(0.5, 0.5), 0, ImVec2(0.5f,0.5f));
@@ -52,10 +52,6 @@ void Hud::shipStats(std::shared_ptr<ShipComponent>  ship) {
                         ship->getForwardThrottle(), 
                         ship->getMinForwardThrottle(), 
                         ship->getMaxForwardThrottle());
-   ImGui::SliderFloat(  "Altitude", 
-                        ship->getVertThrottle(), 
-                        ship->getMinVertThrottle(), 
-                        ship->getMaxVertThrottle());
    ImGui::End();
    ImGui::Render();
 }

@@ -40,22 +40,8 @@ void Scene::apply(shared_ptr<Application> app) {
       app->getThings()[entity->getId()] = entity;
    }
 
-   for (int i = 0; i < this->components.size(); ++i) {
-      shared_ptr<Component> component = this->components.at(i);
-
-      if (dynamic_pointer_cast<Renderable>(component)) {
-         app->getRenderEngine()->registerComponent(component);
-      }
-      else if (dynamic_pointer_cast<PhysicsComponent>(component)) {
-         app->getPhysicsEngine()->registerComponent(component);
-      }
-      else if (dynamic_pointer_cast<ActorComponent>(component)) {
-         app->getActorEngine()->registerComponent(component);
-      }
-   }
    //init HeightMap
    shared_ptr<Entity> terrain = this->entities.at(0);
-
    initTerrain(app, terrain);
 
    //init ship
@@ -64,7 +50,6 @@ void Scene::apply(shared_ptr<Application> app) {
       static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
    shipComponent->setWindow(app->getWindowManager());
    static_pointer_cast<PhysicsEngine>(app->getPhysicsEngine())->setShip(shipComponent);
-   static_pointer_cast<RenderEngine>(app->getRenderEngine())->setShip(shipComponent);
    //shipComponent->getPhysics()->getBody()->setGravity(btVector3(0, 1, 0));
 
    //init player
@@ -76,7 +61,29 @@ void Scene::apply(shared_ptr<Application> app) {
    playerComponent->setShip(shipComponent);
    //playerComponent->getPhysics()->getBody()->setGravity(btVector3(0, -9.8, 0));
 
+   for (int i = 0; i < this->components.size(); ++i) {
+      shared_ptr<Component> component = this->components.at(i);
 
+      if (dynamic_pointer_cast<Renderable>(component)) {
+         app->getRenderEngine()->registerComponent(component);
+      }
+      else if (dynamic_pointer_cast<PhysicsComponent>(component)) {
+         app->getPhysicsEngine()->registerComponent(component);
+      }
+      else if (dynamic_pointer_cast<ActorComponent>(component)) {
+         if (dynamic_pointer_cast<StationComponent>(component)) {
+            static_pointer_cast<StationComponent>(component)->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
+         }
+         if (dynamic_pointer_cast<HelmComponent>(component)) {
+            playerComponent->setHelm(static_pointer_cast<StationComponent>(component));
+            std::shared_ptr<HelmComponent> helm = static_pointer_cast<HelmComponent>(component);
+            static_pointer_cast<RenderEngine>(app->getRenderEngine())->setHelm(helm);
+            helm->setShip(shipComponent);
+            helm->setWindow(app->getWindowManager());
+         }
+         app->getActorEngine()->registerComponent(component);
+      }
+   }
 }
 
 void Scene::dump() {

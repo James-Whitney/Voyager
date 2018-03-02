@@ -217,6 +217,12 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
          }
       }
+      else if (type == "STATION") {
+         string subType = components[i]["sub-type"].GetString();
+         if (subType == "HELM") {
+            entity->add(this->parse_helmComponent(entity, scene, components[i]));
+         }
+      }
       else {
          cerr << "Unknown component type: " << type << endl;
          continue;
@@ -237,7 +243,11 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
 }
 
 
-shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
+shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity, 
+                                                            shared_ptr<PhysicsComponent> physicsComponent, 
+                                                            shared_ptr<Scene> scene, 
+                                                            Value& component) {
+
    shared_ptr<PlayerComponent> playerComponent = make_shared<PlayerComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
    physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
@@ -245,16 +255,34 @@ shared_ptr<Component> SceneLoader::parse_playerComponent(shared_ptr<Entity> enti
    return static_pointer_cast<Component>(playerComponent);
 }
 
-shared_ptr<Component> SceneLoader::parse_shipComponent(shared_ptr<Entity> entity, shared_ptr<PhysicsComponent> physicsComponent, shared_ptr<Scene> scene, Value& component) {
+shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> entity, 
+                                                         shared_ptr<PhysicsComponent> physicsComponent, 
+                                                         shared_ptr<Scene> scene, 
+                                                         Value& component) {
+
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
    physicsComponent->getBody()->setActivationState(DISABLE_DEACTIVATION);
    physicsComponent->getBody()->setAngularFactor(btVector3(0,1,0));
    shipComponent->setPhysics(physicsComponent);
+   shipComponent->setSpeed(component["speed"].GetFloat());
    return static_pointer_cast<Component>(shipComponent);
 }
 
 
-shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent(shared_ptr<Entity> entity, shared_ptr<Scene> scene, Value& component) {
+shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity, 
+                                                            shared_ptr<Scene> scene, 
+                                                            Value& component) {
+
+   shared_ptr<HelmComponent> helmComponent = make_shared<HelmComponent>();
+   helmComponent->setCameraHeight(2.0);
+   helmComponent->setTurnSpeed(component["turnSpeed"].GetFloat());
+   helmComponent->setRiseSpeed(component["riseSpeed"].GetFloat());
+   return helmComponent;
+}
+shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity, 
+                                                                  shared_ptr<Scene> scene, 
+                                                                  Value& component) {
+
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
 
    Value& world_ = component["world"];

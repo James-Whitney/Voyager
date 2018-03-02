@@ -9,6 +9,10 @@
 
 #include "Component.h"
 
+class Component;
+
+class Entity;
+
 typedef std::vector< std::shared_ptr<Entity> >::iterator child_iter;
 typedef std::vector< std::shared_ptr<Component> >::iterator comp_iter;
 

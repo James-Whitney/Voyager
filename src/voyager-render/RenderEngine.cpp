@@ -105,8 +105,8 @@ void RenderEngine::execute(double delta_time) {
 
    btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))->getEntity()->getTransform()->getOrigin();
 
-   cout << terrPos.getX() << " " << terrPos.getY() << " " << terrPos.getZ() << endl;
-   cout << maxHeight << endl;
+   //cout << terrPos.getX() << " " << terrPos.getY() << " " << terrPos.getZ() << endl;
+   //cout << maxHeight << endl;
 
    vec3 min = vec3(terrPos.getX(), terrPos.getY(), terrPos.getZ());
    vec3 max = vec3(-terrPos.getX(), terrPos.getY() + maxHeight, -terrPos.getZ());
@@ -114,7 +114,7 @@ void RenderEngine::execute(double delta_time) {
    float midX = min.x + max.x / 2;
    float midZ = min.z + max.z / 2;
 
-   cout << "min: " << min.y << " " << max.y << endl;
+   //cout << "min: " << min.y << " " << max.y << endl;
 
    mat4 cam = glm::lookAt(vec3(midX, max.y + 1 , midX), vec3(midX, min.y, midZ), vec3(1, 0, 0));
    mat4 ortho = glm::ortho(min.x, max.x, min.z, max.z, 1.f, max.y - min.y + 1);
@@ -173,7 +173,7 @@ void RenderEngine::execute(double delta_time) {
       hud->startMenu();
    } else {
       hud->run();
-      hud->shipStats(ship);
+      hud->shipStats(helm);
    }
 
    this->program->unbind();

@@ -46,6 +46,7 @@ private:
    std::shared_ptr<Component> parse_playerComponent(shared_ptr<Entity> entity, std::shared_ptr<PhysicsComponent> physicsComponent, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    std::shared_ptr<Component> parse_shipComponent(shared_ptr<Entity> entity, std::shared_ptr<PhysicsComponent> physicsComponent, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    std::shared_ptr<PhysicsComponent> parse_physicsComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
+   std::shared_ptr<HelmComponent> parse_helmComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    void parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> entity, Value& transform);
 
 };

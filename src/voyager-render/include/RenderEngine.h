@@ -45,8 +45,8 @@ public:
       this->window = window;
    }
 
-   std::shared_ptr<ShipComponent> getShip() { return this->ship; }
-   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
+   std::shared_ptr<HelmComponent> getHelm() { return this->helm; }
+   void setHelm(std::shared_ptr<HelmComponent> helm) { this->helm = helm; }
 
    std::shared_ptr<Hud> getHud() { return this->hud; }
 
@@ -64,7 +64,7 @@ protected:
    GLuint depthBufferId;
    GLuint depthTextureId;
 
-   std::shared_ptr<ShipComponent> ship;
+   std::shared_ptr<HelmComponent> helm;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 
