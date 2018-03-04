@@ -25,7 +25,7 @@ void RenderEngine::initShadows() {
       depthResolution, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
    //bind texture to framebuffer
-   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
     this->depthTextureId, 0);
 
     // Set up depth
@@ -141,7 +141,7 @@ void RenderEngine::execute(double delta_time) {
       value_ptr(ortho));
    glUniformMatrix4fv(this->program->getUniform("shadowV"), 1, GL_FALSE,
       value_ptr(cam));
- 
+
    // Render the shadows for all the objects to the depth texture
    glBindFramebuffer(GL_FRAMEBUFFER, this->depthBufferId);
    glClear(GL_DEPTH_BUFFER_BIT);
@@ -164,7 +164,7 @@ void RenderEngine::execute(double delta_time) {
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
-   
+
 
    P->pushMatrix();
    V->pushMatrix();
@@ -175,12 +175,12 @@ void RenderEngine::execute(double delta_time) {
       value_ptr(P->topMatrix()));
    glUniformMatrix4fv(this->program->getUniform("V"), 1, GL_FALSE,
       value_ptr(V->topMatrix()));
-  
+
    // TODO: remove hardcoding light position and color
    glUniform3f(this->program->getUniform("lightPos"),
       lightPos.x, lightPos.y, lightPos.z);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
-   
+
    // Render the components to the screen
    glViewport(0, 0, width, height);
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
