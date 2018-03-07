@@ -308,6 +308,33 @@
                "cameraHeight": 2.0
             }
          ]
+      },
+      {
+         "name": "ship_model",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 1,
+               "mesh": 3
+            },
+            {
+               "type": "PHYSICS",
+               "world": 1,
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [1.0, 15.0, 10.0]
+               },
+               "mass": 50.0,
+               "position": [20, 0, 0],
+               "scale": [1.0, 1.0, 1.0],
+               "axis": [0, 0, 1],
+               "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.1, 0.1],
+               "friction": 0.2
+            }
+         ]
       }
    ],
 

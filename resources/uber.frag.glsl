@@ -5,6 +5,7 @@ in vec3 wFragNor;
 in vec3 wFragPos;
 in vec3 WPos;
 in vec4 shadowCoord;
+in vec4 view;
 
 layout(location = 0) out vec4 color;
 
@@ -67,6 +68,20 @@ vec4 cookTorrance(vec3 normal) {
    return vec4(finalValue, opacity);
 }
 
+vec4 applyFog(vec4 color) {
+   // float dist = abs(view.z);
+   float dist = length(view);
+
+   float fogDensity = 0.005;
+
+   float fogFactor = 1.0 / exp(pow(dist * fogDensity, 2));
+   fogFactor = clamp(fogFactor, 0.0, 1.0);
+
+   vec4 fogColor = vec4(0.12f, 0.34f, 0.56f, 1.0); // TODO: Make this a uniform
+
+   return mix(fogColor, color, fogFactor);
+}
+
 void main() {
 
    vec3 normal;
@@ -127,6 +142,8 @@ void main() {
 
 
    }
+
+   color = applyFog(color);
 
    if (shadowMode > 0) {
        vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);

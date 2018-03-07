@@ -16,6 +16,7 @@ out vec3 wFragNor;
 out vec3 wFragPos;
 out vec3 WPos;
 out vec4 shadowCoord;
+out vec4 view;
 
 void main() {
 
@@ -31,4 +32,6 @@ void main() {
    WPos = vec3(V * M * vertPos);
 
    shadowCoord = shadowP * shadowV * M * vertPos;
+
+   view = V * M * vertPos;
 }
