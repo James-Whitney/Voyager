@@ -58,7 +58,7 @@ void PhysicsEngine::execute(double delta_time) {
       //cout << "Updating Pcom: " << i << endl;
       static_pointer_cast<PhysicsComponent>(components[i])->updatePosition(ship);
    }
-   
+
    //print positions of all objects
    /*
    for (int j = world->getNumCollisionObjects() - 1; j >= 0; j--) {
@@ -71,7 +71,7 @@ void PhysicsEngine::execute(double delta_time) {
       else {
          trans = obj->getWorldTransform();
       }
-      printf("Obj Pos: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+      //printf("Obj Pos: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
    }
    for (int j = ship_world->getNumCollisionObjects() - 1; j >= 0; j--) {
       btCollisionObject* obj = ship_world->getCollisionObjectArray()[j];
@@ -101,5 +101,5 @@ void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {
 }
 
 void PhysicsEngine::removeComponent(PhysicsComponent* component) {
-   
+
 }

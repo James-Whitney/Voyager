@@ -257,13 +257,15 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
    index = component["uber"].GetInt();
    renderable->setUber(scene->ubers[index]);
 
+   renderable->setCullStatus(component["static"].GetBool());
+
    return static_pointer_cast<Component>(renderable);
 }
 
 
-shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity, 
-                                                            shared_ptr<PhysicsComponent> physicsComponent, 
-                                                            shared_ptr<Scene> scene, 
+shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity,
+                                                            shared_ptr<PhysicsComponent> physicsComponent,
+                                                            shared_ptr<Scene> scene,
                                                             Value& component) {
 
    shared_ptr<PlayerComponent> playerComponent = make_shared<PlayerComponent>();
@@ -273,9 +275,9 @@ shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> e
    return static_pointer_cast<Component>(playerComponent);
 }
 
-shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> entity, 
-                                                         shared_ptr<PhysicsComponent> physicsComponent, 
-                                                         shared_ptr<Scene> scene, 
+shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> entity,
+                                                         shared_ptr<PhysicsComponent> physicsComponent,
+                                                         shared_ptr<Scene> scene,
                                                          Value& component) {
 
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
@@ -286,8 +288,8 @@ shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> enti
    return static_pointer_cast<Component>(shipComponent);
 }
 
-shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity, 
-                                                            shared_ptr<Scene> scene, 
+shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity,
+                                                            shared_ptr<Scene> scene,
                                                             Value& component) {
 
    shared_ptr<HelmComponent> helmComponent = make_shared<HelmComponent>();
@@ -297,8 +299,8 @@ shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> e
    return helmComponent;
 }
 
-shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity> entity, 
-                                                               shared_ptr<Scene> scene, 
+shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity> entity,
+                                                               shared_ptr<Scene> scene,
                                                                Value& component) {
 
    shared_ptr<TurretComponent> turretComponent = make_shared<TurretComponent>();
@@ -310,8 +312,8 @@ shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity
 }
 
 
-shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity, 
-                                                                  shared_ptr<Scene> scene, 
+shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity,
+                                                                  shared_ptr<Scene> scene,
                                                                   Value& component) {
 
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
@@ -329,7 +331,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
 
    Value& fric = component["friction"];
    btScalar friction = btScalar(fric.GetFloat());
-   
+
    btCollisionShape* collisionShape;
 
    Value& collision = component["collisionShape"];
@@ -351,11 +353,11 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    btVector3 position = btVector3(pos[0].GetFloat(),
                                   pos[1].GetFloat(),
                                   pos[2].GetFloat());
-                                 
+
    Value& scale_ = component["scale"];
    shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat()));
    //scale = btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat());
-   
+
    /*btVector3 scale = btVector3(  scale_[0].GetFloat(),
                                  scale_[1].GetFloat(),
                                  scale_[2].GetFloat());*/
