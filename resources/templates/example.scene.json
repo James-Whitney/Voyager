@@ -7,6 +7,15 @@
       "normal_map": "/sand_norm.png"
    },
 
+   "skybox": {
+      "top": "/skybox/bluecloud_dn.jpg",
+      "bottom": "/skybox/bluecloud_up.jpg",
+      "front": "/skybox/bluecloud_rt.jpg",
+      "back": "/skybox/bluecloud_lf.jpg",
+      "left": "/skybox/bluecloud_bk.jpg",
+      "right": "/skybox/bluecloud_ft.jpg"
+   },
+
    "entities": [
       {
          "name": "terrain",

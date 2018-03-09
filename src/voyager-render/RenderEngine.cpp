@@ -106,6 +106,23 @@ void RenderEngine::init() {
    this->initShadows();
    this->initTerrainTexture();
    this->initTerrainNormalMap();
+
+   // Initialize the skybox
+   this->skybox->init();
+
+   // Initialize the skybox shader
+   this->skyboxProgram = std::make_shared<Program>();
+   this->skyboxProgram->setVerbose(true);
+   this->skyboxProgram->setShaderNames(
+      this->resource_dir + "/skybox/skybox.vert.glsl",
+      this->resource_dir + "/skybox/skybox.frag.glsl"
+   );
+   if (!this->skyboxProgram->init()) {
+      cerr << "Failed to initialize skybox program" << endl;
+      exit(1);
+   }
+   this->skyboxProgram->addUniform("P");
+   this->skyboxProgram->addUniform("V");
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -190,6 +207,19 @@ void RenderEngine::execute(double delta_time) {
    hud->start();
 
    glUniform1i(this->program->getUniform("shadowMode"), 0);
+
+   // Draw skybox
+   this->program->unbind();
+   this->skyboxProgram->bind();
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("P"), 1, GL_FALSE,
+         value_ptr(P->topMatrix()));
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("V"), 1, GL_FALSE,
+         value_ptr(V->topMatrix()));
+
+      this->skybox->draw();
+   this->skyboxProgram->unbind();
+   this->program->bind();
+
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
       this->render(static_pointer_cast<Renderable>(this->components.at(idx)));

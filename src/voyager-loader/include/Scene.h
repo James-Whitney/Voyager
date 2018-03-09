@@ -34,6 +34,8 @@ public:
 
    std::vector< std::shared_ptr<Uber> > ubers;
 
+   std::shared_ptr<Skybox> skybox;
+
    void initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain);
 
    void apply(std::shared_ptr<Application> app);
