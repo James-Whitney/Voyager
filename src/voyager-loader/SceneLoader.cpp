@@ -28,6 +28,10 @@ shared_ptr<Scene> SceneLoader::load(string path) {
       this->parse_terrain(scene, doc["terrain"]);
    }
 
+   if (doc.HasMember("skybox")) {
+      this->parse_skybox(scene, doc["skybox"]);
+   }
+
    if (doc.HasMember("meshes") && doc["meshes"].IsArray()) {
       this->parse_meshes(scene, doc["meshes"]);
    }
@@ -66,6 +70,17 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    vector<shared_ptr<Shape>> mesh;
    mesh.push_back(terrain_shape);
    scene->meshes.push_back(mesh);
+}
+
+void SceneLoader::parse_skybox(std::shared_ptr<Scene> scene, rapidjson::Value& skybox) {
+   string top = this->resource_dir + skybox["top"].GetString();
+   string bottom = this->resource_dir + skybox["bottom"].GetString();
+   string front = this->resource_dir + skybox["front"].GetString();
+   string back = this->resource_dir + skybox["back"].GetString();
+   string left = this->resource_dir + skybox["left"].GetString();
+   string right = this->resource_dir + skybox["right"].GetString();
+
+   scene->skybox = make_shared<Skybox>(top, bottom, front, back, left, right);
 }
 
 void SceneLoader::parse_meshes(shared_ptr<Scene> scene, Value& meshes) {

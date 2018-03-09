@@ -16,13 +16,15 @@ out vec3 wFragNor;
 out vec3 wFragPos;
 out vec3 WPos;
 out vec4 shadowCoord;
+out vec3 skyboxTexCoord;
+uniform int skyboxMode;
 
 void main() {
 
    if (shadowMode > 0) {
-       gl_Position = shadowP * shadowV * M * vertPos;
+      gl_Position = shadowP * shadowV * M * vertPos;
    } else {
-       gl_Position = P * V * M * vertPos;
+      gl_Position = P * V * M * vertPos;
    }
 
    fragNor = (V * M * vec4(vertNor, 0.0)).xyz;
@@ -31,4 +33,9 @@ void main() {
    WPos = vec3(V * M * vertPos);
 
    shadowCoord = shadowP * shadowV * M * vertPos;
+
+   skyboxTexCoord = vertPos.xyz;
+   if (skyboxMode > 0) {
+      gl_Position = P * mat4(mat3(V)) * vertPos;
+   }
 }

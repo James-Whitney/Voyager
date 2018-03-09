@@ -93,6 +93,7 @@ void RenderEngine::init() {
    program->addUniform("K");
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
+   program->addUniform("skyboxMode");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
@@ -106,6 +107,8 @@ void RenderEngine::init() {
    this->initShadows();
    this->initTerrainTexture();
    this->initTerrainNormalMap();
+
+   this->skybox->init();
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -122,6 +125,7 @@ void RenderEngine::execute(double delta_time) {
 
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
+   glUniform1i(this->program->getUniform("skyboxMode"), 0);
 
    std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
    float maxHeight = terrain->getMaxHeight();
@@ -190,6 +194,12 @@ void RenderEngine::execute(double delta_time) {
    hud->start();
 
    glUniform1i(this->program->getUniform("shadowMode"), 0);
+
+   // Draw skybox
+   glUniform1i(this->program->getUniform("skyboxMode"), 1);
+   this->skybox->draw();
+   glUniform1i(this->program->getUniform("skyboxMode"), 0);
+
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
       this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
