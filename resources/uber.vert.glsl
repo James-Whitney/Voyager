@@ -16,8 +16,6 @@ out vec3 wFragNor;
 out vec3 wFragPos;
 out vec3 WPos;
 out vec4 shadowCoord;
-out vec3 skyboxTexCoord;
-uniform int skyboxMode;
 
 void main() {
 
@@ -33,9 +31,4 @@ void main() {
    WPos = vec3(V * M * vertPos);
 
    shadowCoord = shadowP * shadowV * M * vertPos;
-
-   skyboxTexCoord = vertPos.xyz;
-   if (skyboxMode > 0) {
-      gl_Position = P * mat4(mat3(V)) * vertPos;
-   }
 }

@@ -5,7 +5,6 @@ in vec3 wFragNor;
 in vec3 wFragPos;
 in vec3 WPos;
 in vec4 shadowCoord;
-in vec3 skyboxTexCoord;
 
 layout(location = 0) out vec4 color;
 
@@ -26,9 +25,6 @@ uniform float K;
 
 uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
-
-uniform int skyboxMode;
-uniform samplerCube cubeMap;
 
 vec4 cookTorrance(vec3 normal) {
    vec3 lightDirection = lightPos - WPos;
@@ -74,12 +70,6 @@ vec4 cookTorrance(vec3 normal) {
 void main() {
 
    vec3 normal;
-
-   if (skyboxMode > 0) {
-      // color = vec4(skyboxTexCoord, 1.0);
-      color = texture(cubeMap, skyboxTexCoord);
-      return;
-   }
 
    switch (uberMode) {
 
@@ -138,21 +128,21 @@ void main() {
 
    }
 
-   // if (shadowMode > 0) {
-   //    vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
-   //    color = vec4(shift.z, 0.0, 0.0, 1.0);
-   // } else {
-   //    vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
-   //    float depth = texture(depthTexture, shift.xy).r;
+   if (shadowMode > 0) {
+      vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+      color = vec4(shift.z, 0.0, 0.0, 1.0);
+   } else {
+      vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+      float depth = texture(depthTexture, shift.xy).r;
 
-   //    vec3 lightDirection = normalize(lightPos - wFragPos);
-   //    float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
-   //    bias = clamp(bias, 0.005, 0.1);
-   //    if (shift.x > 1 || shift.x < 0) {
-   //       return;
-   //    }
-   //    if (depth < (shift.z - bias)) {
-   //       color = 0.5 * color;
-   //    }
-   // }
+      vec3 lightDirection = normalize(lightPos - wFragPos);
+      float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
+      bias = clamp(bias, 0.005, 0.1);
+      if (shift.x > 1 || shift.x < 0) {
+         return;
+      }
+      if (depth < (shift.z - bias)) {
+         color = 0.5 * color;
+      }
+   }
 }

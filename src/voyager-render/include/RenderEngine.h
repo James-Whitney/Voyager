@@ -86,6 +86,7 @@ protected:
    std::shared_ptr<HelmComponent> helm;
 
    std::shared_ptr<Skybox> skybox;
+   std::shared_ptr<Program> skyboxProgram;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 

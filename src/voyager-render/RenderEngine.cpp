@@ -93,7 +93,6 @@ void RenderEngine::init() {
    program->addUniform("K");
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
-   program->addUniform("skyboxMode");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
@@ -108,7 +107,22 @@ void RenderEngine::init() {
    this->initTerrainTexture();
    this->initTerrainNormalMap();
 
+   // Initialize the skybox
    this->skybox->init();
+
+   // Initialize the skybox shader
+   this->skyboxProgram = std::make_shared<Program>();
+   this->skyboxProgram->setVerbose(true);
+   this->skyboxProgram->setShaderNames(
+      this->resource_dir + "/skybox/skybox.vert.glsl",
+      this->resource_dir + "/skybox/skybox.frag.glsl"
+   );
+   if (!this->skyboxProgram->init()) {
+      cerr << "Failed to initialize skybox program" << endl;
+      exit(1);
+   }
+   this->skyboxProgram->addUniform("P");
+   this->skyboxProgram->addUniform("V");
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -125,7 +139,6 @@ void RenderEngine::execute(double delta_time) {
 
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
-   glUniform1i(this->program->getUniform("skyboxMode"), 0);
 
    std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
    float maxHeight = terrain->getMaxHeight();
@@ -196,9 +209,16 @@ void RenderEngine::execute(double delta_time) {
    glUniform1i(this->program->getUniform("shadowMode"), 0);
 
    // Draw skybox
-   glUniform1i(this->program->getUniform("skyboxMode"), 1);
-   this->skybox->draw();
-   glUniform1i(this->program->getUniform("skyboxMode"), 0);
+   this->program->unbind();
+   this->skyboxProgram->bind();
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("P"), 1, GL_FALSE,
+         value_ptr(P->topMatrix()));
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("V"), 1, GL_FALSE,
+         value_ptr(V->topMatrix()));
+
+      this->skybox->draw();
+   this->skyboxProgram->unbind();
+   this->program->bind();
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
