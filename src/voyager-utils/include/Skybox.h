@@ -9,14 +9,22 @@
 #include <iostream>
 #include "GLSL.h"
 
+#include <glm/glm/gtc/type_ptr.hpp>
+
 class Skybox {
 
 public:
+
+   typedef struct {
+      glm::vec3 color;
+   } Fog;
 
    Skybox(std::string top, std::string bottom, std::string front, std::string back, std::string left, std::string right);
 
    void init();
    void draw();
+
+   Fog fog;
 
 private:
 

@@ -81,6 +81,12 @@ void SceneLoader::parse_skybox(std::shared_ptr<Scene> scene, rapidjson::Value& s
    string right = this->resource_dir + skybox["right"].GetString();
 
    scene->skybox = make_shared<Skybox>(top, bottom, front, back, left, right);
+
+   Value& fog = skybox["fog"];
+   Value& fog_color = fog["color"];
+   scene->skybox->fog.color = glm::vec3(fog_color[0].GetFloat(),
+                                        fog_color[1].GetFloat(),
+                                        fog_color[2].GetFloat());
 }
 
 void SceneLoader::parse_meshes(shared_ptr<Scene> scene, Value& meshes) {

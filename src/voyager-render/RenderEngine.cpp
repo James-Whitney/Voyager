@@ -93,6 +93,7 @@ void RenderEngine::init() {
    program->addUniform("K");
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
+   program->addUniform("fogColor");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
@@ -219,6 +220,10 @@ void RenderEngine::execute(double delta_time) {
       this->skybox->draw();
    this->skyboxProgram->unbind();
    this->program->bind();
+
+   // Set fog properties
+   glm::vec3 fogColor = this->skybox->fog.color;
+   glUniform3f(this->program->getUniform("fogColor"), fogColor.x, fogColor.y, fogColor.z);
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {

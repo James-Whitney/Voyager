@@ -7,6 +7,7 @@
 #include <voyager-core/include/All.h>
 
 #include <voyager-utils/include/Terrain.h>
+#include <voyager-utils/include/Skybox.h>
 
 #include <voyager-render/include/Renderable.h>
 

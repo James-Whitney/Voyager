@@ -24,6 +24,8 @@ uniform float roughnessValue;
 uniform float F0;
 uniform float K;
 
+uniform vec3 fogColor;
+
 uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
 
@@ -77,9 +79,7 @@ vec4 applyFog(vec4 color) {
    float fogFactor = 1.0 / exp(pow(dist * fogDensity, 2));
    fogFactor = clamp(fogFactor, 0.0, 1.0);
 
-   vec4 fogColor = vec4(0.12f, 0.34f, 0.56f, 1.0); // TODO: Make this a uniform
-
-   return mix(fogColor, color, fogFactor);
+   return mix(vec4(fogColor, 1.0), color, fogFactor);
 }
 
 void main() {
@@ -143,6 +143,7 @@ void main() {
 
    }
 
+   // Add fog to fragment
    color = applyFog(color);
 
    if (shadowMode > 0) {
