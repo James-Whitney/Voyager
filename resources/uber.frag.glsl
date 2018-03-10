@@ -25,6 +25,7 @@ uniform float F0;
 uniform float K;
 
 uniform vec3 fogColor;
+uniform float fogDensity;
 
 uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
@@ -71,10 +72,7 @@ vec4 cookTorrance(vec3 normal) {
 }
 
 vec4 applyFog(vec4 color) {
-   // float dist = abs(view.z);
    float dist = length(view);
-
-   float fogDensity = 0.005;
 
    float fogFactor = 1.0 / exp(pow(dist * fogDensity, 2));
    fogFactor = clamp(fogFactor, 0.0, 1.0);

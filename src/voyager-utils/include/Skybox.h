@@ -17,6 +17,8 @@ public:
 
    typedef struct {
       glm::vec3 color;
+      float density;
+      float height;
    } Fog;
 
    Skybox(std::string top, std::string bottom, std::string front, std::string back, std::string left, std::string right);

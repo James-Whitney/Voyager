@@ -87,6 +87,8 @@ void SceneLoader::parse_skybox(std::shared_ptr<Scene> scene, rapidjson::Value& s
    scene->skybox->fog.color = glm::vec3(fog_color[0].GetFloat(),
                                         fog_color[1].GetFloat(),
                                         fog_color[2].GetFloat());
+   scene->skybox->fog.density = fog["density"].GetFloat();
+   scene->skybox->fog.height = fog["height"].GetFloat();
 }
 
 void SceneLoader::parse_meshes(shared_ptr<Scene> scene, Value& meshes) {
