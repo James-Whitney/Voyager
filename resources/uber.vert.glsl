@@ -21,9 +21,9 @@ out vec4 view;
 void main() {
 
    if (shadowMode > 0) {
-       gl_Position = shadowP * shadowV * M * vertPos;
+      gl_Position = shadowP * shadowV * M * vertPos;
    } else {
-       gl_Position = P * V * M * vertPos;
+      gl_Position = P * V * M * vertPos;
    }
 
    fragNor = (V * M * vec4(vertNor, 0.0)).xyz;

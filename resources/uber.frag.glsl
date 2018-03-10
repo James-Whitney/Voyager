@@ -146,20 +146,20 @@ void main() {
    color = applyFog(color);
 
    if (shadowMode > 0) {
-       vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
-       color = vec4(shift.z, 0.0, 0.0, 1.0);
+      vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+      color = vec4(shift.z, 0.0, 0.0, 1.0);
    } else {
-        vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
-        float depth = texture(depthTexture, shift.xy).r;
+      vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+      float depth = texture(depthTexture, shift.xy).r;
 
-        vec3 lightDirection = normalize(lightPos - wFragPos);
-        float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
-        bias = clamp(bias, 0.005, 0.1);
-        if (shift.x > 1 || shift.x < 0) {
-            return;
-        }
-        if (depth < (shift.z - bias)) {
-           color = 0.5 * color;
-        }
+      vec3 lightDirection = normalize(lightPos - wFragPos);
+      float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
+      bias = clamp(bias, 0.005, 0.1);
+      if (shift.x > 1 || shift.x < 0) {
+         return;
+      }
+      if (depth < (shift.z - bias)) {
+         color = 0.5 * color;
+      }
    }
 }
