@@ -4,6 +4,7 @@ in vec3 fragNor;
 in vec3 wFragNor;
 in vec3 wFragPos;
 in vec3 WPos;
+in vec2 texCoord;
 in vec4 shadowCoord;
 
 layout(location = 0) out vec4 color;
@@ -25,6 +26,7 @@ uniform float K;
 
 uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
+uniform float terrainTextureScale;
 
 vec4 cookTorrance(vec3 normal) {
    vec3 lightDirection = lightPos - WPos;
@@ -100,22 +102,22 @@ void main() {
       float b = (blending.x + blending.y + blending.z);
       blending /= vec3(b, b, b);
 
-      float scale = 0.1;
-      vec4 texX = texture(terrainTexture, wFragPos.yz * scale);
-      vec4 texY = texture(terrainTexture, wFragPos.xz * scale);
-      vec4 texZ = texture(terrainTexture, wFragPos.xy * scale);
+      vec4 texX = texture(terrainTexture, wFragPos.yz * terrainTextureScale);
+      vec4 texY = texture(terrainTexture, wFragPos.xz * terrainTextureScale);
+      vec4 texZ = texture(terrainTexture, wFragPos.xy * terrainTextureScale);
       vec4 tex = texX * blending.x + texY * blending.y + texZ * blending.z;
 
-      vec4 normX = texture(terrainNormalMap, wFragPos.yz * scale);
-      vec4 normY = texture(terrainNormalMap, wFragPos.xz * scale);
-      vec4 normZ = texture(terrainNormalMap, wFragPos.xy * scale);
+      vec4 normX = texture(terrainNormalMap, wFragPos.yz * terrainTextureScale);
+      vec4 normY = texture(terrainNormalMap, wFragPos.xz * terrainTextureScale);
+      vec4 normZ = texture(terrainNormalMap, wFragPos.xy * terrainTextureScale);
       vec4 norm = normX * blending.x + normY * blending.y + normZ * blending.z;
 
       normal = normalize(fragNor);
       // normal = normalize(norm.xyz * 2.0 - 1.0);
 
-      color = tex * cookTorrance(normal);
+      // color = tex * cookTorrance(normal);
       // color = norm * cookTorrance(normal);
+      color = texture(terrainNormalMap, texCoord) * cookTorrance(normal);
       break;
 
    /* --=[ Default Shading ]=------------------------------------------------ */

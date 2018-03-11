@@ -76,20 +76,16 @@ void Shape::init()
       CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, norBuf.size() * sizeof(float), &norBuf[0], GL_STATIC_DRAW));
    }
 
-   // Send the texture array to the GPU
+   // If we don't have a texture buffer, generate a default one
    if (texBuf.empty())
    {
-      texBufID = 0;
+      texBuf.resize(this->posBuf.size(), 0.0f);
    }
-   else
-   {
-      texBufID = 0;
 
-      // TODO: Add this back in when we have texturing. Commented out to prevent an OpenGL warning being displayed every draw call
-      // CHECKED_GL_CALL(glGenBuffers(1, &texBufID));
-      // CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, texBufID));
-      // CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, texBuf.size() * sizeof(float), &texBuf[0], GL_STATIC_DRAW));
-   }
+   // Send the texture array to the GPU
+   CHECKED_GL_CALL(glGenBuffers(1, &texBufID));
+   CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, texBufID));
+   CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, texBuf.size() * sizeof(float), &texBuf[0], GL_STATIC_DRAW));
 
    // Send the element array to the GPU
    CHECKED_GL_CALL(glGenBuffers(1, &eleBufID));
