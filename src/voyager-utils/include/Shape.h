@@ -39,6 +39,8 @@ protected:
    unsigned int posBufID = 0;
    unsigned int norBufID = 0;
    unsigned int texBufID = 0;
+   unsigned int tanBufID = 0;
+   unsigned int bitanBufID = 0;
    unsigned int vaoID = 0;
 
 };

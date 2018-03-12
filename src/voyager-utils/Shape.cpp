@@ -95,6 +95,16 @@ void Shape::init()
    // Calculate tangents and bitangents
    this->calculateTangentsAndBitangents();
 
+   // Send the tangent array to the GPU
+   CHECKED_GL_CALL(glGenBuffers(1, &tanBufID));
+   CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, tanBufID));
+   CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, tanBuf.size() * sizeof(float), &tanBuf[0], GL_STATIC_DRAW));
+
+   // Send the bitangent array to the GPU
+   CHECKED_GL_CALL(glGenBuffers(1, &bitanBufID));
+   CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bitanBufID));
+   CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, bitanBuf.size() * sizeof(float), &bitanBuf[0], GL_STATIC_DRAW));
+
    // Unbind the arrays
    CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
    CHECKED_GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
@@ -180,8 +190,8 @@ void Shape::calculateTangentsAndBitangents() {
 
 void Shape::draw(const shared_ptr<Program> prog) const
 {
-   int h_pos, h_nor, h_tex;
-   h_pos = h_nor = h_tex = -1;
+   int h_pos, h_nor, h_tex, h_tan, h_bitan;
+   h_pos = h_nor = h_tex = h_tan = h_bitan = -1;
 
    CHECKED_GL_CALL(glBindVertexArray(vaoID));
 
@@ -213,6 +223,24 @@ void Shape::draw(const shared_ptr<Program> prog) const
       }
    }
 
+   // Bind tangent buffer
+   h_tan = prog->getAttribute("vertTan");
+   if (h_tan != -1 && tanBufID != 0)
+   {
+      GLSL::enableVertexAttribArray(h_tan);
+      CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, tanBufID));
+      CHECKED_GL_CALL(glVertexAttribPointer(h_tan, 3, GL_FLOAT, GL_FALSE, 0, (const void *)0));
+   }
+
+   // Bind bitangent buffer
+   h_bitan = prog->getAttribute("vertBitan");
+   if (h_bitan != -1 && bitanBufID != 0)
+   {
+      GLSL::enableVertexAttribArray(h_bitan);
+      CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, bitanBufID));
+      CHECKED_GL_CALL(glVertexAttribPointer(h_bitan, 3, GL_FLOAT, GL_FALSE, 0, (const void *)0));
+   }
+
    // Bind element buffer
    CHECKED_GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eleBufID));
 
@@ -227,6 +255,14 @@ void Shape::draw(const shared_ptr<Program> prog) const
    if (h_nor != -1)
    {
       GLSL::disableVertexAttribArray(h_nor);
+   }
+   if (h_tan != -1)
+   {
+      GLSL::disableVertexAttribArray(h_tan);
+   }
+   if (h_bitan != -1)
+   {
+      GLSL::disableVertexAttribArray(h_bitan);
    }
    GLSL::disableVertexAttribArray(h_pos);
    CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, 0));

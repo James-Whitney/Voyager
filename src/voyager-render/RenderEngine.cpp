@@ -98,6 +98,8 @@ void RenderEngine::init() {
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
    program->addAttribute("vertTex");
+   program->addAttribute("vertTan");
+   program->addAttribute("vertBitan");
 
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();

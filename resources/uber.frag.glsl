@@ -6,6 +6,7 @@ in vec3 wFragPos;
 in vec3 WPos;
 in vec2 texCoord;
 in vec4 shadowCoord;
+in mat3 TBN;
 
 layout(location = 0) out vec4 color;
 
@@ -112,12 +113,12 @@ void main() {
       vec4 normZ = texture(terrainNormalMap, wFragPos.xy * terrainTextureScale);
       vec4 norm = normX * blending.x + normY * blending.y + normZ * blending.z;
 
-      normal = normalize(fragNor);
-      // normal = normalize(norm.xyz * 2.0 - 1.0);
+      normal = normalize(norm.xyz * 2.0 - 1.0);
+      normal = normalize(TBN * normal);
 
-      // color = tex * cookTorrance(normal);
-      // color = norm * cookTorrance(normal);
-      color = texture(terrainNormalMap, texCoord) * cookTorrance(normal);
+      color = tex * cookTorrance(normal);
+      // color = tex;
+      // color = vec4(normal, 1.0);
       break;
 
    /* --=[ Default Shading ]=------------------------------------------------ */

@@ -3,6 +3,8 @@
 layout(location = 0) in vec4 vertPos;
 layout(location = 1) in vec3 vertNor;
 layout(location = 2) in vec2 vertTex;
+layout(location = 3) in vec3 vertTan;
+layout(location = 4) in vec3 vertBitan;
 
 uniform mat4 P;
 uniform mat4 V;
@@ -18,6 +20,7 @@ out vec3 wFragPos;
 out vec3 WPos;
 out vec2 texCoord;
 out vec4 shadowCoord;
+out mat3 TBN;
 
 void main() {
 
@@ -34,4 +37,9 @@ void main() {
    texCoord = vertTex;
 
    shadowCoord = shadowP * shadowV * M * vertPos;
+
+   vec3 T = normalize(vec3(M * vec4(vertTan, 0.0)));
+   vec3 B = normalize(vec3(M * vec4(vertBitan, 0.0)));
+   vec3 N = normalize(vec3(M * vec4(vertNor, 0.0)));
+   TBN = mat3(T, B, N);
 }
