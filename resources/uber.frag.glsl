@@ -30,7 +30,9 @@ uniform sampler2D terrainNormalMap;
 uniform float terrainTextureScale;
 
 vec4 cookTorrance(vec3 normal) {
-   vec3 lightDirection = lightPos - WPos;
+   float epsilon = 0.00390625;
+
+   vec3 lightDirection = lightPos - wFragPos;
    float lightDistance = length(lightDirection);
 
    // do the lighting calculation for each fragment
@@ -38,7 +40,7 @@ vec4 cookTorrance(vec3 normal) {
 
    float specular = 0.0;
    if (NdotL > 0.0) {
-      vec3 eyeDir = normalize(-WPos);
+      vec3 eyeDir = normalize(-wFragPos);
 
       // calculate intermediary values
       vec3 halfVector = normalize(lightDirection + eyeDir);
@@ -49,13 +51,13 @@ vec4 cookTorrance(vec3 normal) {
 
       // geometric attenuation
       float NH2 = 2.0 * NdotH;
-      float g1 = (NH2 * NdotV) / VdotH;
-      float g2 = (NH2 * NdotL) / VdotH;
+      float g1 = (NH2 * NdotV) / max(VdotH, epsilon);
+      float g2 = (NH2 * NdotL) / max(VdotH, epsilon);
       float geoAtt = min(1.0, min(g1, g2));
 
       // roughness beckmann distribution function
       float r1 = 1.0 / (4.0 * mSquared * pow(NdotH, 4.0));
-      float r2 = (NdotH * NdotH - 1.0) / (mSquared * NdotH * NdotH);
+      float r2 = (NdotH * NdotH - 1.0) / max((mSquared * NdotH * NdotH), epsilon);
       float roughness = r1 * exp(r2);
 
       // fresnel Schlick approximation
@@ -63,7 +65,7 @@ vec4 cookTorrance(vec3 normal) {
       fresnel *= (1.0 - F0);
       fresnel += F0;
 
-      specular = (fresnel * geoAtt * roughness) / (NdotV * NdotL * 3.1415926);
+      specular = (fresnel * geoAtt * roughness) / max((NdotV * NdotL * 3.1415926), epsilon);
    }
 
    vec3 finalValue = MatAmb + (lightColor / lightDistance) * NdotL * (K + specular * (1.0 - K));
