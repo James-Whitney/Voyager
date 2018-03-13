@@ -11,6 +11,8 @@
 
 #include <voyager-actors/include/ActorEngine.h>
 
+#include <voyager-network/include/NetworkEngines.h>
+
 std::shared_ptr<Application> make_application(std::shared_ptr<VoyagerConfig> config);
 
 #endif

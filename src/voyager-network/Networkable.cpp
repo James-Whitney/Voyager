@@ -26,18 +26,7 @@ struct  btVector3FloatData {
 };
 */
 
-sf::Packet Networkable::packTransform(sf::Packet packet, std::shared_ptr<btTransform> trans) {
-   /*
-    * data has the following field types and names
-    * - btMatrix3x3FloatData m_basis;
-    *   - btVector3FloatData m_el[3];
-    *     - float m_floats[4];
-    * - btVector3FloatData   m_origin;
-    *   - float m_floats[4];
-    */
-   btTransformFloatData data;
-   trans->serializeFloat(data);
-
+/*
    packet << data.m_origin.m_floats[0] << data.m_origin.m_floats[1]
              << data.m_origin.m_floats[2] << data.m_origin.m_floats[3]
           << data.m_basis.m_el[0].m_floats[0] << data.m_basis.m_el[0].m_floats[1]
@@ -46,12 +35,33 @@ sf::Packet Networkable::packTransform(sf::Packet packet, std::shared_ptr<btTrans
              << data.m_basis.m_el[1].m_floats[2] << data.m_basis.m_el[1].m_floats[3]
           << data.m_basis.m_el[2].m_floats[0] << data.m_basis.m_el[2].m_floats[1]
              << data.m_basis.m_el[2].m_floats[2] << data.m_basis.m_el[2].m_floats[3];
+*/
+/*
+* data has the following field types and names
+* - btMatrix3x3FloatData m_basis;
+*   - btVector3FloatData m_el[3];
+*     - float m_floats[4];
+* - btVector3FloatData   m_origin;
+*   - float m_floats[4];
+*/
+sf::Packet Networkable::packTransform(sf::Packet packet, std::shared_ptr<btTransform> trans) {
+   btTransformFloatData data;
+   trans->serializeFloat(data);
+
+   for (int i = 0; i < 4; i++) {
+      packet << data.m_origin.m_floats[i];
+   }
+   for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 4; j++) {
+         packet << data.m_basis.m_el[i].m_floats[j];
+      }
+   }
+
 
    return packet;
 }
 
-void Networkable::unpackTransform(sf::Packet packet, std::shared_ptr<btTransform> trans) {
-   btTransformFloatData data;
+/*
    packet >> data.m_origin.m_floats[0] >> data.m_origin.m_floats[1]
              >> data.m_origin.m_floats[2] >> data.m_origin.m_floats[3]
           >> data.m_basis.m_el[0].m_floats[0] >> data.m_basis.m_el[0].m_floats[1]
@@ -60,7 +70,16 @@ void Networkable::unpackTransform(sf::Packet packet, std::shared_ptr<btTransform
              >> data.m_basis.m_el[1].m_floats[2] >> data.m_basis.m_el[1].m_floats[3]
           >> data.m_basis.m_el[2].m_floats[0] >> data.m_basis.m_el[2].m_floats[1]
              >> data.m_basis.m_el[2].m_floats[2] >> data.m_basis.m_el[2].m_floats[3];
-
-
+*/
+void Networkable::unpackTransform(sf::Packet packet, std::shared_ptr<btTransform> trans) {
+   btTransformFloatData data;
+   for (int i = 0; i < 4; i++) {
+      packet << data.m_origin.m_floats[i];
+   }
+   for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 4; j++) {
+         packet << data.m_basis.m_el[i].m_floats[j];
+      }
+   }
    trans->deSerializeFloat(data);
 }

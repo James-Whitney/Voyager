@@ -85,6 +85,7 @@ void ServerNetworkEngine::receive() {
          case UPDATE_TRANSFORM:
          default:
             std::cout << "Bad Packet Flag Recieved" << std::endl;
+            std::cout << "Recieved Flag: " << (FLAG)flag << std::endl;
             break;
       }
    }
@@ -95,17 +96,18 @@ void ServerNetworkEngine::receive() {
 
 void ServerNetworkEngine::addPlayer(sf::Packet packet) {
    sf::Uint32 playerIp;
-   unsigned short playerPort;
+   sf::Uint32 playerPort;
    sf::Socket::Status socketStatus;
 
    packet >> playerIp >> playerPort;
-   this->players.push_back(std::make_shared<Connection>(sf::IpAddress(playerIp), playerPort));
+   this->players.push_back(std::make_shared<Connection>(sf::IpAddress(playerIp), (unsigned short)playerPort));
 
-   std::cout << "Player " << numConnected << " connected from IP " << this->players.at(numConnected)->getIp().toString()
+   std::cout << "Player " << this->numConnected << " connected from IP "
+      << this->players.at(this->numConnected)->getIp().toString()
       << " on port " << playerPort << std::endl;
 
    packet.clear();
-   packet << CONNECT_ACCEPT << numConnected;
+   packet << (sf::Uint8)CONNECT_ACCEPT << this->numConnected;
    socketStatus = NetworkEngine::sendPacket(&packet, sf::IpAddress(playerIp), playerPort);
    if (socketStatus == sf::Socket::Done) { this->numConnected++; }
 }

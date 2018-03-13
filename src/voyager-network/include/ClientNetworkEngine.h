@@ -10,7 +10,7 @@
 
 class ClientNetworkEngine : public NetworkEngine {
 public:
-   Connection *server;
+   std::shared_ptr<Connection> server;
    std::vector<Networkable> networkables;
 
    ClientNetworkEngine() : NetworkEngine::NetworkEngine(SEND) { }

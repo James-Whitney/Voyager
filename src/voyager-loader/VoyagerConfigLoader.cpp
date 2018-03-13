@@ -30,7 +30,7 @@ shared_ptr<VoyagerConfig> VoyagerConfigLoader::load(string path) {
    }
 
    if (doc.HasMember("type")) {
-      result->type = doc["type"].GetString() == "SERVER" ? SERVER : CLIENT;
+      result->type = !strcmp(doc["type"].GetString(),"SERVER") ? SERVER : CLIENT;
    }
 
    return result;

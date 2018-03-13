@@ -15,7 +15,7 @@
 
 class NetworkEngine : public Engine {
 public:
-   Connection *host;
+   std::shared_ptr<Connection> host;
    sf::UdpSocket socket;
    int numPlayers;
    std::vector< std::shared_ptr<Connection> > players;
@@ -36,7 +36,7 @@ public:
    NetworkEngine(STATUS s) { this->status = s; };
 
    void init();
-   sf::Socket::Status sendPacket(sf::Packet *packet, sf::IpAddress receiverIp, unsigned short receiverPort);
+   sf::Socket::Status sendPacket(sf::Packet *packet, sf::IpAddress receiverIp, unsigned int receiverPort);
 
    virtual void execute(double delta_time) = 0;
 

@@ -1,28 +1,16 @@
 #include "include/ClientNetworkEngine.h"
 
-/*
-void ClientNetworkEngine::init() {
-   if (this->socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) {
-       std::cout << "Error setting up socket." << std::endl;
-   }
-   this->host = new Connection(sf::IpAddress::getLocalAddress(), socket.getLocalPort());
-   std::cout << "Ip Address is " << this->host->getIp().toString()
-      << " on port " << this->host->getPort() << std::endl;
-   ClientNetworkEngine::connectionSetup();
-   this->socket.setBlocking(false);
-}
-*/
-
 void ClientNetworkEngine::connectionSetup() {
    sf::IpAddress serverIp;
    std::string serverIpString;
    unsigned short serverPort;
 
    sf::Uint32 playerIp;
-   unsigned short playerPort;
+   sf::Uint32 playerPort;
 
    sf::Packet packet;
 
+   sf::Uint8 flag;
    bool connected = false;
 
    while (!connected) {
@@ -33,8 +21,10 @@ void ClientNetworkEngine::connectionSetup() {
       std::cin >> serverPort;
 
       playerIp = this->host->getIp().toInteger();
-      playerPort = this->host->getPort();
-      packet << playerIp << playerPort;
+      playerPort = (sf::Uint32)this->host->getPort(); //std::to_string(i)
+      packet << (sf::Uint8)CONNECT_REQEST << playerIp << playerPort;
+
+      std::cout << "Sending server " << serverIpString << ":" << serverPort << " with player info " << playerIp << ":" << playerPort << std::endl;
 
       if (this->socket.send(packet, serverIp, serverPort) != sf::Socket::Done) {
          std::cout << "Error sending connection." << std::endl;
@@ -43,10 +33,12 @@ void ClientNetworkEngine::connectionSetup() {
          std::cout << "Error receiving reply from server." << std::endl;
       }
 
-      packet >> connected;
+      packet >> flag;
 
-      if (connected) {
-         this->server = new Connection(serverIp, serverPort);
+      if ((FLAG)flag == CONNECT_ACCEPT) {
+         packet >> this->numPlayers;
+         this->server = make_shared<Connection>(serverIp, serverPort);
+         connected = true;
       } else {
          std::cout << "Please Enter Server Information Again." << std::endl;
       }
