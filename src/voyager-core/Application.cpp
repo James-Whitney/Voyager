@@ -69,9 +69,9 @@ void Application::run() {
       this->network_engine->execute(delta_time);
 
       // Render
-      if (this->getType() == CLIENT) {
+      //if (this->getType() == CLIENT) {
          this->render();
-      }
+      //}
    }
    this->shutdown();
 
@@ -83,7 +83,7 @@ void Application::init() {
    ss << "--------==[ Initializing " << type << " ]==--------";
    log_life(ss.str());
 
-   if (this->getType() == CLIENT) {
+   //if (this->getType() == CLIENT) {
 
       if (this->window == nullptr) {
          cerr << "Application has no window" << endl;
@@ -103,11 +103,13 @@ void Application::init() {
          exit(1);
       }
       this->render_engine->init();
-      this->network_engine->init();
-   } else if ( this->getType() == SERVER) {
-      this->network_engine->init();
-      cout << "----------==[ I am the " << type << " ]==----------" << endl;
+   //}
+   if (this->network_engine == nullptr) {
+      cerr << "Application has no network_engine" << endl;
+      exit(1);
    }
+   this->network_engine->init();
+   cout << "----------==[ I am the " << type << " ]==----------" << endl;
 }
 
 void Application::update(double delta_time) {
@@ -130,7 +132,7 @@ void Application::physics(double delta_time) {
 }
 
 void Application::render() {
-   assert(this->getType() == CLIENT);
+   //assert(this->getType() == CLIENT);
    assert(this->render_engine != nullptr);
    this->render_engine->execute();
 }
@@ -138,15 +140,15 @@ void Application::render() {
 void Application::shutdown() {
    log_life("--------==[ Shutting Down ]==--------");
 
-   if (this->getType() == CLIENT) {
+   //if (this->getType() == CLIENT) {
       this->window->shutdown();
-   }
+   //}
 }
 
 bool Application::shouldQuit() {
-   if (this->getType() == CLIENT) {
+   //if (this->getType() == CLIENT) {
       return glfwWindowShouldClose(this->getWindowManager()->getHandle());
-   } else {
+   //} else {
       return false;
-   }
+   //}
 }

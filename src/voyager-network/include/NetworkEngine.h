@@ -15,10 +15,11 @@
 
 class NetworkEngine : public Engine {
 public:
-   Connection *host;
+   std::shared_ptr<Connection> host;
+   std::shared_ptr<Connection> server;
    sf::UdpSocket socket;
-   int numPlayers;
-   std::vector< std::shared_ptr<Connection> > players;
+
+   int playerId;
    std::vector< std::shared_ptr<Networkable> > networkables;
 
    enum STATUS { SEND, RECEIVE };
@@ -30,19 +31,28 @@ public:
       RECEIVE_PLAYER,
       UPDATE_PLAYERS,
       UPDATE_SHIP,
-      UPDATE_TRANSFORM
+      UPDATE_TRANSFORM,
+      START_TRANSFORM,
+      END_TRANSFORM
    };
 
-   NetworkEngine(STATUS s) { this->status = s; };
+   NetworkEngine(STATUS s = SEND) { this->status = s; };
 
    void init();
    sf::Socket::Status sendPacket(sf::Packet *packet, sf::IpAddress receiverIp, unsigned short receiverPort);
 
-   virtual void execute(double delta_time) = 0;
+   void execute(double delta_time);
 
-   virtual void connectionSetup() = 0;
-   virtual void send() = 0;
-   virtual void receive() = 0;
+   void connectionSetup();
+   void send();
+   void receive();
+
+private:
+   void updatePlayers(sf::Packet packet);
+   void updateShip(sf::Packet packet);
+   void updateTransform(sf::Packet packet);
+   void receivePacket(sf::Packet &packet, sf::IpAddress serverIp, unsigned short serverPort);
+   void receivePacket(sf::Packet &packet);
 };
 
 #endif

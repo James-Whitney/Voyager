@@ -10,18 +10,21 @@
 
 class ServerNetworkEngine : public NetworkEngine {
 public:
-   int numConnected = 0;
+   int numConnected = 1;
 
    sf::IpAddress allAddress = sf::IpAddress::Any;
    unsigned short allPorts = sf::Socket::AnyPort;
 
+   int numPlayers;
+   std::vector< std::shared_ptr<Connection> > players;
+
    ServerNetworkEngine() : NetworkEngine::NetworkEngine(RECEIVE) { }
 
-   //void init();
    void execute(double delta_time);
 
    void connectionSetup();
    void send();
+   void send(sf::Packet packet);
    void receive();
 
 private:

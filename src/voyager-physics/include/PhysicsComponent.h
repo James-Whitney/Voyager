@@ -26,17 +26,17 @@ public:
 
    void initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<unsigned char> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace);
 
-   void initRigidBody(  int world, 
-                        std::shared_ptr<Entity> entity, 
-                        btCollisionShape *collisionShape, 
-                        btScalar mass, 
-                        btVector3 position, 
-                        btQuaternion rotation, 
+   void initRigidBody(  int world,
+                        std::shared_ptr<Entity> entity,
+                        btCollisionShape *collisionShape,
+                        btScalar mass,
+                        btVector3 position,
+                        btQuaternion rotation,
                         btVector3 velocity,
-                        btScalar friction);                
+                        btScalar friction);
 
-   btCollisionShape* get_collisionShape() {return collisionShape;}
-   btRigidBody*      getBody() { return body; }
+   btCollisionShape*  get_collisionShape() {return collisionShape;}
+   btRigidBody* getBody() { return (btRigidBody*)body; }
 
    int getWorldIndex() { return world; }
 
@@ -47,8 +47,8 @@ private:
    //initialized variables, dont change.
    int                     world;
 
-   btCollisionShape        *collisionShape;
-   btRigidBody             *body;
+   btCollisionShape         *collisionShape;
+   btCollisionObject        *body;
 };
 
 #endif

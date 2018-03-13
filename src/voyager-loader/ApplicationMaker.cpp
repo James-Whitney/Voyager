@@ -26,6 +26,15 @@ shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
    shared_ptr<ActorEngine> actors = make_shared<ActorEngine>();
    app->setActorEngine(static_pointer_cast<Engine>(actors));
 
+   //network engine
+   if (app->getType() == CLIENT) {
+      shared_ptr<NetworkEngine> network = make_shared<NetworkEngine>();
+      app->setNetworkEngine(static_pointer_cast<Engine>(network));
+   } else {
+      shared_ptr<ServerNetworkEngine> network = make_shared<ServerNetworkEngine>();
+      app->setNetworkEngine(static_pointer_cast<Engine>(network));
+   }
+
    // done
    return app;
 

@@ -18,8 +18,8 @@ public:
    void init();
    void update(double delta_time);
 
-   sf::Packet packTransform(sf::Packet packet, std::shared_ptr<btTransform> trans);
-   void unpackTransform(sf::Packet packet, std::shared_ptr<btTransform> trans);
+   sf::Packet packTransform(sf::Packet packet);
+   void unpackTransform(sf::Packet packet);
 };
 
 #endif
