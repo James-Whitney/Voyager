@@ -83,9 +83,12 @@ void Shape::init()
    }
    else
    {
-      CHECKED_GL_CALL(glGenBuffers(1, &texBufID));
-      CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, texBufID));
-      CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, texBuf.size() * sizeof(float), &texBuf[0], GL_STATIC_DRAW));
+      texBufID = 0;
+
+      // TODO: Add this back in when we have texturing. Commented out to prevent an OpenGL warning being displayed every draw call
+      // CHECKED_GL_CALL(glGenBuffers(1, &texBufID));
+      // CHECKED_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, texBufID));
+      // CHECKED_GL_CALL(glBufferData(GL_ARRAY_BUFFER, texBuf.size() * sizeof(float), &texBuf[0], GL_STATIC_DRAW));
    }
 
    // Send the element array to the GPU

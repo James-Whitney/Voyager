@@ -60,10 +60,11 @@ void Application::run() {
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
          this->update(delta_time);
-         //actos
-         this->actors(delta_time);
+
          //Physics
          this->physics(delta_time);
+         //actors
+         this->actors(delta_time);
       }
       this->network_engine->execute(delta_time);
 

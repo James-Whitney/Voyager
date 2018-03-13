@@ -13,13 +13,14 @@
 #include <voyager-utils/include/Terrain.h>
 
 #include <voyager-physics/include/PhysicsComponent.h>
+#include <voyager-physics/include/PhysicsEngine.h>
+
 #include <voyager-actors/include/PlayerComponent.h>
 #include <voyager-actors/include/ShipComponent.h>
-
+#include <voyager-actors/include/HelmComponent.h>
+#include <voyager-actors/include/TurretComponent.h>
 
 #include <iostream>
-
-
 
 class Scene {
 
@@ -29,9 +30,11 @@ public:
 
    std::vector< std::shared_ptr<Component> > components;
 
-   std::vector< std::shared_ptr<Shape> > shapes;
+   std::vector< std::vector< std::shared_ptr<Shape> > > meshes;
 
    std::vector< std::shared_ptr<Uber> > ubers;
+
+   std::shared_ptr<Skybox> skybox;
 
    void initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain);
 

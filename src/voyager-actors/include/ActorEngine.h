@@ -6,7 +6,6 @@
 #include <memory>
 
 #include <voyager-core/include/Engine.h>
-#include <voyager-core/include/Entity.h>
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 

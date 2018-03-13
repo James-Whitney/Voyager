@@ -6,6 +6,9 @@
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
+#include <voyager-actors/include/PlayerComponent.h>
+#include <voyager-actors/include/ShipComponent.h>
+
 #include "PhysicsComponent.h"
 
 #include <iostream>
@@ -19,9 +22,13 @@ public:
    //void initOverworld();
    //void initShipworld();
    void initWorld();
+   void initShipWorld();
 
-   btDiscreteDynamicsWorld* get_world() { return world; }
+   btDiscreteDynamicsWorld* get_world() { return this->world; }
+   btDiscreteDynamicsWorld* get_ship_world() { return this->ship_world; }
 
+   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
+   
    //btDiscreteDynamicsWorld* get_shipworld() {return shipworld;}
 
    void execute(double delta_time = 0);
@@ -32,21 +39,33 @@ public:
 
    void updateEntityTransforms();
 
+   btDiscreteDynamicsWorld* getWorld() { return world; }
+
 
    void registerComponent(std::shared_ptr<Component> component);
-
+   
 
 protected:
 
-   //Overworld Objects
+   std::shared_ptr<ShipComponent>         ship;
+   // ***** Ship World ***** //
+   btBroadphaseInterface                  *ship_broadphase;
+   btDefaultCollisionConfiguration        *ship_collisionConfiguration;
+   btCollisionDispatcher                  *ship_dispatcher;
+   btSequentialImpulseConstraintSolver    *ship_solver;
+   btAxisSweep3                           *ship_overlappingPairCache;
+   btDiscreteDynamicsWorld                *ship_world;
+
+   // ***** World ***** //
    btBroadphaseInterface                  *broadphase;
    btDefaultCollisionConfiguration        *collisionConfiguration;
    btCollisionDispatcher                  *dispatcher;
    btSequentialImpulseConstraintSolver    *solver;
-
+   btAxisSweep3                           *overlappingPairCache;
    btDiscreteDynamicsWorld                *world;
-   btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
+   btAlignedObjectArray<btCollisionShape*> collisionShapes;
+   
 };
 
 #endif
