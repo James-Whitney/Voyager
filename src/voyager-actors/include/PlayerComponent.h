@@ -27,6 +27,8 @@ public:
    void setHelm(std::shared_ptr<StationComponent> helm) { this->helm = helm; }
    void setTurret(std::shared_ptr<StationComponent> turret, int i);
 
+   void collisionCheck();
+
    std::shared_ptr<PhysicsComponent> getPhysics() { return physicsComponent; }
 
    btScalar getRotation();

@@ -220,9 +220,10 @@
                "world": 0,
                "collisionShape": 
                {
-                  "type": "box",
-                  "scale": [0.1, 0.1, 0.1]
+                  "type": "sphere",
+                  "radius": 1
                },
+               "ghost": true,
                "mass": 0.0,
                "position": [-7, 0, 0.0],
                "scale": [1.0, 0.5, 1.0],

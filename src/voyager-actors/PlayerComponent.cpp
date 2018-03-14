@@ -23,6 +23,14 @@ glm::vec3 PlayerComponent::getPosition() {
    return bulletToGlm(entity->getTransform()->getOrigin());
 }
 
+void PlayerComponent::collisionCheck() {
+   std::vector< std::shared_ptr<Entity> >  collisionList = getEntity()->getCollideList();
+   printf("Player Collided! %d\n", collisionList.size());
+   for (auto &collision: collisionList) {
+      
+   }
+}
+
 btScalar PlayerComponent::getRotation() {
    btScalar yaw, pitch, roll;
    entity->getTransform()->getBasis().getEulerYPR(yaw, pitch, roll);
@@ -73,6 +81,7 @@ void PlayerComponent::update(double delta_time) {
    if (active) {
       positionUpdate(delta_time);
       cameraUpdate();
+      collisionCheck();
    }
 }
 
