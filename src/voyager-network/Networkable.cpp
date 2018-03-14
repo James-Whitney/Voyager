@@ -44,9 +44,9 @@ struct  btVector3FloatData {
 * - btVector3FloatData   m_origin;
 *   - float m_floats[4];
 */
-sf::Packet Networkable::packTransform(sf::Packet packet, std::shared_ptr<btTransform> trans) {
+sf::Packet Networkable::packTransform(sf::Packet packet) {
    btTransformFloatData data;
-   trans->serializeFloat(data);
+   this->getEntity()->getTransform()->serializeFloat(data);
 
    for (int i = 0; i < 4; i++) {
       packet << data.m_origin.m_floats[i];
@@ -71,7 +71,7 @@ sf::Packet Networkable::packTransform(sf::Packet packet, std::shared_ptr<btTrans
           >> data.m_basis.m_el[2].m_floats[0] >> data.m_basis.m_el[2].m_floats[1]
              >> data.m_basis.m_el[2].m_floats[2] >> data.m_basis.m_el[2].m_floats[3];
 */
-void Networkable::unpackTransform(sf::Packet packet, std::shared_ptr<btTransform> trans) {
+void Networkable::unpackTransform(sf::Packet packet) {
    btTransformFloatData data;
    for (int i = 0; i < 4; i++) {
       packet << data.m_origin.m_floats[i];
@@ -81,5 +81,5 @@ void Networkable::unpackTransform(sf::Packet packet, std::shared_ptr<btTransform
          packet << data.m_basis.m_el[i].m_floats[j];
       }
    }
-   trans->deSerializeFloat(data);
+   this->getEntity()->getTransform()->deSerializeFloat(data);
 }

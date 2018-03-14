@@ -2,58 +2,53 @@
 #include <glm/glm/gtc/type_ptr.hpp>
 
 void ServerNetworkEngine::connectionSetup() {
+   this->players.push_back(this->host);
+
    std::cout << "Number of Players? ";
    std::cin >> this->numPlayers;
 
    while (this->numConnected < this->numPlayers) {
-      ServerNetworkEngine::receive();
+      this->receive();
    }
    for (auto &player : this->players) {
 
    }
 }
 
-void ServerNetworkEngine::execute(double delta_time) {
-   if (SEND == status) {
-      ServerNetworkEngine::send();
-      status = RECEIVE;
-   } else if (RECEIVE == status) {
-      ServerNetworkEngine::receive();
-      status = SEND;
-   }
-}
-
-
 void ServerNetworkEngine::send() {
-   ServerNetworkEngine::sendNetworkableUpdates();
-   ServerNetworkEngine::sendPlayerUpdates();
+   this->sendNetworkableUpdates();
+   this->sendPlayerUpdates();
 }
 
 void ServerNetworkEngine::sendNetworkableUpdates() {
    sf::Packet packet;
    std::shared_ptr<Networkable> networkable;
+   packet << START_TRANSFORM;
+
 
    for (int idx = 0; idx < this->networkables.size(); idx++) {
       networkable = this->networkables.at(idx);
       if (networkable->updateThis) {
-         packet << UPDATE_TRANSFORM << idx;
+         packet << UPDATE_TRANSFORM << (sf::Uint32)idx;
          packet = networkable->packTransform(packet, networkable->getEntity()->getTransform());
-         ServerNetworkEngine::sendToPlayers(&packet);
+         this->sendToPlayers(&packet);
          packet.clear();
       }
    }
+   packet << END_TRANSFORM;
+
 }
 
 void ServerNetworkEngine::sendPlayerUpdates() {
    sf::Packet packet;
    std::shared_ptr<Connection> player;
 
-   for (int idx = 0; idx < this->players.size(); idx++) {
+   for (int idx = 1; idx < this->players.size(); idx++) {
       player = this->players.at(idx);
       if (player->getNetworkable()->updateThis) {
-         packet << UPDATE_PLAYERS << idx;
+         packet << UPDATE_PLAYERS << (sf::Uint32)idx;
          packet = player->getNetworkable()->packTransform(packet, player->getNetworkable()->getEntity()->getTransform());
-         ServerNetworkEngine::sendToPlayers(&packet);
+         this->sendToPlayers(&packet);
          packet.clear();
       }
    }
@@ -61,7 +56,7 @@ void ServerNetworkEngine::sendPlayerUpdates() {
 
 void ServerNetworkEngine::sendToPlayers(sf::Packet *packet) {
    for (auto &player : this->players) {
-      NetworkEngine::sendPacket(packet, player->getIp(), player->getPort());
+      this->sendPacket(packet, player->getIp(), player->getPort());
    }
 }
 
@@ -74,10 +69,10 @@ void ServerNetworkEngine::receive() {
       packet >> flag;
       switch ((FLAG)flag) {
          case CONNECT_REQEST:
-            ServerNetworkEngine::addPlayer(packet);
+            this->addPlayer(packet);
             break;
          case RECEIVE_PLAYER:
-            ServerNetworkEngine::receivePlayer(packet);
+            this->receivePlayer(packet);
             break;
          case CONNECT_ACCEPT:
          case UPDATE_PLAYERS:
@@ -108,7 +103,7 @@ void ServerNetworkEngine::addPlayer(sf::Packet packet) {
 
    packet.clear();
    packet << (sf::Uint8)CONNECT_ACCEPT << this->numConnected;
-   socketStatus = NetworkEngine::sendPacket(&packet, sf::IpAddress(playerIp), playerPort);
+   socketStatus = this->sendPacket(&packet, sf::IpAddress(playerIp), playerPort);
    if (socketStatus == sf::Socket::Done) { this->numConnected++; }
 }
 

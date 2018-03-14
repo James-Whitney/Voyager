@@ -20,6 +20,9 @@ public:
    sf::IpAddress getIp() { return this->ip; }
    unsigned short getPort() { return this->port; }
 
+   void setIp(sf::IpAddress addr) { this->ip = addr; }
+   void setPort(unsigned short p) { this->port = p; }
+
    void setNetworkable(std::shared_ptr<Networkable> n) { this->networkable = n; }
    std::shared_ptr<Networkable> getNetworkable() { return this->networkable; }
 };

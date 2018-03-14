@@ -28,7 +28,7 @@ shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
 
    //network engine
    if (app->getType() == CLIENT) {
-      shared_ptr<ClientNetworkEngine> network = make_shared<ClientNetworkEngine>();
+      shared_ptr<NetworkEngine> network = make_shared<NetworkEngine>();
       app->setNetworkEngine(static_pointer_cast<Engine>(network));
    } else {
       shared_ptr<ServerNetworkEngine> network = make_shared<ServerNetworkEngine>();
