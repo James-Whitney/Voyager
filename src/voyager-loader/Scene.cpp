@@ -36,6 +36,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    shared_ptr<RenderEngine> renderEngine = static_pointer_cast<RenderEngine>(app->getRenderEngine());
    renderEngine->setTerrainTexture(terrainShape->getTexture());
    renderEngine->setTerrainNormalMap(terrainShape->getNormalMap());
+   renderEngine->setTerrainTextureScale(terrainShape->getTextureScale());
 }
 
 void Scene::apply(shared_ptr<Application> app) {

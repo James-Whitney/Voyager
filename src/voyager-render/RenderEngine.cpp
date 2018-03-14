@@ -93,9 +93,13 @@ void RenderEngine::init() {
    program->addUniform("K");
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
+   program->addUniform("terrainTextureScale");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
+   program->addAttribute("vertTex");
+   program->addAttribute("vertTan");
+   program->addAttribute("vertBitan");
 
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
@@ -179,6 +183,9 @@ void RenderEngine::execute(double delta_time) {
 
    // Bind terrain normal map
    this->terrainNormalMap->bind(this->program->getUniform("terrainNormalMap"));
+
+   // Bind terrain texture scale
+   glUniform1f(this->program->getUniform("terrainTextureScale"), this->terrainTextureScale);
 
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
