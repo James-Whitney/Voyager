@@ -23,6 +23,7 @@ public:
    void execute(double delta_time);
 
    void connectionSetup();
+   void send();
    void send(sf::Packet packet);
    void receive();
 

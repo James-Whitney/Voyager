@@ -51,7 +51,8 @@ private:
    void updatePlayers(sf::Packet packet);
    void updateShip(sf::Packet packet);
    void updateTransform(sf::Packet packet);
-
+   void receivePacket(sf::Packet &packet, sf::IpAddress serverIp, unsigned short serverPort);
+   void receivePacket(sf::Packet &packet);
 };
 
 #endif

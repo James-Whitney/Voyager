@@ -19,8 +19,18 @@ sf::Socket::Status NetworkEngine::sendPacket(sf::Packet *packet, sf::IpAddress r
    return socketStatus;
 }
 
-void NetworkEngine::receivePacket(sf::Packet *packet) {
-   if (socketStatus = this->socket.receive(*packet, this->host->getIp(), this->host->getPort())) != sf::Socket::Done) {
+void NetworkEngine::receivePacket(sf::Packet &packet) {
+   sf::Socket::Status socketStatus;
+   sf::IpAddress ip = this->host->getIp();
+   unsigned short port = this->host->getPort();
+   if ((socketStatus = this->socket.receive(packet, ip, port)) != sf::Socket::Done) {
+      std::cout << "Error receiving packet." << std::endl;
+   }
+}
+
+void NetworkEngine::receivePacket(sf::Packet &packet, sf::IpAddress ip, unsigned short port) {
+   sf::Socket::Status socketStatus;
+   if ((socketStatus = this->socket.receive(packet, ip, port)) != sf::Socket::Done) {
       std::cout << "Error receiving packet." << std::endl;
    }
 }
@@ -55,7 +65,7 @@ void NetworkEngine::connectionSetup() {
       //if (this->socket.send(packet, serverIp, serverPort) != sf::Socket::Done) {
          //std::cout << "Error sending connection." << std::endl;
       //}
-      this->receivePacket(&packet, serverIp, serverPort);
+      this->receivePacket(packet, serverIp, serverPort);
       //if (this->socket.receive(packet, serverIp, serverPort) != sf::Socket::Done) {
          //std::cout << "Error receiving reply from server." << std::endl;
       //}
@@ -90,7 +100,9 @@ void NetworkEngine::receive() {
    sf::Packet packet;
    sf::Uint8 flag;
 
-   if ((socketStatus = this->socket.receive(packet, this->host->getIp(), this->host->getPort())) == sf::Socket::Done) {
+   sf::IpAddress ip = this->host->getIp();
+   unsigned short port = this->host->getPort();
+   if ((socketStatus = this->socket.receive(packet, ip, port)) == sf::Socket::Done) {
       packet >> flag;
       switch ((FLAG)flag) {
          case UPDATE_PLAYERS:
@@ -138,10 +150,10 @@ void NetworkEngine::updateTransform(sf::Packet packet) {
       cur->unpackTransform(packet);
 
       this->receivePacket(packet);
-      packt >> flag;
+      packet >> flag;
    }
    if ((FLAG)flag != END_TRANSFORM) {
-      std::cout << "Error recieving all Transform Updates" << std:endl;
+      std::cout << "Error recieving all Transform Updates" << std::endl;
    }
 }
 

@@ -30,7 +30,7 @@ void ServerNetworkEngine::sendNetworkableUpdates() {
       networkable = this->networkables.at(idx);
       if (networkable->updateThis) {
          packet << UPDATE_TRANSFORM << (sf::Uint32)idx;
-         packet = networkable->packTransform(packet, networkable->getEntity()->getTransform());
+         packet = networkable->packTransform(packet);
          this->sendToPlayers(&packet);
          packet.clear();
       }
@@ -47,7 +47,7 @@ void ServerNetworkEngine::sendPlayerUpdates() {
       player = this->players.at(idx);
       if (player->getNetworkable()->updateThis) {
          packet << UPDATE_PLAYERS << (sf::Uint32)idx;
-         packet = player->getNetworkable()->packTransform(packet, player->getNetworkable()->getEntity()->getTransform());
+         packet = player->getNetworkable()->packTransform(packet);
          this->sendToPlayers(&packet);
          packet.clear();
       }
@@ -114,6 +114,6 @@ void ServerNetworkEngine::receivePlayer(sf::Packet packet) {
    packet >> id;
    player = this->players.at(id)->getNetworkable()->getEntity()->getTransform();
 
-   this->players.at(id)->getNetworkable()->unpackTransform(packet, player);
+   this->players.at(id)->getNetworkable()->unpackTransform(packet);
    std::cout << "Received Player update from " << id << std::endl;
 }

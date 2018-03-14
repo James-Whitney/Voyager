@@ -9,7 +9,7 @@ void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 p
    this->entity = entity;
 
    this->world = 1;
-  
+
   std::shared_ptr<btTransform> transform = entity->getTransform();
 
    btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
@@ -30,7 +30,7 @@ void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 p
 
    btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
 
-   this->body = new btRigidBody(rbInfo);                   
+   this->body = (btRigidBody*)(new btRigidBody(rbInfo));
 }
 
 
@@ -40,34 +40,34 @@ void PhysicsComponent::initRigidBody(int world, std::shared_ptr<Entity> entity, 
    this->entity = entity;
    //create a dynamic rigidbody
    //btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
-   
+
    this->collisionShape = collisionShape;
-   
+
    /// Create Dynamic Objects
    std::shared_ptr<btTransform> transform = std::make_shared<btTransform>();
    transform->setIdentity();
-   
+
    //rigidbody is dynamic if and only if mass is non zero, otherwise static
    bool isDynamic = (mass != 0.f);
-   
+
    if (isDynamic)
       collisionShape->calculateLocalInertia(mass, velocity);
-   
+
    transform->setOrigin(position);
    transform->setRotation(rotation);
-   
+
    //using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
    btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
-   
+
    btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, collisionShape, velocity);
    rbInfo.m_friction = friction;
-   this->body = new btRigidBody(rbInfo);
-   
+   this->body = (btCollisionObject*)(new btRigidBody(rbInfo));
+
    entity->setTransform(transform);
-   
+
    //this->body->applyGravity();
-   this->body->setSleepingThresholds(btScalar(0.001), btScalar(0.001));
-   
+   this->getBody()->setSleepingThresholds(btScalar(0.001), btScalar(0.001));
+
 }
 
 void PhysicsComponent::update(double delta_time) {
@@ -77,8 +77,8 @@ void PhysicsComponent::update(double delta_time) {
 void PhysicsComponent::updatePosition(std::shared_ptr<ShipComponent> ship) {
    btTransform objectTrans;
    btTransform shipTrans;
-   
-   body->getMotionState()->getWorldTransform(objectTrans);
+
+   this->getBody()->getMotionState()->getWorldTransform(objectTrans);
    if (world == 0) {
       ship->getPhysics()->getBody()->getMotionState()->getWorldTransform(shipTrans);
       btVector3 position = objectTrans.getOrigin().rotate(btVector3(0, 1, 0), ship->getRotation());
