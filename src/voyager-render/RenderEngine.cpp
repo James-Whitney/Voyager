@@ -25,7 +25,7 @@ void RenderEngine::initShadows() {
       depthResolution, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
    //bind texture to framebuffer
-   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
     this->depthTextureId, 0);
 
     // Set up depth
@@ -93,18 +93,40 @@ void RenderEngine::init() {
    program->addUniform("K");
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
+   program->addUniform("terrainTextureScale");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
+   program->addAttribute("vertTex");
+   program->addAttribute("vertTan");
+   program->addAttribute("vertBitan");
 
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
    }
-
+   cout << "components size: " << this->components.size() << endl;
+   this->vfc = make_shared<VFCobj>(&this->components);
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
    this->initShadows();
    this->initTerrainTexture();
    this->initTerrainNormalMap();
+
+   // Initialize the skybox
+   this->skybox->init();
+
+   // Initialize the skybox shader
+   this->skyboxProgram = std::make_shared<Program>();
+   this->skyboxProgram->setVerbose(true);
+   this->skyboxProgram->setShaderNames(
+      this->resource_dir + "/skybox/skybox.vert.glsl",
+      this->resource_dir + "/skybox/skybox.frag.glsl"
+   );
+   if (!this->skyboxProgram->init()) {
+      cerr << "Failed to initialize skybox program" << endl;
+      exit(1);
+   }
+   this->skyboxProgram->addUniform("P");
+   this->skyboxProgram->addUniform("V");
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -141,7 +163,7 @@ void RenderEngine::execute(double delta_time) {
       value_ptr(ortho));
    glUniformMatrix4fv(this->program->getUniform("shadowV"), 1, GL_FALSE,
       value_ptr(cam));
- 
+
    // Render the shadows for all the objects to the depth texture
    glBindFramebuffer(GL_FRAMEBUFFER, this->depthBufferId);
    glClear(GL_DEPTH_BUFFER_BIT);
@@ -162,9 +184,12 @@ void RenderEngine::execute(double delta_time) {
    // Bind terrain normal map
    this->terrainNormalMap->bind(this->program->getUniform("terrainNormalMap"));
 
+   // Bind terrain texture scale
+   glUniform1f(this->program->getUniform("terrainTextureScale"), this->terrainTextureScale);
+
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
-   
+
 
    P->pushMatrix();
    V->pushMatrix();
@@ -175,35 +200,52 @@ void RenderEngine::execute(double delta_time) {
       value_ptr(P->topMatrix()));
    glUniformMatrix4fv(this->program->getUniform("V"), 1, GL_FALSE,
       value_ptr(V->topMatrix()));
-  
+
    // TODO: remove hardcoding light position and color
    glUniform3f(this->program->getUniform("lightPos"),
       lightPos.x, lightPos.y, lightPos.z);
    glUniform3f(this->program->getUniform("lightColor"), 1, 1, 1);
-   
+
    // Render the components to the screen
    glViewport(0, 0, width, height);
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+   hud->start();
+
    glUniform1i(this->program->getUniform("shadowMode"), 0);
-   for (int i = 0; i < this->components.size(); ++i) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
+
+   // Draw skybox
+   this->program->unbind();
+   this->skyboxProgram->bind();
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("P"), 1, GL_FALSE,
+         value_ptr(P->topMatrix()));
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("V"), 1, GL_FALSE,
+         value_ptr(V->topMatrix()));
+
+      this->skybox->draw();
+   this->skyboxProgram->unbind();
+   this->program->bind();
+
+   this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
+   for (auto &idx : this->vfc->ViewFrustCull()) {
+      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+   }
+   for (auto &idx : this->vfc->dynamic) {
+      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
    }
 
    V->popMatrix();
    P->popMatrix();
 
-
    if (hud->startScreen) {
       hud->startMenu();
-   } else {
-      hud->run();
+   }  else {
+      hud->render();
       hud->shipStats(helm);
    }
 
    this->program->unbind();
-
    glfwSwapBuffers(this->window->getHandle());
 }
 

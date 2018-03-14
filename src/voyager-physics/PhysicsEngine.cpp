@@ -107,5 +107,5 @@ void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {
 }
 
 void PhysicsEngine::removeComponent(PhysicsComponent* component) {
-   
+
 }

@@ -9,7 +9,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getMesh().at(0));
 
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
-   
+
    int mapWidth = terrainShape->getMapWidth();
    int mapLength = terrainShape->getMapLength();
    vector<unsigned char> heightData = terrainShape->getHeightData();
@@ -36,6 +36,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    shared_ptr<RenderEngine> renderEngine = static_pointer_cast<RenderEngine>(app->getRenderEngine());
    renderEngine->setTerrainTexture(terrainShape->getTexture());
    renderEngine->setTerrainNormalMap(terrainShape->getNormalMap());
+   renderEngine->setTerrainTextureScale(terrainShape->getTextureScale());
 }
 
 void Scene::apply(shared_ptr<Application> app) {
@@ -45,20 +46,23 @@ void Scene::apply(shared_ptr<Application> app) {
       app->getThings()[entity->getId()] = entity;
    }
 
-   //init HeightMap
+   // Init HeightMap
    shared_ptr<Entity> terrain = this->entities.at(0);
    initTerrain(app, terrain);
 
-   //init ship
+   // Set skybox
+   static_pointer_cast<RenderEngine>(app->getRenderEngine())->setSkybox(this->skybox);
+
+   // Init ship
    shared_ptr<Entity> ship = this->entities.at(1);
-   shared_ptr<ShipComponent> shipComponent = 
+   shared_ptr<ShipComponent> shipComponent =
       static_pointer_cast<ShipComponent>(ship->componentAt(ship->numComponents()-1));
    static_pointer_cast<PhysicsEngine>(app->getPhysicsEngine())->setShip(shipComponent);
    //shipComponent->getPhysics()->getBody()->setGravity(btVector3(0, 1, 0));
 
-   //init player
+   // Init player
    shared_ptr<Entity> player = this->entities.at(2);
-   shared_ptr<PlayerComponent> playerComponent = 
+   shared_ptr<PlayerComponent> playerComponent =
       static_pointer_cast<PlayerComponent>(player->componentAt(player->numComponents()-1));
    playerComponent->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
    playerComponent->setShip(shipComponent);

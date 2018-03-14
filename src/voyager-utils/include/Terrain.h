@@ -11,8 +11,8 @@
 class Terrain : public Shape {
 
 public:
-   
-   void createShape(std::string heightmap_path, float max_height, float vertex_spacing);
+
+   void createShape(std::string heightmap_path, float max_height, float vertex_spacing, float texture_scale);
 
    std::vector<unsigned char> getHeightData();
    btScalar getHeightScale();
@@ -27,6 +27,7 @@ public:
 
    std::string getTexture() { return this->texture_filename; }
    std::string getNormalMap() { return this->normal_map_filename; }
+   float getTextureScale() { return this->texture_scale; }
 
 private:
 
@@ -53,6 +54,7 @@ private:
    void buildElementBuffer();
    void buildPositionBuffer();
    void buildNormalBuffer();
+   void buildTextureBuffer();
 
    float max_height = 0.0f;
    float min_height = 0.0f;
@@ -60,6 +62,8 @@ private:
 
    std::string texture_filename;
    std::string normal_map_filename;
+
+   float texture_scale = 1.0f;
 };
 
 #endif

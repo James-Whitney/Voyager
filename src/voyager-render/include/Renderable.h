@@ -21,6 +21,9 @@ public:
    std::vector<std::shared_ptr<Shape>> getMesh() { return this->mesh; }
    void setMesh(std::vector<std::shared_ptr<Shape>> mesh) { this->mesh = mesh; }
 
+   bool getCullStatus() { return this->shouldCull; }
+   void setCullStatus(bool status) { this->shouldCull = status; }
+
    virtual void init();
    virtual void update(double delta_time);
 
@@ -28,6 +31,7 @@ private:
 
    std::shared_ptr<Uber> uber;
    std::vector<std::shared_ptr<Shape>> mesh;
+   bool shouldCull;
 
 };
 
