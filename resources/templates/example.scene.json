@@ -4,7 +4,8 @@
       "height": 100.0,
       "spacing": 1.0,
       "texture": "/sand_tex.png",
-      "normal_map": "/sand_norm.png"
+      "normal_map": "/sand_norm.png",
+      "textureScale": 0.1
    },
 
    "skybox": {

@@ -57,8 +57,9 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    string heightmap_path = this->resource_dir + terrain["heightmap"].GetString();
    float max_height = terrain["height"].GetFloat();
    float vertex_spacing = terrain["spacing"].GetFloat();
+   float texture_scale = terrain["textureScale"].GetFloat();
 
-   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
+   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing, texture_scale);
    terrain_shape->measure();
 
    string texture_path = this->resource_dir + terrain["texture"].GetString();
