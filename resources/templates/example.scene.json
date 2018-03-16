@@ -9,16 +9,16 @@
    },
 
    "skybox": {
-      "top": "/skybox/bluecloud_dn.jpg",
-      "bottom": "/skybox/bluecloud_up.jpg",
-      "front": "/skybox/bluecloud_rt.jpg",
-      "back": "/skybox/bluecloud_lf.jpg",
-      "left": "/skybox/bluecloud_bk.jpg",
-      "right": "/skybox/bluecloud_ft.jpg",
+      "top": "/skybox/sandstorm_up.jpeg",
+      "bottom": "/skybox/sandstorm_dn.jpeg",
+      "front": "/skybox/sandstorm_ft.jpeg",
+      "back": "/skybox/sandstorm_bk.jpeg",
+      "left": "/skybox/sandstorm_rt.jpeg",
+      "right": "/skybox/sandstorm_lf.jpeg",
       "fog": {
-         "color": [0.12, 0.34, 0.56],
-         "density": 0.003,
-         "height": 0.2
+         "color": [0.93, 0.69, 0.49],
+         "density": 0.002,
+         "height": 0.15
       }
    },
 
@@ -403,10 +403,10 @@
       {
          "type": "TERRAIN_COOK_TORRANCE",
          "opacity": 1,
-         "ambient": [0.5, 0.5, 0.5],
-         "roughness": 0.3,
+         "ambient": [0.93, 0.69, 0.49],
+         "roughness": 0.9,
          "f0": 0.8,
-         "k": 0.3
+         "k": 0.5
       }
    ]
 

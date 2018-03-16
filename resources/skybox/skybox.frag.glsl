@@ -13,7 +13,7 @@ void main() {
    color = texture(cubeMap, skyboxTexCoord);
 
    if (skyboxTexCoord.y < fogHeight) {
-      float mixFactor = pow(skyboxTexCoord.y / fogHeight, 5);
+      float mixFactor = skyboxTexCoord.y / fogHeight;
       mixFactor = clamp(mixFactor, 0.0, 1.0);
       color = mix(vec4(fogColor, 1.0), color, mixFactor);
    }
