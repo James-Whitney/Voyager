@@ -6,6 +6,7 @@ in vec3 wFragPos;
 in vec3 WPos;
 in vec2 texCoord;
 in vec4 shadowCoord;
+in vec4 view;
 in mat3 TBN;
 
 layout(location = 0) out vec4 color;
@@ -24,6 +25,9 @@ uniform float opacity;
 uniform float roughnessValue;
 uniform float F0;
 uniform float K;
+
+uniform vec3 fogColor;
+uniform float fogDensity;
 
 uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
@@ -70,6 +74,15 @@ vec4 cookTorrance(vec3 normal) {
 
    vec3 finalValue = MatAmb + (lightColor / lightDistance) * NdotL * (K + specular * (1.0 - K));
    return vec4(finalValue, opacity);
+}
+
+vec4 applyFog(vec4 color) {
+   float dist = length(view);
+
+   float fogFactor = 1.0 / exp(pow(dist * fogDensity, 2));
+   fogFactor = clamp(fogFactor, 0.0, 1.0);
+
+   return mix(vec4(fogColor, 1.0), color, fogFactor);
 }
 
 void main() {
@@ -132,6 +145,9 @@ void main() {
 
 
    }
+
+   // Add fog to fragment
+   color = applyFog(color);
 
    if (shadowMode > 0) {
       vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);

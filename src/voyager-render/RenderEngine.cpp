@@ -94,6 +94,8 @@ void RenderEngine::init() {
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
    program->addUniform("terrainTextureScale");
+   program->addUniform("fogColor");
+   program->addUniform("fogDensity");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
@@ -127,6 +129,8 @@ void RenderEngine::init() {
    }
    this->skyboxProgram->addUniform("P");
    this->skyboxProgram->addUniform("V");
+   this->skyboxProgram->addUniform("fogColor");
+   this->skyboxProgram->addUniform("fogHeight");
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -215,13 +219,25 @@ void RenderEngine::execute(double delta_time) {
 
    glUniform1i(this->program->getUniform("shadowMode"), 0);
 
+   // Set fog properties
+   Skybox::Fog fog = this->skybox->fog;
+   glUniform3f(this->program->getUniform("fogColor"),
+      fog.color.x, fog.color.y, fog.color.z);
+   glUniform1f(this->program->getUniform("fogDensity"), fog.density);
+
    // Draw skybox
    this->program->unbind();
    this->skyboxProgram->bind();
+      // Bind P and V
       glUniformMatrix4fv(this->skyboxProgram->getUniform("P"), 1, GL_FALSE,
          value_ptr(P->topMatrix()));
       glUniformMatrix4fv(this->skyboxProgram->getUniform("V"), 1, GL_FALSE,
          value_ptr(V->topMatrix()));
+
+      // Bind fog properties
+      glUniform3f(this->skyboxProgram->getUniform("fogColor"),
+         fog.color.x, fog.color.y, fog.color.z);
+      glUniform1f(this->skyboxProgram->getUniform("fogHeight"), fog.height);
 
       this->skybox->draw();
    this->skyboxProgram->unbind();
