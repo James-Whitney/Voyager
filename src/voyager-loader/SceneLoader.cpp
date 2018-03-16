@@ -250,19 +250,23 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          shared_ptr<PhysicsComponent> physicsComponent = this->parse_physicsComponent(entity, scene, components[i]);
          entity->add(static_pointer_cast<Component>(physicsComponent));
          if ( components[i].HasMember("player") ) {
+            entity->setMask(PLAYER_MASK);
             entity->add(this->parse_playerComponent(entity, physicsComponent, scene, components[i]));
          }
          else if ( components[i].HasMember("ship") ) {
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
+            entity->setMask(SHIP_MASK);
          }
       }
       else if (type == "STATION") {
          string subType = components[i]["sub-type"].GetString();
          if (subType == "HELM") {
             entity->add(this->parse_helmComponent(entity, scene, components[i]));
+            entity->setMask(HELM_MASK);
          }
          else if (subType == "TURRET") {
             entity->add(this->parse_turretComponent(entity, scene, components[i]));
+            entity->setMask(TURRET_MASK);
          }
       }
       else {
@@ -341,7 +345,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
                                                                   Value& component) {
 
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
-
+   bool ghost = false;
    Value& world_ = component["world"];
    int world = world_.GetInt();
 
@@ -369,6 +373,14 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
       btScalar radius = component["collisionShape"]["radius"].GetFloat();
       btScalar height = component["collisionShape"]["height"].GetFloat();
       collisionShape = new btCapsuleShape(radius, height);
+   }
+   else if (strncmp(collision["type"].GetString(), "sphere", 6) == 0) {
+      btScalar radius = component["collisionShape"]["radius"].GetFloat();
+      collisionShape = new btSphereShape(radius);      
+   }
+
+   if (component.HasMember("ghost")){
+      ghost = true;
    }
 
    btScalar mass(component["mass"].GetFloat());
@@ -398,7 +410,9 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    btVector3 velocity = btVector3(vel[0].GetFloat(),
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
-
+   if (ghost) {
+      
+   }
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;

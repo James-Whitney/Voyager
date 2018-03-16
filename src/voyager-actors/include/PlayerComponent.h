@@ -27,6 +27,10 @@ public:
    void setHelm(std::shared_ptr<StationComponent> helm) { this->helm = helm; }
    void setTurret(std::shared_ptr<StationComponent> turret, int i);
 
+   std::shared_ptr<StationComponent> attemptMount();
+
+   void collisionCheck();
+
    std::shared_ptr<PhysicsComponent> getPhysics() { return physicsComponent; }
 
    btScalar getRotation();
@@ -62,6 +66,8 @@ private:
    double prev_shipAngle = 0;
 
    bool active = true;
+
+   bool E_DeBounce = false;
 
 };
 

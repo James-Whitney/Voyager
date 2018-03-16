@@ -67,6 +67,8 @@ void Application::run() {
          this->physics(delta_time);
          //actors
          this->actors(delta_time);
+
+         this->collisionClean();
       }
 
       // Render
@@ -114,6 +116,11 @@ void Application::update(double delta_time) {
       e.second->update(delta_time);
    }
 
+}
+
+void Application::collisionClean() {
+   assert(this->physics_engine != nullptr);
+   static_pointer_cast<PhysicsEngine>(this->physics_engine)->clearEntityCollides();
 }
 
 void Application::actors(double delta_time) {
