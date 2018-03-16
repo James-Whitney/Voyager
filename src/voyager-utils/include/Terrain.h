@@ -8,10 +8,17 @@
 #include <glm/glm/gtc/type_ptr.hpp>
 #include <bullet/src/btBulletDynamicsCommon.h>
 
+struct vertex {
+   glm::vec3 pos;
+   glm::vec3 normal;
+};
+
+typedef std::vector<std::vector<vertex>> vert_grid_t;
+
 class Terrain : public Shape {
 
 public:
-   
+
    void createShape(std::string heightmap_path, float max_height, float vertex_spacing);
 
    std::vector<unsigned char> getHeightData();
@@ -28,12 +35,9 @@ public:
    std::string getTexture() { return this->texture_filename; }
    std::string getNormalMap() { return this->normal_map_filename; }
 
-private:
+   vert_grid_t getVertices() { return this->verticies; }
 
-   struct vertex {
-      glm::vec3 pos;
-      glm::vec3 normal;
-   };
+private:
 
    struct triangle {
       glm::ivec2 v1_idx; // Index into verticies 2D vector
