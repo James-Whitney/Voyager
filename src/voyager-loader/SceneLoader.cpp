@@ -242,19 +242,23 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          shared_ptr<PhysicsComponent> physicsComponent = this->parse_physicsComponent(entity, scene, components[i]);
          entity->add(static_pointer_cast<Component>(physicsComponent));
          if ( components[i].HasMember("player") ) {
+            entity->setMask(PLAYER_MASK);
             entity->add(this->parse_playerComponent(entity, physicsComponent, scene, components[i]));
          }
          else if ( components[i].HasMember("ship") ) {
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
+            entity->setMask(SHIP_MASK);
          }
       }
       else if (type == "STATION") {
          string subType = components[i]["sub-type"].GetString();
          if (subType == "HELM") {
             entity->add(this->parse_helmComponent(entity, scene, components[i]));
+            entity->setMask(HELM_MASK);
          }
          else if (subType == "TURRET") {
             entity->add(this->parse_turretComponent(entity, scene, components[i]));
+            entity->setMask(TURRET_MASK);
          }
       }
       else {
