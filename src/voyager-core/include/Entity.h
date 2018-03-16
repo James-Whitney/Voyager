@@ -37,7 +37,10 @@ public:
 
    std::shared_ptr<btVector3> getScale() { return this->scale; }
    void setScale(std::shared_ptr<btVector3> scale) { this->scale = scale; }
-   
+
+   btRigidBody* getBody() { return this->body; }
+   void setBody(btRigidBody* b) { this->body = b; }
+
    child_iter startChild();
    child_iter endChild();
    void addChild(std::shared_ptr<Entity> child);
@@ -54,11 +57,10 @@ protected:
    long id;
    std::shared_ptr<btVector3>     scale;
    std::shared_ptr<btTransform>  transform;
+   btRigidBody *body;
 
    std::shared_ptr<Entity> parent = nullptr;
    std::vector< std::shared_ptr<Entity> > children;
-
-
 };
 
 #endif

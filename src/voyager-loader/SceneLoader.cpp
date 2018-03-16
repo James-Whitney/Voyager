@@ -392,5 +392,6 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
 
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
+   entity->setBody(physicsComponent->getBody());
    return physicsComponent;
 }
