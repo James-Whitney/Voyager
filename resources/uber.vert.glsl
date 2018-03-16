@@ -20,6 +20,7 @@ out vec3 wFragPos;
 out vec3 WPos;
 out vec2 texCoord;
 out vec4 shadowCoord;
+out vec4 view;
 out mat3 TBN;
 
 void main() {
@@ -37,6 +38,8 @@ void main() {
    texCoord = vertTex;
 
    shadowCoord = shadowP * shadowV * M * vertPos;
+
+   view = V * M * vertPos;
 
    vec3 T = normalize(vec3(M * vec4(vertTan, 0.0)));
    vec3 B = normalize(vec3(M * vec4(vertBitan, 0.0)));
