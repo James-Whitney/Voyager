@@ -58,7 +58,7 @@ void Hud::shipStats(std::shared_ptr<HelmComponent>  ship) {
 
 
 void Hud::startMenu() {
-   Hud::start();
+   //Hud::start();
    //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
    ImGui::SetNextWindowPos(ImVec2(0.5*Hud::width, 0.5*Hud::height), 0, ImVec2(0.5f,0.5f));
    ImGui::SetNextWindowSize(ImVec2(0,0), 0);
@@ -70,6 +70,11 @@ void Hud::startMenu() {
    }
    ImGui::End();
    ImGui::Render();
+}
+
+void Hud::dynamicTextbox(const char *titlebar, const char *txt, int x_pos, int y_pos, int r, int g, int b, int a) {
+   Textbox *textbox = new Textbox(titlebar, txt, x_pos, y_pos, r, g, b, a);
+   textbox->render();
 }
 
 

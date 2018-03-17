@@ -43,50 +43,56 @@ void PhysicsEngine::init() {
    initShipWorld();
 }
 
+std::shared_ptr<Entity> PhysicsEngine::findEntityFromBody(const btCollisionObject* ob) {
+   for (auto &component: components) {
+      if (static_pointer_cast<PhysicsComponent>(component)->getBody() == ob) {
+         return static_pointer_cast<PhysicsComponent>(component)->getEntity();
+      }
+   }
+   return nullptr;
+}
+
+void PhysicsEngine::clearEntityCollides() {
+   for (auto &component: components) {
+      static_pointer_cast<PhysicsComponent>(component)->getEntity()->resetCollide();
+   }
+}
+
+void PhysicsEngine::checkCollision(btDiscreteDynamicsWorld *this_world) {
+   int numManifolds = this_world->getDispatcher()->getNumManifolds();
+   //For each contact manifold
+   for (int i = 0; i < numManifolds; i++) {
+      btPersistentManifold* contactManifold =  this_world->getDispatcher()->getManifoldByIndexInternal(i);
+      std::shared_ptr<Entity> entityA = findEntityFromBody(contactManifold->getBody0());   
+      std::shared_ptr<Entity> entityB = findEntityFromBody(contactManifold->getBody1());
+      if (entityA == nullptr | entityB == nullptr) {
+         printf("ROUGE BODY HAS NO ENTITY! WTF DID YOU DO!\n");
+      }
+      else {
+         entityA->collide(entityB);
+         entityB->collide(entityA);
+      }
+   }
+}
+
 
 void PhysicsEngine::execute(double delta_time) {
    ///-----stepsimulation_start-----
    //cout << "Num of Objects: " << world->getNumCollisionObjects() << endl;
    //cout << "Time: " << delta_time << endl;
    ship_world->stepSimulation(delta_time, 1);
-
-   //world->debugDrawWorld();
+   checkCollision(ship_world);
 
    world->stepSimulation(delta_time, 1);
+   checkCollision(world);
 
    for (int i = 0; i < components.size(); i++) {
       //cout << "Updating Pcom: " << i << endl;
       static_pointer_cast<PhysicsComponent>(components[i])->updatePosition(ship);
    }
-   
-   //print positions of all objects
-   /*
-   for (int j = world->getNumCollisionObjects() - 1; j >= 0; j--) {
-      btCollisionObject* obj = world->getCollisionObjectArray()[j];
-      btRigidBody* body = btRigidBody::upcast(obj);
-      btTransform trans;
-      if (body && body->getMotionState()) {
-         body->getMotionState()->getWorldTransform(trans);
-      }
-      else {
-         trans = obj->getWorldTransform();
-      }
-      printf("Obj Pos: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-   }
-   for (int j = ship_world->getNumCollisionObjects() - 1; j >= 0; j--) {
-      btCollisionObject* obj = ship_world->getCollisionObjectArray()[j];
-      btRigidBody* body = btRigidBody::upcast(obj);
-      btTransform trans;
-      if (body && body->getMotionState()) {
-         body->getMotionState()->getWorldTransform(trans);
-      }
-      else {
-         trans = obj->getWorldTransform();
-      }
-      printf("Obj Pos: %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-   }*/
-
 }
+
+
 void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {
    this->components.push_back(component);
    std::shared_ptr<PhysicsComponent> physicsComponent = std::static_pointer_cast<PhysicsComponent>(component);
@@ -101,5 +107,5 @@ void PhysicsEngine::registerComponent(std::shared_ptr<Component> component) {
 }
 
 void PhysicsEngine::removeComponent(PhysicsComponent* component) {
-   
+
 }

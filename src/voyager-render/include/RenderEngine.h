@@ -13,8 +13,12 @@
 #include <voyager-utils/include/Program.h>
 #include <voyager-utils/include/BulletToGlm.h>
 #include <voyager-utils/include/Terrain.h>
+#include <voyager-utils/include/Skybox.h>
 
 #include <voyager-hud/include/Hud.h>
+
+//#include "VFCobj.h"
+#include <voyager-vfc/include/VFCobj.h>
 
 #include <voyager-actors/include/ShipComponent.h>
 
@@ -49,12 +53,16 @@ public:
    void setHelm(std::shared_ptr<HelmComponent> helm) { this->helm = helm; }
 
    std::shared_ptr<Hud> getHud() { return this->hud; }
+   std::shared_ptr<VFCobj> getVfc() { return this->vfc; }
 
    virtual void init();
    virtual void execute(double delta_time = 0);
 
    void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
    void setTerrainNormalMap(std::string filename) { this->terrainNormalMapFilename = filename; }
+   void setTerrainTextureScale(float scale) { this->terrainTextureScale = scale; }
+
+   void setSkybox(std::shared_ptr<Skybox> skybox) { this->skybox = skybox; }
 
 protected:
 
@@ -64,6 +72,9 @@ protected:
    std::shared_ptr<Program> program;
    std::shared_ptr<WindowManager> window;
    std::shared_ptr<Hud> hud;
+
+   std::shared_ptr<VFCobj> vfc;
+
    GLuint depthBufferId;
    GLuint depthTextureId;
    int depthResolution;
@@ -72,8 +83,12 @@ protected:
    std::shared_ptr<Texture> terrainTexture;
    std::string terrainNormalMapFilename;
    std::shared_ptr<Texture> terrainNormalMap;
+   float terrainTextureScale;
 
    std::shared_ptr<HelmComponent> helm;
+
+   std::shared_ptr<Skybox> skybox;
+   std::shared_ptr<Program> skyboxProgram;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 

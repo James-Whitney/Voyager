@@ -11,7 +11,7 @@ NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, int res, float shift) :
    player(player), terrain(terrain)
 {
    vert_grid_t grid = terrain->getVertices();
-   vector<vector<wpt_ptr_t>> waypoint_grid((grid.size() / res) + 1;
+   vector<vector<wpt_ptr_t>> waypoint_grid((grid.size() / res) + 1);
 
    // loop through the vertices, building a grid and adding waypoints to the map
    for (int x = 0; x < grid.size(); x += res) {

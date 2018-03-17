@@ -28,6 +28,10 @@ shared_ptr<Scene> SceneLoader::load(string path) {
       this->parse_terrain(scene, doc["terrain"]);
    }
 
+   if (doc.HasMember("skybox")) {
+      this->parse_skybox(scene, doc["skybox"]);
+   }
+
    if (doc.HasMember("meshes") && doc["meshes"].IsArray()) {
       this->parse_meshes(scene, doc["meshes"]);
    }
@@ -53,8 +57,9 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    string heightmap_path = this->resource_dir + terrain["heightmap"].GetString();
    float max_height = terrain["height"].GetFloat();
    float vertex_spacing = terrain["spacing"].GetFloat();
+   float texture_scale = terrain["textureScale"].GetFloat();
 
-   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing);
+   terrain_shape->createShape(heightmap_path, max_height, vertex_spacing, texture_scale);
    terrain_shape->measure();
 
    string texture_path = this->resource_dir + terrain["texture"].GetString();
@@ -66,6 +71,25 @@ void SceneLoader::parse_terrain(shared_ptr<Scene> scene, Value& terrain) {
    vector<shared_ptr<Shape>> mesh;
    mesh.push_back(terrain_shape);
    scene->meshes.push_back(mesh);
+}
+
+void SceneLoader::parse_skybox(std::shared_ptr<Scene> scene, rapidjson::Value& skybox) {
+   string top = this->resource_dir + skybox["top"].GetString();
+   string bottom = this->resource_dir + skybox["bottom"].GetString();
+   string front = this->resource_dir + skybox["front"].GetString();
+   string back = this->resource_dir + skybox["back"].GetString();
+   string left = this->resource_dir + skybox["left"].GetString();
+   string right = this->resource_dir + skybox["right"].GetString();
+
+   scene->skybox = make_shared<Skybox>(top, bottom, front, back, left, right);
+
+   Value& fog = skybox["fog"];
+   Value& fog_color = fog["color"];
+   scene->skybox->fog.color = glm::vec3(fog_color[0].GetFloat(),
+                                        fog_color[1].GetFloat(),
+                                        fog_color[2].GetFloat());
+   scene->skybox->fog.density = fog["density"].GetFloat();
+   scene->skybox->fog.height = fog["height"].GetFloat();
 }
 
 void SceneLoader::parse_meshes(shared_ptr<Scene> scene, Value& meshes) {
@@ -226,19 +250,23 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          shared_ptr<PhysicsComponent> physicsComponent = this->parse_physicsComponent(entity, scene, components[i]);
          entity->add(static_pointer_cast<Component>(physicsComponent));
          if ( components[i].HasMember("player") ) {
+            entity->setMask(PLAYER_MASK);
             entity->add(this->parse_playerComponent(entity, physicsComponent, scene, components[i]));
          }
          else if ( components[i].HasMember("ship") ) {
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
+            entity->setMask(SHIP_MASK);
          }
       }
       else if (type == "STATION") {
          string subType = components[i]["sub-type"].GetString();
          if (subType == "HELM") {
             entity->add(this->parse_helmComponent(entity, scene, components[i]));
+            entity->setMask(HELM_MASK);
          }
          else if (subType == "TURRET") {
             entity->add(this->parse_turretComponent(entity, scene, components[i]));
+            entity->setMask(TURRET_MASK);
          }
       }
       else {
@@ -257,13 +285,15 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
    index = component["uber"].GetInt();
    renderable->setUber(scene->ubers[index]);
 
+   renderable->setCullStatus(component["static"].GetBool());
+
    return static_pointer_cast<Component>(renderable);
 }
 
 
-shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity, 
-                                                            shared_ptr<PhysicsComponent> physicsComponent, 
-                                                            shared_ptr<Scene> scene, 
+shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity,
+                                                            shared_ptr<PhysicsComponent> physicsComponent,
+                                                            shared_ptr<Scene> scene,
                                                             Value& component) {
 
    shared_ptr<PlayerComponent> playerComponent = make_shared<PlayerComponent>();
@@ -273,9 +303,9 @@ shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> e
    return static_pointer_cast<Component>(playerComponent);
 }
 
-shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> entity, 
-                                                         shared_ptr<PhysicsComponent> physicsComponent, 
-                                                         shared_ptr<Scene> scene, 
+shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> entity,
+                                                         shared_ptr<PhysicsComponent> physicsComponent,
+                                                         shared_ptr<Scene> scene,
                                                          Value& component) {
 
    shared_ptr<ShipComponent> shipComponent = make_shared<ShipComponent>();
@@ -286,8 +316,8 @@ shared_ptr<Component> SceneLoader::parse_shipComponent(  shared_ptr<Entity> enti
    return static_pointer_cast<Component>(shipComponent);
 }
 
-shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity, 
-                                                            shared_ptr<Scene> scene, 
+shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> entity,
+                                                            shared_ptr<Scene> scene,
                                                             Value& component) {
 
    shared_ptr<HelmComponent> helmComponent = make_shared<HelmComponent>();
@@ -297,8 +327,8 @@ shared_ptr<HelmComponent> SceneLoader::parse_helmComponent( shared_ptr<Entity> e
    return helmComponent;
 }
 
-shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity> entity, 
-                                                               shared_ptr<Scene> scene, 
+shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity> entity,
+                                                               shared_ptr<Scene> scene,
                                                                Value& component) {
 
    shared_ptr<TurretComponent> turretComponent = make_shared<TurretComponent>();
@@ -310,12 +340,12 @@ shared_ptr<TurretComponent> SceneLoader::parse_turretComponent(shared_ptr<Entity
 }
 
 
-shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity, 
-                                                                  shared_ptr<Scene> scene, 
+shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Entity> entity,
+                                                                  shared_ptr<Scene> scene,
                                                                   Value& component) {
 
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
-
+   bool ghost = false;
    Value& world_ = component["world"];
    int world = world_.GetInt();
 
@@ -329,7 +359,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
 
    Value& fric = component["friction"];
    btScalar friction = btScalar(fric.GetFloat());
-   
+
    btCollisionShape* collisionShape;
 
    Value& collision = component["collisionShape"];
@@ -344,6 +374,14 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
       btScalar height = component["collisionShape"]["height"].GetFloat();
       collisionShape = new btCapsuleShape(radius, height);
    }
+   else if (strncmp(collision["type"].GetString(), "sphere", 6) == 0) {
+      btScalar radius = component["collisionShape"]["radius"].GetFloat();
+      collisionShape = new btSphereShape(radius);      
+   }
+
+   if (component.HasMember("ghost")){
+      ghost = true;
+   }
 
    btScalar mass(component["mass"].GetFloat());
 
@@ -351,11 +389,11 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    btVector3 position = btVector3(pos[0].GetFloat(),
                                   pos[1].GetFloat(),
                                   pos[2].GetFloat());
-                                 
+
    Value& scale_ = component["scale"];
    shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat()));
    //scale = btVector3(scale_[0].GetFloat(), scale_[1].GetFloat(), scale_[2].GetFloat());
-   
+
    /*btVector3 scale = btVector3(  scale_[0].GetFloat(),
                                  scale_[1].GetFloat(),
                                  scale_[2].GetFloat());*/
@@ -372,7 +410,9 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    btVector3 velocity = btVector3(vel[0].GetFloat(),
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
-
+   if (ghost) {
+      
+   }
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;

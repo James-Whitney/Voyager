@@ -7,6 +7,7 @@
 #include <voyager-core/include/All.h>
 
 #include <voyager-utils/include/Terrain.h>
+#include <voyager-utils/include/Skybox.h>
 
 #include <voyager-render/include/Renderable.h>
 
@@ -35,6 +36,7 @@ private:
    std::string resource_dir;
 
    void parse_terrain(std::shared_ptr<Scene> scene, rapidjson::Value& terrain);
+   void parse_skybox(std::shared_ptr<Scene> scene, rapidjson::Value& skybox);
    void parse_meshes(std::shared_ptr<Scene> scene, rapidjson::Value& meshes);
    void parse_ubers(std::shared_ptr<Scene> scene, rapidjson::Value& ubers);
    void parse_entities(std::shared_ptr<Scene> scene, rapidjson::Value& entities);
