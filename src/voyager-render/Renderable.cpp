@@ -12,6 +12,16 @@ void Renderable::init() {
    }
 }
 
+void Renderable::renderableInit(std::string resource_dir) {
+
+}
+
 void Renderable::update(double delta_time) {
 
+}
+
+void Renderable::draw(std::shared_ptr<Program> prog) {
+   for (std::shared_ptr<Shape> shape : this->getMesh()) {
+      shape->draw(prog);
+   }
 }

@@ -1,5 +1,7 @@
 #include "include/RenderEngine.h"
 
+#include <iostream>
+
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
 using namespace glm;
@@ -104,9 +106,10 @@ void RenderEngine::init() {
    program->addAttribute("vertBitan");
 
    for (int i = 0; i < this->components.size(); ++i) {
-      this->components.at(i)->init();
+      auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
+      renderable->renderableInit(this->resource_dir);
+      renderable->init();
    }
-   cout << "components size: " << this->components.size() << endl;
    this->vfc = make_shared<VFCobj>(&this->components);
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
    this->initShadows();
@@ -245,10 +248,12 @@ void RenderEngine::execute(double delta_time) {
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+      auto r = static_pointer_cast<Renderable>(this->components.at(idx));
+      this->render(r);
    }
    for (auto &idx : this->vfc->dynamic) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+      auto r = static_pointer_cast<Renderable>(this->components.at(idx));
+      this->render(r);
    }
 
    V->popMatrix();
@@ -275,16 +280,22 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    M->pushMatrix();
    {
       std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
-      M->loadMatrix(bulletToGlm(*trans.get()));
+      if (trans != nullptr) {
+         M->loadMatrix(bulletToGlm(*trans.get()));
+      }
       std::shared_ptr<btVector3> scale = renderable->getEntity()->getScale();
-      M->scale(bulletToGlm(*scale.get()) * 2.0f);
+      if (scale != nullptr) {
+         M->scale(bulletToGlm(*scale.get()) * 2.0f);
+      }
 
-      renderable->getUber()->setUniforms(this->program);
+      auto uber = renderable->getUber();
+      if (uber != nullptr) {
+         uber->setUniforms(this->program);
+      }
+
       glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
 
-      for (std::shared_ptr<Shape> shape : renderable->getMesh()) {
-         shape->draw(this->program);
-      }
+      renderable->draw(this->program);
    }
    M->popMatrix();
 }

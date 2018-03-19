@@ -1,5 +1,7 @@
 #include "include/Entity.h"
 
+#include <iostream>
+
 using namespace std;
 
 static long nextId = 0;

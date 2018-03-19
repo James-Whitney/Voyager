@@ -1,10 +1,8 @@
 #include "include/Scene.h"
 
-
-
 using namespace std;
 
-void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
+shared_ptr<Terrain> Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
    shared_ptr<Renderable> terrainRenderable = static_pointer_cast<Renderable>(terrain->componentAt(0));
    shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getMesh().at(0));
 
@@ -37,18 +35,15 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    renderEngine->setTerrainTexture(terrainShape->getTexture());
    renderEngine->setTerrainNormalMap(terrainShape->getNormalMap());
    renderEngine->setTerrainTextureScale(terrainShape->getTextureScale());
+
+   return terrainShape;
 }
 
 void Scene::apply(shared_ptr<Application> app) {
 
-   for (int i = 0; i < this->entities.size(); ++i) {
-      shared_ptr<Entity> entity = this->entities.at(i);
-      app->getThings()[entity->getId()] = entity;
-   }
-
    // Init HeightMap
    shared_ptr<Entity> terrain = this->entities.at(0);
-   initTerrain(app, terrain);
+   shared_ptr<Terrain> terrain_shape = initTerrain(app, terrain);
 
    // Set skybox
    static_pointer_cast<RenderEngine>(app->getRenderEngine())->setSkybox(this->skybox);
@@ -68,6 +63,20 @@ void Scene::apply(shared_ptr<Application> app) {
    playerComponent->setShip(shipComponent);
    //playerComponent->getPhysics()->getBody()->setGravity(btVector3(0, -9.8, 0));
 
+   // Init Nav Map
+   shared_ptr<NavMapEntity> nav_map_entity = make_shared<NavMapEntity>(player, terrain_shape);
+   this->entities.push_back(static_pointer_cast<Entity>(nav_map_entity));
+   shared_ptr<NavMapRenderable> nav_map_renderable = make_shared<NavMapRenderable>(nav_map_entity->getNavMap());
+   nav_map_entity->add(nav_map_renderable);
+   this->components.push_back(nav_map_renderable);
+
+   // Transfer entities to the app
+   for (int i = 0; i < this->entities.size(); ++i) {
+      shared_ptr<Entity> entity = this->entities.at(i);
+      app->getThings()[entity->getId()] = entity;
+   }
+
+   // transfer components to the app and assign them to engines
    for (int i = 0; i < this->components.size(); ++i) {
       shared_ptr<Component> component = this->components.at(i);
 

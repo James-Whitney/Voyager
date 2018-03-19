@@ -15,10 +15,12 @@
 #include <voyager-physics/include/PhysicsComponent.h>
 #include <voyager-physics/include/PhysicsEngine.h>
 
+#include <voyager-actors/include/ActorEngine.h>
 #include <voyager-actors/include/PlayerComponent.h>
 #include <voyager-actors/include/ShipComponent.h>
 #include <voyager-actors/include/HelmComponent.h>
 #include <voyager-actors/include/TurretComponent.h>
+#include <voyager-actors/include/ai/NavMapEntity.h>
 
 #include <iostream>
 
@@ -36,7 +38,7 @@ public:
 
    std::shared_ptr<Skybox> skybox;
 
-   void initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain);
+   std::shared_ptr<Terrain> initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain);
 
    void apply(std::shared_ptr<Application> app);
 

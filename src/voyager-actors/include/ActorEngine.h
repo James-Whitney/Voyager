@@ -9,6 +9,8 @@
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
+#include "ai/NavMap.h"
+
 class ActorEngine : public Engine {
 
 public:
