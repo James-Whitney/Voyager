@@ -102,7 +102,7 @@ void RenderEngine::init() {
    }
    cout << "components size: " << this->components.size() << endl;
    this->vfc = make_shared<VFCobj>(&this->components);
-   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir, this->getHelm(), this->getPlayer());
    this->initShadows();
    this->initTerrainTexture();
    this->initTerrainNormalMap();
@@ -231,12 +231,11 @@ void RenderEngine::execute(double delta_time) {
    V->popMatrix();
    P->popMatrix();
 
-   if (hud->startScreen) {
-      hud->startMenu();
-   }  else {
-      hud->render();
-      hud->shipStats(helm);
-   }
+   //if (hud->startScreen) {
+   ///   hud->startMenu();
+   //}  else {
+   hud->render();
+   //}
 
    this->program->unbind();
    glfwSwapBuffers(this->window->getHandle());

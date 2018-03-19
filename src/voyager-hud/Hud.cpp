@@ -6,12 +6,16 @@
 #include <rapidjson/error/en.h>
 #include <rapidjson/filereadstream.h>
 
-Hud::Hud(GLFWwindow* window, std::string resourcedir) {
+Hud::Hud(GLFWwindow* window, std::string resourcedir,
+   std::shared_ptr<HelmComponent>  ship, std::shared_ptr<PlayerComponent>  player)
+{
    resource_dir = resourcedir;
    ImGui_ImplGlfwGL3_Init(window, false);
    glfwGetWindowSize(window, &width, &height);
+   this->ship = ship;
+   this->player = player;
    Hud::open();
-   startScreen = true;
+   startScreen = false;
    glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
    this->buf[0] = 0;
 }
@@ -42,18 +46,17 @@ void Hud::open() {
 }
 
 
-void Hud::shipStats(std::shared_ptr<HelmComponent>  ship) {
-   Hud::start();
-   //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
-   ImGui::SetNextWindowPos(ImVec2(0.5, 0.5), 0, ImVec2(0.5f,0.5f));
-   ImGui::SetNextWindowSize(ImVec2(200,60), 0);
+void Hud::shipStats() {
+   //Hud::start();
+   ImGui::SetNextWindowPos(ImVec2(200.5, 200.5), 0, ImVec2(0.5f,0.5f));
+   ImGui::SetNextWindowSize(ImVec2(60,200), 0);
    ImGui::Begin("Ship_Stats", NULL, ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse);
-   ImGui::SliderFloat(  "Forward", 
-                        ship->getForwardThrottle(), 
-                        ship->getMinForwardThrottle(), 
-                        ship->getMaxForwardThrottle());
+   ImGui::VSliderFloat("Forward", ImVec2(60,200),
+                      ship->getForwardThrottle(),
+                      ship->getMinForwardThrottle(),
+                      ship->getMaxForwardThrottle());
    ImGui::End();
-   ImGui::Render();
+   //ImGui::Render();
 }
 
 
@@ -97,6 +100,11 @@ void Hud::generate() {
          this->widgets.push_back(new ProgressBar(widget["titlebar"].GetString(), widget["percent"].GetFloat(),
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["width"].GetFloat()*Hud::width, widget["height"].GetFloat()*Hud::height));
+      } else if (!strcmp("shipinfo", widget["type"].GetString())) {
+         this->widgets.push_back(new ShipInfo(widget["titlebar"].GetString(),
+            widget["x_pos"].GetFloat(), widget["y_pos"].GetFloat(),
+            widget["width"].GetFloat(), widget["height"].GetFloat(),
+            this->ship->getMinForwardThrottle(), this->ship->getMaxForwardThrottle(), this->ship));
       }
    }
 }

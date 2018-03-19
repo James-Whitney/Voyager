@@ -89,6 +89,9 @@ void Scene::apply(shared_ptr<Application> app) {
          else if (dynamic_pointer_cast<TurretComponent>(component)) {
             playerComponent->setTurret(static_pointer_cast<StationComponent>(component), static_pointer_cast<TurretComponent>(component)->getTurretID());
          }
+         else if (dynamic_pointer_cast<PlayerComponent>(component)) {
+            static_pointer_cast<RenderEngine>(app->getRenderEngine())->setPlayer(static_pointer_cast<PlayerComponent>(component));
+         }
          app->getActorEngine()->registerComponent(component);
       }
    }
