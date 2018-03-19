@@ -28,7 +28,7 @@ public:
 
    void render() {
       Widget::setupDefaults();
-      ImGui::VSliderFloat(this->titlebar, this->size, this->ship->getForwardThrottle(), this->min, this->max);
+      ImGui::VSliderFloat(this->titlebar, this->size, this->ship->getForwardThrottle(), this->min, this->max, "");
       Widget::endDefault();
    }
 };

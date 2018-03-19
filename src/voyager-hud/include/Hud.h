@@ -25,6 +25,7 @@
 #include "FPS.h"
 #include "ProgressBar.h"
 #include "ShipInfo.h"
+#include "PlayerInfo.h"
 
 class Hud {
 public:

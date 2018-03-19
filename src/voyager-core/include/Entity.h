@@ -42,6 +42,12 @@ public:
    child_iter endChild();
    void addChild(std::shared_ptr<Entity> child);
 
+   std::vector< std::shared_ptr<Entity> > getCollideList() { return this->collideList; }
+   void collide(std::shared_ptr<Entity> other) { this->collideList.push_back(other); }
+   void resetCollide() { this->collideList.clear(); }
+
+   void setMask(int mask) { this->mask = mask; }
+
    virtual void update(double delta_time);
 
    virtual void add(std::shared_ptr<Component> component);
@@ -54,6 +60,10 @@ protected:
    long id;
    std::shared_ptr<btVector3>     scale;
    std::shared_ptr<btTransform>  transform;
+
+   int mask = 0;
+
+   std::vector< std::shared_ptr<Entity> > collideList;
 
    std::shared_ptr<Entity> parent = nullptr;
    std::vector< std::shared_ptr<Entity> > children;
