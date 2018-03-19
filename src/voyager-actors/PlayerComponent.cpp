@@ -23,6 +23,13 @@ glm::vec3 PlayerComponent::getPosition() {
    return bulletToGlm(entity->getTransform()->getOrigin());
 }
 
+void PlayerComponent::collisionCheck() {
+   // std::vector< std::shared_ptr<Entity> >  collisionList = getEntity()->getCollideList();
+   // for (auto &collision: collisionList) {
+      
+   // }
+}
+
 btScalar PlayerComponent::getRotation() {
    btScalar yaw, pitch, roll;
    entity->getTransform()->getBasis().getEulerYPR(yaw, pitch, roll);
@@ -34,36 +41,52 @@ btScalar PlayerComponent::getRotation() {
    return btScalar(pitch);
 }
 
+std::shared_ptr<StationComponent> PlayerComponent::attemptMount() {
+   std::shared_ptr<StationComponent> nearestMount = nullptr;
+   btScalar nearestDistance = 99999999;
+   btScalar distance;
+   btScalar mountDistance = 4;
+
+   //CHECK HELM
+   distance = (helm->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
+   if ( (distance < mountDistance) && (distance < nearestDistance) ) {
+      nearestMount = helm;
+      nearestDistance = distance;
+   }
+   //CHECK TURRET0
+   distance = (turret0->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
+   if ( (distance < mountDistance) && (distance < nearestDistance) ) {
+      nearestMount = turret0;
+      nearestDistance = distance;
+   }
+   //CHECK TURRET1
+   distance = (turret1->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
+   if ( (distance < mountDistance) && (distance < nearestDistance) ) {
+      nearestMount = turret0;
+      nearestDistance = distance;
+   }
+   return nearestMount;
+}
+
+
 void PlayerComponent::stationSelectionCheck() {
-   if (glfwGetKey(window->getHandle(), GLFW_KEY_1 ) == GLFW_PRESS) {
-      active = true;
-      if (mounted != nullptr)
+   if ((glfwGetKey(window->getHandle(), GLFW_KEY_E ) == GLFW_PRESS) && !E_DeBounce) {
+      E_DeBounce = true;
+      if (mounted != nullptr){
          mounted->deactivate();  
-      mounted = nullptr;
-   }
-   else if (glfwGetKey(window->getHandle(), GLFW_KEY_2 ) == GLFW_PRESS) {
-      active = false;
-      if (mounted != nullptr) {
-         mounted->deactivate();
+         mounted = nullptr;
+         active = true;
       }
-      mounted = helm;
-      mounted->activate();
-   }
-   else if (glfwGetKey(window->getHandle(), GLFW_KEY_3 ) == GLFW_PRESS) {
-      active = false;
-      if (mounted != nullptr) {
-         mounted->deactivate();
+      else {
+         mounted = attemptMount();
+         if (mounted != nullptr) {
+            mounted->activate();
+            active = false;
+         }
       }
-      mounted = turret0;
-      mounted->activate();
    }
-   else if (glfwGetKey(window->getHandle(), GLFW_KEY_4 ) == GLFW_PRESS) {
-      active = false;
-      if (mounted != nullptr) {
-         mounted->deactivate();
-      }
-      mounted = turret1;
-      mounted->activate();
+   if ((glfwGetKey(window->getHandle(), GLFW_KEY_E ) == GLFW_RELEASE) && E_DeBounce) {
+      E_DeBounce = false;
    }
 }
 
@@ -73,6 +96,7 @@ void PlayerComponent::update(double delta_time) {
    if (active) {
       positionUpdate(delta_time);
       cameraUpdate();
+      collisionCheck();
    }
 }
 

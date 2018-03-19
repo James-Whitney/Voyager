@@ -13,6 +13,7 @@
 #include <voyager-utils/include/Time.h>
 //#include <voyager-utils/include/IdMap.h>
 #include <voyager-render/include/RenderEngine.h>
+#include <voyager-physics/include/PhysicsEngine.h>
 
 #include "ApplicationType.h"
 #include "Component.h"
@@ -48,6 +49,8 @@ public:
    void setActorEngine(std::shared_ptr<Engine> actor_engine) { this->actor_engine = actor_engine; }
 
    std::unordered_map<long, std::shared_ptr<Entity> > getThings() { return this->things; }
+
+   void collisionClean();
 
    // event callbacks
    virtual void keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);

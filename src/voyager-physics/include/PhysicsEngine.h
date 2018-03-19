@@ -28,6 +28,12 @@ public:
    btDiscreteDynamicsWorld* get_ship_world() { return this->ship_world; }
 
    void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
+
+   std::shared_ptr<Entity> findEntityFromBody(const btCollisionObject* ob);
+
+   void checkCollision(btDiscreteDynamicsWorld *this_world);
+
+   void clearEntityCollides();
    
    //btDiscreteDynamicsWorld* get_shipworld() {return shipworld;}
 

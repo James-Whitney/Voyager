@@ -45,24 +45,7 @@ void Hud::open() {
    Hud::generate();
 }
 
-
-void Hud::shipStats() {
-   //Hud::start();
-   ImGui::SetNextWindowPos(ImVec2(200.5, 200.5), 0, ImVec2(0.5f,0.5f));
-   ImGui::SetNextWindowSize(ImVec2(60,200), 0);
-   ImGui::Begin("Ship_Stats", NULL, ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse);
-   ImGui::VSliderFloat("Forward", ImVec2(60,200),
-                      ship->getForwardThrottle(),
-                      ship->getMinForwardThrottle(),
-                      ship->getMaxForwardThrottle());
-   ImGui::End();
-   //ImGui::Render();
-}
-
-
 void Hud::startMenu() {
-   //Hud::start();
-   //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
    ImGui::SetNextWindowPos(ImVec2(0.5*Hud::width, 0.5*Hud::height), 0, ImVec2(0.5f,0.5f));
    ImGui::SetNextWindowSize(ImVec2(0,0), 0);
    ImGui::SetNextWindowBgAlpha(0.0f);
@@ -84,7 +67,6 @@ void Hud::dynamicTextbox(const char *titlebar, const char *txt, int x_pos, int y
 void Hud::generate() {
    for (auto& widget : doc.GetArray()) {
       if (!strcmp("textbox", widget["type"].GetString())) {
-         if (!strcmp("compass-text", widget["titlebar"].GetString())) { this->compassIdx = this->widgets.size(); }
          this->widgets.push_back(new Textbox(widget["titlebar"].GetString(), widget["text"].GetString(),
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["r"].GetInt(), widget["g"].GetInt(), widget["b"].GetInt(), widget["a"].GetInt()));
@@ -105,7 +87,13 @@ void Hud::generate() {
             widget["x_pos"].GetFloat(), widget["y_pos"].GetFloat(),
             widget["width"].GetFloat(), widget["height"].GetFloat(),
             this->ship->getMinForwardThrottle(), this->ship->getMaxForwardThrottle(), this->ship));
+      } else if (!strcmp("playerinfo", widget["type"].GetString())) {
+         this->widgets.push_back(new PlayerInfo(widget["titlebar"].GetString(),
+            widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
+            widget["r"].GetInt(), widget["g"].GetInt(), widget["b"].GetInt(), widget["a"].GetInt(),
+            this->player));
       }
+
    }
 }
 

@@ -61,6 +61,7 @@ public:
 
    void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
    void setTerrainNormalMap(std::string filename) { this->terrainNormalMapFilename = filename; }
+   void setTerrainTextureScale(float scale) { this->terrainTextureScale = scale; }
 
    void setSkybox(std::shared_ptr<Skybox> skybox) { this->skybox = skybox; }
 
@@ -86,6 +87,7 @@ protected:
    std::shared_ptr<Texture> terrainTexture;
    std::string terrainNormalMapFilename;
    std::shared_ptr<Texture> terrainNormalMap;
+   float terrainTextureScale;
 
    std::shared_ptr<HelmComponent> helm;
    std::shared_ptr<PlayerComponent> player;
