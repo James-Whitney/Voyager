@@ -1,5 +1,7 @@
 #include "include/Scene.h"
 
+#include <voyager-actors/include/ai/AiEngine.h>
+
 using namespace std;
 
 shared_ptr<Terrain> Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
@@ -69,6 +71,8 @@ void Scene::apply(shared_ptr<Application> app) {
    shared_ptr<NavMapRenderable> nav_map_renderable = make_shared<NavMapRenderable>(nav_map_entity->getNavMap());
    nav_map_entity->add(nav_map_renderable);
    this->components.push_back(nav_map_renderable);
+   shared_ptr<AiEngine> ai = static_pointer_cast<AiEngine>(app->getAiEngine());
+   ai->setNavMapEntity(nav_map_entity);
 
    // Transfer entities to the app
    for (int i = 0; i < this->entities.size(); ++i) {

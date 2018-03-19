@@ -1,5 +1,7 @@
 #include "include/ApplicationMaker.h"
 
+#include <voyager-actors/include/ai/AiEngine.h>
+
 using namespace std;
 
 shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
@@ -26,7 +28,10 @@ shared_ptr<Application> make_application(shared_ptr<VoyagerConfig> config) {
    shared_ptr<ActorEngine> actors = make_shared<ActorEngine>();
    app->setActorEngine(static_pointer_cast<Engine>(actors));
 
+   // ai engine
+   shared_ptr<AiEngine> ai = make_shared<AiEngine>();
+   app->setAiEngine(static_pointer_cast<Engine>(ai));
+
    // done
    return app;
-
 }
