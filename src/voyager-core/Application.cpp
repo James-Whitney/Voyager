@@ -1,8 +1,5 @@
 #include "include/Application.h"
 
-#include <sstream>
-
-#include <voyager-render/include/Renderable.h>
 
 #define _APPLICATION_LOG_LIFECYCLE 0 // set to 1 to log lifecycle events
 
@@ -56,7 +53,6 @@ void Application::run() {
       log_life("--------------------==[ LOOP ]==--------------------");
       // Game Update
       double delta_time;
-      //this->timer.tick(&delta_time);
       
 
       this->timer.reset();
@@ -125,17 +121,20 @@ void Application::collisionClean() {
 
 void Application::actors(double delta_time) {
    assert(this->actor_engine != nullptr);
+   this->actor_engine->removeFlagged();
    this->actor_engine->execute(delta_time);
 }
 
 void Application::physics(double delta_time) {
    assert(this->physics_engine != nullptr);
+   this->physics_engine->removeFlagged();
    this->physics_engine->execute(delta_time);
 }
 
 void Application::render() {
    assert(this->getType() == CLIENT);
    assert(this->render_engine != nullptr);
+   this->render_engine->removeFlagged();
    this->render_engine->execute();
 }
 

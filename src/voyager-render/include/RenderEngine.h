@@ -58,6 +58,7 @@ public:
 
    virtual void init();
    virtual void execute(double delta_time = 0);
+   virtual void removeFlagged();
 
    void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
    void setTerrainNormalMap(std::string filename) { this->terrainNormalMapFilename = filename; }
