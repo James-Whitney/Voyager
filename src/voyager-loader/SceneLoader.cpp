@@ -40,6 +40,10 @@ shared_ptr<Scene> SceneLoader::load(string path) {
       this->parse_ubers(scene, doc["ubers"]);
    }
 
+   if (doc.HasMember("sounds") && doc["sounds"].IsArray()) {
+      this->parse_sounds(scene, doc["sounds"]);
+   }
+
    if (doc.HasMember("entities") && doc["entities"].IsArray()) {
       this->parse_entities(scene, doc["entities"]);
    }
@@ -164,6 +168,21 @@ void SceneLoader::parse_ubers(shared_ptr<Scene> scene, Value& ubers) {
       }
 
       scene->ubers.push_back(uber);
+   }
+}
+
+void SceneLoader::parse_sounds(shared_ptr<Scene> scene, Value& sounds) {
+   log("Sounds:");
+
+   for (SizeType i = 0; i < sounds.Size(); ++i) {
+      string name = sounds[i]["name"].GetString();
+      string filename = this->resource_dir + sounds[i]["file"].GetString();
+
+      stringstream ss;
+      ss << "\t" << name << ": " << filename;
+      log(ss.str());
+
+      // Audio::load(name, filename);
    }
 }
 

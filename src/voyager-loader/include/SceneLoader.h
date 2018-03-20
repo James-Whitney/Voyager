@@ -8,6 +8,7 @@
 
 #include <voyager-utils/include/Terrain.h>
 #include <voyager-utils/include/Skybox.h>
+#include <voyager-utils/include/Audio.h>
 
 #include <voyager-render/include/Renderable.h>
 
@@ -39,6 +40,7 @@ private:
    void parse_skybox(std::shared_ptr<Scene> scene, rapidjson::Value& skybox);
    void parse_meshes(std::shared_ptr<Scene> scene, rapidjson::Value& meshes);
    void parse_ubers(std::shared_ptr<Scene> scene, rapidjson::Value& ubers);
+   void parse_sounds(std::shared_ptr<Scene> scene, rapidjson::Value& sounds);
    void parse_entities(std::shared_ptr<Scene> scene, rapidjson::Value& entities);
    std::shared_ptr<Entity> parse_entity(std::shared_ptr<Scene> scene, rapidjson::Value& json, int tabs = 0);
    void parse_components(std::shared_ptr<Scene> scene, std::shared_ptr<Entity> entity,

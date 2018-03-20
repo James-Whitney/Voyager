@@ -412,6 +412,13 @@
       {
          "type": "NORMAL"
       }
+   ],
+
+   "sounds": [
+      {
+         "name": "shot",
+         "file": "/sounds/shot.wav"
+      }
    ]
 
 }
