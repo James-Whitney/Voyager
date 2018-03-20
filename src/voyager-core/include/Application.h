@@ -8,13 +8,16 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <sstream>
 
 #include <voyager-utils/include/GLSL.h>
 #include <voyager-utils/include/Time.h>
 //#include <voyager-utils/include/IdMap.h>
 #include <voyager-render/include/RenderEngine.h>
+//#include <voyager-render/include/Renderable.h>
 #include <voyager-physics/include/PhysicsEngine.h>
 
+#include "SceneMesh.h"
 #include "ApplicationType.h"
 #include "Component.h"
 #include "Engine.h"
@@ -50,6 +53,9 @@ public:
 
    std::unordered_map<long, std::shared_ptr<Entity> > getThings() { return this->things; }
 
+   void setSceneMesh(std::shared_ptr<SceneMesh> scene) { this->scene = scene; }
+   std::shared_ptr<SceneMesh> getSceneMesh() { return this->scene; }
+
    void collisionClean();
 
    // event callbacks
@@ -66,6 +72,8 @@ private:
    std::shared_ptr<VoyagerConfig> config;
 
    std::shared_ptr<WindowManager> window;
+
+   std::shared_ptr<SceneMesh> scene;
 
    std::unordered_map< long, std::shared_ptr<Entity> > things;
 

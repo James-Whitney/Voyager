@@ -45,7 +45,7 @@ std::shared_ptr<StationComponent> PlayerComponent::attemptMount() {
    std::shared_ptr<StationComponent> nearestMount = nullptr;
    btScalar nearestDistance = 99999999;
    btScalar distance;
-   btScalar mountDistance = 4;
+   btScalar mountDistance = 5;
 
    //CHECK HELM
    distance = (helm->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
@@ -62,7 +62,7 @@ std::shared_ptr<StationComponent> PlayerComponent::attemptMount() {
    //CHECK TURRET1
    distance = (turret1->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
    if ( (distance < mountDistance) && (distance < nearestDistance) ) {
-      nearestMount = turret0;
+      nearestMount = turret1;
       nearestDistance = distance;
    }
    return nearestMount;

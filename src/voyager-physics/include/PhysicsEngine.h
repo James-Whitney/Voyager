@@ -39,6 +39,8 @@ public:
 
    void execute(double delta_time = 0);
 
+   virtual void removeFlagged();
+
    void removeComponent(PhysicsComponent* component);
 
    void addEntity();
