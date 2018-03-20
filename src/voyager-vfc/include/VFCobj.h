@@ -23,7 +23,7 @@ public:
    vec4 planes[6];
 
    std::shared_ptr<VFCoct> tree;
-   std::vector<int> dynamic;
+   //std::vector<int> dynamic;
 
    VFCobj(std::vector< std::shared_ptr<Component> > *objs);
    void ExtractVFPlanes(mat4 P, mat4 V);
