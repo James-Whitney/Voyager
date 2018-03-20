@@ -67,12 +67,24 @@ void Scene::apply(shared_ptr<Application> app) {
 
    // Init Nav Map
    shared_ptr<NavMapEntity> nav_map_entity = make_shared<NavMapEntity>(player, terrain_shape);
-   this->entities.push_back(static_pointer_cast<Entity>(nav_map_entity));
    shared_ptr<NavMapRenderable> nav_map_renderable = make_shared<NavMapRenderable>(nav_map_entity->getNavMap());
    nav_map_entity->add(nav_map_renderable);
+   this->entities.push_back(static_pointer_cast<Entity>(nav_map_entity));
    this->components.push_back(nav_map_renderable);
    shared_ptr<AiEngine> ai = static_pointer_cast<AiEngine>(app->getAiEngine());
    ai->setNavMapEntity(nav_map_entity);
+
+   // Nav Map markers
+   vector<vector<wpt_ptr_t>> navGrid = nav_map_entity->getNavMap()->getWaypointGrid();
+   for (int x = 0; x < navGrid.size(); ++x) {
+      for (int y = 0; y < navGrid.at(x).size(); ++y) {
+         shared_ptr<Entity> ent = this->make_waypoint_marker(navGrid.at(x).at(y));
+         this->entities.push_back(ent);
+         for (int i = 0; i < ent->numComponents(); ++i) {
+            this->components.push_back(ent->componentAt(i));
+         }
+      }
+   }
 
    // Transfer entities to the app
    for (int i = 0; i < this->entities.size(); ++i) {
@@ -115,4 +127,28 @@ void Scene::dump() {
    cout << this->entities.size() << " entities" << endl;
    cout << this->components.size() << " components" << endl;
    cout << "</Scene>" << endl;
+}
+
+shared_ptr<Entity> Scene::make_waypoint_marker(wpt_ptr_t wpt) {
+   shared_ptr<Entity> ent = make_shared<Entity>();
+
+   // make the transform
+   shared_ptr<btTransform> trans = make_shared<btTransform>();
+   btVector3 pos = btVector3(
+      wpt->getLocation().x, wpt->getLocation().y, wpt->getLocation().z
+   );
+   trans->setOrigin(pos);
+   btQuaternion quat = btQuaternion(btVector3(0, 0, 1), 0);
+   trans->setRotation(quat);
+   ent->setTransform(trans);
+   ent->setScale(make_shared<btVector3>(btVector3(1, 1, 1)));
+
+   // make the render component
+   shared_ptr<Renderable> rend = make_shared<Renderable>();
+   rend->setMesh(this->meshes[1]);
+   rend->setUber(this->ubers[5]);
+   rend->setCullStatus(false);
+   ent->add(static_pointer_cast<Component>(rend));
+
+   return ent;
 }

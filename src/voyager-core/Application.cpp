@@ -57,7 +57,7 @@ void Application::run() {
       // Game Update
       double delta_time;
       //this->timer.tick(&delta_time);
-      
+
 
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {

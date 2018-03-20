@@ -44,6 +44,10 @@ public:
 
    void dump();
 
+private:
+
+   std::shared_ptr<Entity> make_waypoint_marker(wpt_ptr_t wpt);
+
 };
 
 #endif

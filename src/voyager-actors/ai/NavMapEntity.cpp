@@ -8,7 +8,7 @@ using namespace std;
 // NavMapEntity ///////////////////////////////////////////////////////////
 
 NavMapEntity::NavMapEntity(ent_ptr_t player, shared_ptr<Terrain> terrain) {
-   this->nav_map = make_shared<NavMap>(player, terrain, 50, 4);
+   this->nav_map = make_shared<NavMap>(player, terrain, 20, 4);
 }
 
 // NavMapRenderable ///////////////////////////////////////////////////////

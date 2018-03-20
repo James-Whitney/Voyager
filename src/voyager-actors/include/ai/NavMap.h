@@ -25,6 +25,7 @@ class NavMap :
 public:
    NavMap(ent_ptr_t player, terrain_ptr_t terrain, int res, float shift);
    ent_ptr_t getPlayer() { return this->player; }
+   std::vector<std::vector<wpt_ptr_t>> getWaypointGrid() { return this->waypoint_grid; }
    void addWaypoint(wpt_ptr_t wpt);
    void makeEdge(wpt_ptr_t start, wpt_ptr_t end);
    wpt_list_t navigate(wpt_ptr_t start, wpt_ptr_t end); // A* search
