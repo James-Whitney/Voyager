@@ -20,19 +20,18 @@
 #include <voyager-actors/include/HelmComponent.h>
 #include <voyager-actors/include/TurretComponent.h>
 
+#include <voyager-core/include/Application.h>
+
 #include <iostream>
 
-class Scene {
-
+class Scene : public SceneMesh,
+   public std::enable_shared_from_this<Scene>
+{
 public:
 
    std::vector< std::shared_ptr<Entity> > entities;
 
    std::vector< std::shared_ptr<Component> > components;
-
-   std::vector< std::vector< std::shared_ptr<Shape> > > meshes;
-
-   std::vector< std::shared_ptr<Uber> > ubers;
 
    std::shared_ptr<Skybox> skybox;
 

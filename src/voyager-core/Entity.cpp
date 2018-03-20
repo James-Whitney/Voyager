@@ -58,3 +58,7 @@ bool Entity::remove(shared_ptr<Component> component) {
    }
    return false;
 }
+
+void Entity::removeComponentAt(int i) {
+   this->erase(this->begin() + i);
+}

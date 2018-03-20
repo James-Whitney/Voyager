@@ -3,6 +3,7 @@
 #define _ACTORCOMPONENT_H
 
 #include <voyager-core/include/Component.h>
+#include <voyager-core/include/WindowManager.h>
 
 class ActorComponent : public Component {
 
