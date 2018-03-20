@@ -67,6 +67,8 @@ void Application::run() {
          this->physics(delta_time);
          //actors
          this->actors(delta_time);
+         assert(this->ai_engine != nullptr);
+         this->ai_engine->execute(delta_time);
 
          this->collisionClean();
       }
@@ -108,6 +110,10 @@ void Application::init() {
 
       cout << "initialize render engine" << endl;
       this->render_engine->init();
+
+      cout << "initializing ai engine" << endl;
+      this->ai_engine->init();
+
       cout << "client initialization done" << endl;
    }
 }

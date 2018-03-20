@@ -12,9 +12,8 @@ void StateMachine::start(shared_ptr<State> initial_state) {
 }
 
 void StateMachine::run() {
-   if (this->cur_state != nullptr) {
-      this->cur_state->run();
-   }
+   assert(this->cur_state != nullptr);
+   this->cur_state->run();
 }
 
 void StateMachine::stop() {
@@ -26,7 +25,8 @@ void StateMachine::stop() {
 void StateMachine::addState(shared_ptr<State> state) {
    assert(!this->contains(state));
    this->insert(state);
-   state->setMachine(this->shared_from_this());
+   // shared_ptr<StateMachine> me = this->shared_from_this();
+   // state->setMachine(me);
 }
 
 void StateMachine::setState(shared_ptr<State> state) {

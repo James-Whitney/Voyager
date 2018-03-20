@@ -24,7 +24,7 @@ Drone::Drone(shared_ptr<Scene> scene, shared_ptr<NavMap> nav_map, shared_ptr<btT
    // this->add(static_pointer_cast<Component>(phys));
 
    // brain
-   this->brain = make_shared<BrainComponent>();
+   this->brain = make_shared<BrainComponent>(nav_map->getPlayer());
 }
 
 void Drone::linkComponents() {

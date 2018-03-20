@@ -72,7 +72,7 @@ void Scene::apply(shared_ptr<Application> app) {
    //playerComponent->getPhysics()->getBody()->setGravity(btVector3(0, -9.8, 0));
 
    // Init Nav Map
-   shared_ptr<NavMapEntity> nav_map_entity = make_shared<NavMapEntity>(player, this->terrain_entity->getTransform(), terrain_shape);
+   shared_ptr<NavMapEntity> nav_map_entity = make_shared<NavMapEntity>(ship, this->terrain_entity->getTransform(), terrain_shape);
    shared_ptr<NavMapRenderable> nav_map_renderable = make_shared<NavMapRenderable>(nav_map_entity->getNavMap());
    nav_map_entity->add(nav_map_renderable);
    this->entities.push_back(static_pointer_cast<Entity>(nav_map_entity));
@@ -129,6 +129,8 @@ void Scene::apply(shared_ptr<Application> app) {
             playerComponent->setTurret(static_pointer_cast<StationComponent>(component), static_pointer_cast<TurretComponent>(component)->getTurretID());
          }
          app->getActorEngine()->registerComponent(component);
+      } else if (dynamic_pointer_cast<BrainComponent>(component)) {
+         app->getAiEngine()->registerComponent(component);
       }
    }
 }
