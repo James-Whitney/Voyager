@@ -8,11 +8,14 @@
 using namespace glm;
 using namespace std;
 
-NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, int res, float shift) :
+NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, btVector3 &terrain_origin, int res, float shift) :
    player(player), terrain(terrain)
 {
    cout << "---< Initializing NavMap >---------------------------------" << endl;
    vert_grid_t grid = terrain->getVertices();
+   vec3 terr_origin = vec3(
+      terrain_origin.getX(), terrain_origin.getY(), terrain_origin.getZ()
+   );
 
    // loop through the vertices, building a grid and adding waypoints to the map
    cout << "   * build the grid of Waypoints" << endl;
@@ -22,7 +25,9 @@ NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, int res, float shift) :
 
          // find a point for the nav map
          vertex pt = grid.at(x).at(y);
-         vec3 nav_pt = pt.pos + shift * pt.normal;
+         // vec3 nav_pt = 2.0f * ((pt.pos + terr_origin) + shift * pt.normal);
+         vec3 nav_pt = 2.0f * pt.pos + terr_origin;
+         nav_pt += shift * pt.normal;
 
          // make a waypoint and add it to the map
          wpt_ptr_t waypoint = make_shared<Waypoint>(nav_pt);

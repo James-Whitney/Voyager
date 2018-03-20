@@ -2,9 +2,14 @@
 
 #include <voyager-actors/include/ai/AiEngine.h>
 
+#define SHOW_NAVMAP_WAYPOINTS 0
+
 using namespace std;
 
 shared_ptr<Terrain> Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain) {
+
+   this->terrain_entity = terrain;
+
    shared_ptr<Renderable> terrainRenderable = static_pointer_cast<Renderable>(terrain->componentAt(0));
    shared_ptr<Terrain> terrainShape = static_pointer_cast<Terrain>(terrainRenderable->getMesh().at(0));
 
@@ -66,7 +71,7 @@ void Scene::apply(shared_ptr<Application> app) {
    //playerComponent->getPhysics()->getBody()->setGravity(btVector3(0, -9.8, 0));
 
    // Init Nav Map
-   shared_ptr<NavMapEntity> nav_map_entity = make_shared<NavMapEntity>(player, terrain_shape);
+   shared_ptr<NavMapEntity> nav_map_entity = make_shared<NavMapEntity>(player, this->terrain_entity->getTransform(), terrain_shape);
    shared_ptr<NavMapRenderable> nav_map_renderable = make_shared<NavMapRenderable>(nav_map_entity->getNavMap());
    nav_map_entity->add(nav_map_renderable);
    this->entities.push_back(static_pointer_cast<Entity>(nav_map_entity));
@@ -74,6 +79,7 @@ void Scene::apply(shared_ptr<Application> app) {
    shared_ptr<AiEngine> ai = static_pointer_cast<AiEngine>(app->getAiEngine());
    ai->setNavMapEntity(nav_map_entity);
 
+#if SHOW_NAVMAP_WAYPOINTS
    // Nav Map markers
    vector<vector<wpt_ptr_t>> navGrid = nav_map_entity->getNavMap()->getWaypointGrid();
    for (int x = 0; x < navGrid.size(); ++x) {
@@ -85,6 +91,7 @@ void Scene::apply(shared_ptr<Application> app) {
          }
       }
    }
+#endif
 
    // Transfer entities to the app
    for (int i = 0; i < this->entities.size(); ++i) {

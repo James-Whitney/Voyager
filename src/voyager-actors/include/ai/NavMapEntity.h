@@ -17,7 +17,7 @@ class NavMapEntity :
    public Entity
 {
 public:
-   NavMapEntity(ent_ptr_t player, std::shared_ptr<Terrain> terrain_shape);
+   NavMapEntity(ent_ptr_t player, std::shared_ptr<btTransform> trans, std::shared_ptr<Terrain> terrain_shape);
    std::shared_ptr<NavMap> getNavMap() { return this->nav_map; }
 private:
    std::shared_ptr<NavMap> nav_map;

@@ -48,6 +48,8 @@ private:
 
    std::shared_ptr<Entity> make_waypoint_marker(wpt_ptr_t wpt);
 
+   std::shared_ptr<Entity> terrain_entity;
+
 };
 
 #endif

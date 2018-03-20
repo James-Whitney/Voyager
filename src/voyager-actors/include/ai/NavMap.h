@@ -23,7 +23,7 @@ class NavMap :
    public nav_map_graph_t
 {
 public:
-   NavMap(ent_ptr_t player, terrain_ptr_t terrain, int res, float shift);
+   NavMap(ent_ptr_t player, terrain_ptr_t terrain, btVector3 &terrain_origin, int res, float shift);
    ent_ptr_t getPlayer() { return this->player; }
    std::vector<std::vector<wpt_ptr_t>> getWaypointGrid() { return this->waypoint_grid; }
    void addWaypoint(wpt_ptr_t wpt);

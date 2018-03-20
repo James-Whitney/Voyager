@@ -7,8 +7,9 @@ using namespace std;
 
 // NavMapEntity ///////////////////////////////////////////////////////////
 
-NavMapEntity::NavMapEntity(ent_ptr_t player, shared_ptr<Terrain> terrain) {
-   this->nav_map = make_shared<NavMap>(player, terrain, 20, 4);
+NavMapEntity::NavMapEntity(ent_ptr_t player, shared_ptr<btTransform> trans, shared_ptr<Terrain> terrain) {
+   btVector3 terrain_origin = trans->getOrigin();
+   this->nav_map = make_shared<NavMap>(player, terrain, terrain_origin, 20, 9);
 }
 
 // NavMapRenderable ///////////////////////////////////////////////////////
