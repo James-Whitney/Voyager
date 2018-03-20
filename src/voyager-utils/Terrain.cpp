@@ -1,10 +1,11 @@
 #include "include/Terrain.h"
 
-void Terrain::createShape(std::string heightmap_path, float max_height, float vertex_spacing) {
+void Terrain::createShape(std::string heightmap_path, float max_height, float vertex_spacing, float texture_scale) {
    this->max_height = max_height;
    this->min_height = 0;
    this->vertex_spacing = vertex_spacing;
-   
+   this->texture_scale = texture_scale;
+
    // Generate terrain from heightmap
    this->heightmap->load(heightmap_path);
    this->generateVerticies(max_height, vertex_spacing);
@@ -15,6 +16,7 @@ void Terrain::createShape(std::string heightmap_path, float max_height, float ve
    this->buildPositionBuffer();
    this->buildNormalBuffer();
    this->buildElementBuffer();
+   this->buildTextureBuffer();
 }
 
 void Terrain::generateVerticies(float max_height, float vertex_spacing) {
@@ -144,6 +146,20 @@ void Terrain::buildNormalBuffer() {
          this->norBuf.push_back(v.normal.x);
          this->norBuf.push_back(v.normal.y);
          this->norBuf.push_back(v.normal.z);
+      }
+   }
+}
+
+void Terrain::buildTextureBuffer() {
+   // Clear existing texture buffer
+   this->texBuf.clear();
+
+   // Build the texture buffer
+   for (int z = 0; z < this->heightmap->height; z++) {
+      for (int x = 0; x < this->heightmap->width; x++) {
+         vertex v = this->verticies[x][z];
+         this->texBuf.push_back(v.pos.x * this->texture_scale);
+         this->texBuf.push_back(v.pos.z * this->texture_scale);
       }
    }
 }

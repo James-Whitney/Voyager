@@ -93,9 +93,15 @@ void RenderEngine::init() {
    program->addUniform("K");
    program->addUniform("terrainTexture");
    program->addUniform("terrainNormalMap");
+   program->addUniform("terrainTextureScale");
+   program->addUniform("fogColor");
+   program->addUniform("fogDensity");
 
    program->addAttribute("vertPos");
    program->addAttribute("vertNor");
+   program->addAttribute("vertTex");
+   program->addAttribute("vertTan");
+   program->addAttribute("vertBitan");
 
    for (int i = 0; i < this->components.size(); ++i) {
       this->components.at(i)->init();
@@ -106,6 +112,25 @@ void RenderEngine::init() {
    this->initShadows();
    this->initTerrainTexture();
    this->initTerrainNormalMap();
+
+   // Initialize the skybox
+   this->skybox->init();
+
+   // Initialize the skybox shader
+   this->skyboxProgram = std::make_shared<Program>();
+   this->skyboxProgram->setVerbose(true);
+   this->skyboxProgram->setShaderNames(
+      this->resource_dir + "/skybox/skybox.vert.glsl",
+      this->resource_dir + "/skybox/skybox.frag.glsl"
+   );
+   if (!this->skyboxProgram->init()) {
+      cerr << "Failed to initialize skybox program" << endl;
+      exit(1);
+   }
+   this->skyboxProgram->addUniform("P");
+   this->skyboxProgram->addUniform("V");
+   this->skyboxProgram->addUniform("fogColor");
+   this->skyboxProgram->addUniform("fogHeight");
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -163,6 +188,9 @@ void RenderEngine::execute(double delta_time) {
    // Bind terrain normal map
    this->terrainNormalMap->bind(this->program->getUniform("terrainNormalMap"));
 
+   // Bind terrain texture scale
+   glUniform1f(this->program->getUniform("terrainTextureScale"), this->terrainTextureScale);
+
    shared_ptr<MatrixStack> P = make_shared<MatrixStack>();
    shared_ptr<MatrixStack> V = make_shared<MatrixStack>();
 
@@ -190,6 +218,31 @@ void RenderEngine::execute(double delta_time) {
    hud->start();
 
    glUniform1i(this->program->getUniform("shadowMode"), 0);
+
+   // Set fog properties
+   Skybox::Fog fog = this->skybox->fog;
+   glUniform3f(this->program->getUniform("fogColor"),
+      fog.color.x, fog.color.y, fog.color.z);
+   glUniform1f(this->program->getUniform("fogDensity"), fog.density);
+
+   // Draw skybox
+   this->program->unbind();
+   this->skyboxProgram->bind();
+      // Bind P and V
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("P"), 1, GL_FALSE,
+         value_ptr(P->topMatrix()));
+      glUniformMatrix4fv(this->skyboxProgram->getUniform("V"), 1, GL_FALSE,
+         value_ptr(V->topMatrix()));
+
+      // Bind fog properties
+      glUniform3f(this->skyboxProgram->getUniform("fogColor"),
+         fog.color.x, fog.color.y, fog.color.z);
+      glUniform1f(this->skyboxProgram->getUniform("fogHeight"), fog.height);
+
+      this->skybox->draw();
+   this->skyboxProgram->unbind();
+   this->program->bind();
+
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
       this->render(static_pointer_cast<Renderable>(this->components.at(idx)));

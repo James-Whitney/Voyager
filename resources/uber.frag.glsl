@@ -4,7 +4,10 @@ in vec3 fragNor;
 in vec3 wFragNor;
 in vec3 wFragPos;
 in vec3 WPos;
+in vec2 texCoord;
 in vec4 shadowCoord;
+in vec4 view;
+in mat3 TBN;
 
 layout(location = 0) out vec4 color;
 
@@ -23,11 +26,17 @@ uniform float roughnessValue;
 uniform float F0;
 uniform float K;
 
+uniform vec3 fogColor;
+uniform float fogDensity;
+
 uniform sampler2D terrainTexture;
 uniform sampler2D terrainNormalMap;
+uniform float terrainTextureScale;
 
 vec4 cookTorrance(vec3 normal) {
-   vec3 lightDirection = lightPos - WPos;
+   float epsilon = 0.00390625;
+
+   vec3 lightDirection = lightPos - wFragPos;
    float lightDistance = length(lightDirection);
 
    // do the lighting calculation for each fragment
@@ -35,7 +44,7 @@ vec4 cookTorrance(vec3 normal) {
 
    float specular = 0.0;
    if (NdotL > 0.0) {
-      vec3 eyeDir = normalize(-WPos);
+      vec3 eyeDir = normalize(-wFragPos);
 
       // calculate intermediary values
       vec3 halfVector = normalize(lightDirection + eyeDir);
@@ -46,13 +55,13 @@ vec4 cookTorrance(vec3 normal) {
 
       // geometric attenuation
       float NH2 = 2.0 * NdotH;
-      float g1 = (NH2 * NdotV) / VdotH;
-      float g2 = (NH2 * NdotL) / VdotH;
+      float g1 = (NH2 * NdotV) / max(VdotH, epsilon);
+      float g2 = (NH2 * NdotL) / max(VdotH, epsilon);
       float geoAtt = min(1.0, min(g1, g2));
 
       // roughness beckmann distribution function
       float r1 = 1.0 / (4.0 * mSquared * pow(NdotH, 4.0));
-      float r2 = (NdotH * NdotH - 1.0) / (mSquared * NdotH * NdotH);
+      float r2 = (NdotH * NdotH - 1.0) / max((mSquared * NdotH * NdotH), epsilon);
       float roughness = r1 * exp(r2);
 
       // fresnel Schlick approximation
@@ -60,11 +69,20 @@ vec4 cookTorrance(vec3 normal) {
       fresnel *= (1.0 - F0);
       fresnel += F0;
 
-      specular = (fresnel * geoAtt * roughness) / (NdotV * NdotL * 3.1415926);
+      specular = (fresnel * geoAtt * roughness) / max((NdotV * NdotL * 3.1415926), epsilon);
    }
 
    vec3 finalValue = MatAmb + (lightColor / lightDistance) * NdotL * (K + specular * (1.0 - K));
    return vec4(finalValue, opacity);
+}
+
+vec4 applyFog(vec4 color) {
+   float dist = length(view);
+
+   float fogFactor = 1.0 / exp(pow(dist * fogDensity, 2));
+   fogFactor = clamp(fogFactor, 0.0, 1.0);
+
+   return mix(vec4(fogColor, 1.0), color, fogFactor);
 }
 
 void main() {
@@ -76,7 +94,7 @@ void main() {
    /* --=[ Cook Torrance ]=-------------------------------------------------- */
    case 1:
       // interpolating normals will change the length, renormalize
-      normal = normalize(fragNor);
+      normal = normalize(wFragNor);
       color = cookTorrance(normal);
       break;
 
@@ -87,7 +105,7 @@ void main() {
 
    /* --=[ Normal Shading ]=------------------------------------------------- */
    case 3:
-      normal = normalize(fragNor);
+      normal = normalize(wFragNor);
       vec3 ncolor = 0.5 * normal + 0.5;
       color = vec4(ncolor, 1.0);
       break;
@@ -100,22 +118,22 @@ void main() {
       float b = (blending.x + blending.y + blending.z);
       blending /= vec3(b, b, b);
 
-      float scale = 0.1;
-      vec4 texX = texture(terrainTexture, wFragPos.yz * scale);
-      vec4 texY = texture(terrainTexture, wFragPos.xz * scale);
-      vec4 texZ = texture(terrainTexture, wFragPos.xy * scale);
+      vec4 texX = texture(terrainTexture, wFragPos.yz * terrainTextureScale);
+      vec4 texY = texture(terrainTexture, wFragPos.xz * terrainTextureScale);
+      vec4 texZ = texture(terrainTexture, wFragPos.xy * terrainTextureScale);
       vec4 tex = texX * blending.x + texY * blending.y + texZ * blending.z;
 
-      vec4 normX = texture(terrainNormalMap, wFragPos.yz * scale);
-      vec4 normY = texture(terrainNormalMap, wFragPos.xz * scale);
-      vec4 normZ = texture(terrainNormalMap, wFragPos.xy * scale);
+      vec4 normX = texture(terrainNormalMap, wFragPos.yz * terrainTextureScale);
+      vec4 normY = texture(terrainNormalMap, wFragPos.xz * terrainTextureScale);
+      vec4 normZ = texture(terrainNormalMap, wFragPos.xy * terrainTextureScale);
       vec4 norm = normX * blending.x + normY * blending.y + normZ * blending.z;
 
-      normal = normalize(fragNor);
-      // normal = normalize(norm.xyz * 2.0 - 1.0);
+      normal = normalize(norm.xyz * 2.0 - 1.0);
+      normal = normalize(TBN * normal);
 
       color = tex * cookTorrance(normal);
-      // color = norm * cookTorrance(normal);
+      // color = tex;
+      // color = vec4(normal, 1.0);
       break;
 
    /* --=[ Default Shading ]=------------------------------------------------ */
@@ -128,21 +146,24 @@ void main() {
 
    }
 
-   if (shadowMode > 0) {
-       vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
-       color = vec4(shift.z, 0.0, 0.0, 1.0);
-   } else {
-        vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
-        float depth = texture(depthTexture, shift.xy).r;
+   // Add fog to fragment
+   color = applyFog(color);
 
-        vec3 lightDirection = normalize(lightPos - wFragPos);
-        float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
-        bias = clamp(bias, 0.005, 0.1);
-        if (shift.x > 1 || shift.x < 0) {
-            return;
-        }
-        if (depth < (shift.z - bias)) {
-           color = 0.5 * color;
-        }
+   if (shadowMode > 0) {
+      vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+      color = vec4(shift.z, 0.0, 0.0, 1.0);
+   } else {
+      vec3 shift = shadowCoord.xyz * 0.5 + vec3(0.5);
+      float depth = texture(depthTexture, shift.xy).r;
+
+      vec3 lightDirection = normalize(lightPos - wFragPos);
+      float bias = 0.005 * tan(acos(dot(wFragNor,lightDirection)));
+      bias = clamp(bias, 0.005, 0.1);
+      if (shift.x > 1 || shift.x < 0) {
+         return;
+      }
+      if (depth < (shift.z - bias)) {
+         color = 0.5 * color;
+      }
    }
 }
