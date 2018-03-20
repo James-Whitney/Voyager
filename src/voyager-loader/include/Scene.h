@@ -24,7 +24,7 @@
 
 #include <iostream>
 
-class Scene {
+class Scene : public std::enable_shared_from_this<Scene> {
 
 public:
 
@@ -49,6 +49,8 @@ private:
    std::shared_ptr<Entity> make_waypoint_marker(wpt_ptr_t wpt);
 
    std::shared_ptr<Entity> terrain_entity;
+
+   void inject_entity(std::shared_ptr<Entity> entity);
 
 };
 

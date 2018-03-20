@@ -4,6 +4,12 @@
 
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
 
+static void log(string msg) {
+#if _RENDERENGINE_LOG_RENDERS
+   cout << msg << endl;
+#endif
+}
+
 using namespace glm;
 using namespace std;
 
@@ -64,6 +70,7 @@ void RenderEngine::initTerrainNormalMap() {
 }
 
 void RenderEngine::init() {
+   log("make program");
    this->program = make_shared<Program>();
 
    glCullFace(GL_BACK);
@@ -105,18 +112,28 @@ void RenderEngine::init() {
    program->addAttribute("vertTan");
    program->addAttribute("vertBitan");
 
+   log("initialize renderables");
    for (int i = 0; i < this->components.size(); ++i) {
       auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
       renderable->renderableInit(this->resource_dir);
       renderable->init();
    }
+
+   log("initialize VFC");
    this->vfc = make_shared<VFCobj>(&this->components);
+
+   log("initialize HUD");
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+
+   log("initialize Shadows");
    this->initShadows();
+
+   log("initialize Terrain");
    this->initTerrainTexture();
    this->initTerrainNormalMap();
 
    // Initialize the skybox
+   log("initialize skybox");
    this->skybox->init();
 
    // Initialize the skybox shader
@@ -134,6 +151,8 @@ void RenderEngine::init() {
    this->skyboxProgram->addUniform("V");
    this->skyboxProgram->addUniform("fogColor");
    this->skyboxProgram->addUniform("fogHeight");
+
+   log("done initializing render engine");
 }
 
 void RenderEngine::execute(double delta_time) {

@@ -11,14 +11,12 @@ using namespace std;
 NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, btVector3 &terrain_origin, int res, float shift) :
    player(player), terrain(terrain)
 {
-   cout << "---< Initializing NavMap >---------------------------------" << endl;
    vert_grid_t grid = terrain->getVertices();
    vec3 terr_origin = vec3(
       terrain_origin.getX(), terrain_origin.getY(), terrain_origin.getZ()
    );
 
    // loop through the vertices, building a grid and adding waypoints to the map
-   cout << "   * build the grid of Waypoints" << endl;
    for (int x = 0; x < grid.size(); x += res) {
       vector<wpt_ptr_t> waypoint_col;
       for (int y = 0; y < grid.at(x).size(); y += res) {
@@ -38,7 +36,6 @@ NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, btVector3 &terrain_origi
    }
 
    // now, iterate through the grid and link waypoints with edges
-   cout << "   * link them together" << endl;
    for (int x = 0; x < waypoint_grid.size(); ++x) {
       int x_size = waypoint_grid.size();
       for (int y = 0; y < waypoint_grid.at(x).size(); ++y) {
@@ -79,7 +76,6 @@ NavMap::NavMap(ent_ptr_t player, terrain_ptr_t terrain, btVector3 &terrain_origi
       }
    }
 
-   cout << "-----------------------------------------------------------" << endl;
 }
 
 void NavMap::addWaypoint(wpt_ptr_t wpt) {

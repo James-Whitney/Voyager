@@ -1,8 +1,9 @@
 #include "include/Scene.h"
 
 #include <voyager-actors/include/ai/AiEngine.h>
+#include <voyager-actors/include/enemies/Drone.h>
 
-#define SHOW_NAVMAP_WAYPOINTS 0
+#define SHOW_NAVMAP_WAYPOINTS 1
 
 using namespace std;
 
@@ -85,13 +86,18 @@ void Scene::apply(shared_ptr<Application> app) {
    for (int x = 0; x < navGrid.size(); ++x) {
       for (int y = 0; y < navGrid.at(x).size(); ++y) {
          shared_ptr<Entity> ent = this->make_waypoint_marker(navGrid.at(x).at(y));
-         this->entities.push_back(ent);
-         for (int i = 0; i < ent->numComponents(); ++i) {
-            this->components.push_back(ent->componentAt(i));
-         }
+         this->inject_entity(ent);
       }
    }
 #endif
+
+   // TEMPORARILY INJECT A DRONE HERE
+   shared_ptr<btTransform> drone_trans = make_shared<btTransform>();
+   drone_trans->setOrigin(btVector3(30, 0, 40));
+   drone_trans->setRotation(btQuaternion(btVector3(0, 0, 1), 0));
+   shared_ptr<Drone> drone = make_shared<Drone>(this->shared_from_this(), nav_map_entity->getNavMap(), drone_trans);
+   drone->linkComponents();
+   this->inject_entity(drone);
 
    // Transfer entities to the app
    for (int i = 0; i < this->entities.size(); ++i) {
@@ -158,4 +164,11 @@ shared_ptr<Entity> Scene::make_waypoint_marker(wpt_ptr_t wpt) {
    ent->add(static_pointer_cast<Component>(rend));
 
    return ent;
+}
+
+void Scene::inject_entity(shared_ptr<Entity> entity) {
+   this->entities.push_back(entity);
+   for (int i = 0; i < entity->numComponents(); ++i) {
+      this->components.push_back(entity->componentAt(i));
+   }
 }

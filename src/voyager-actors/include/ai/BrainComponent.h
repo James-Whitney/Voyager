@@ -6,9 +6,11 @@
 
 #include "Brain.h"
 
-class BrainComponent : Component {
+class BrainComponent : public Component {
 public:
    BrainComponent();
+   virtual void init() {};
+   virtual void update(double delta_time) {};
 private:
    std::shared_ptr<Brain> brain;
 };

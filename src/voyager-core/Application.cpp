@@ -105,7 +105,10 @@ void Application::init() {
          cerr << "Application has no render_engine" << endl;
          exit(1);
       }
+
+      cout << "initialize render engine" << endl;
       this->render_engine->init();
+      cout << "client initialization done" << endl;
    }
 }
 
