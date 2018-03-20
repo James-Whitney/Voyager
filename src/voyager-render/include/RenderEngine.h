@@ -14,6 +14,7 @@
 #include <voyager-utils/include/BulletToGlm.h>
 #include <voyager-utils/include/Terrain.h>
 #include <voyager-utils/include/Skybox.h>
+#include <voyager-utils/include/DebugBox.h>
 
 #include <voyager-hud/include/Hud.h>
 
@@ -63,6 +64,7 @@ public:
    void setTerrainTextureScale(float scale) { this->terrainTextureScale = scale; }
 
    void setSkybox(std::shared_ptr<Skybox> skybox) { this->skybox = skybox; }
+   void setDebugBoxes(std::vector<std::shared_ptr<DebugBox>> debugBoxes) { this->debugBoxes = debugBoxes; }
 
 protected:
 
@@ -89,6 +91,8 @@ protected:
 
    std::shared_ptr<Skybox> skybox;
    std::shared_ptr<Program> skyboxProgram;
+
+   std::vector<std::shared_ptr<DebugBox>> debugBoxes;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 

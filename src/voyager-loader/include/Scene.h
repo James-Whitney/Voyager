@@ -11,6 +11,7 @@
 #include <voyager-render/include/RenderEngine.h>
 
 #include <voyager-utils/include/Terrain.h>
+#include <voyager-utils/include/DebugBox.h>
 
 #include <voyager-physics/include/PhysicsComponent.h>
 #include <voyager-physics/include/PhysicsEngine.h>
@@ -35,6 +36,8 @@ public:
    std::vector< std::shared_ptr<Uber> > ubers;
 
    std::shared_ptr<Skybox> skybox;
+
+   std::vector< std::shared_ptr<DebugBox> > debugBoxes;
 
    void initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain);
 

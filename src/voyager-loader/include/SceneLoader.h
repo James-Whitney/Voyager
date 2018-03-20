@@ -8,6 +8,7 @@
 
 #include <voyager-utils/include/Terrain.h>
 #include <voyager-utils/include/Skybox.h>
+#include <voyager-utils/include/DebugBox.h>
 
 #include <voyager-render/include/Renderable.h>
 

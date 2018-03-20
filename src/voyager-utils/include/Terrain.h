@@ -14,7 +14,7 @@ public:
 
    void createShape(std::string heightmap_path, float max_height, float vertex_spacing, float texture_scale);
 
-   std::vector<unsigned char> getHeightData();
+   std::vector<float> getHeightData();
    btScalar getHeightScale();
    btScalar getVertexSpacing();
    btScalar getMinHeight();

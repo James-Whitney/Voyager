@@ -131,6 +131,10 @@ void RenderEngine::init() {
    this->skyboxProgram->addUniform("V");
    this->skyboxProgram->addUniform("fogColor");
    this->skyboxProgram->addUniform("fogHeight");
+
+   for (auto debugBox : this->debugBoxes) {
+      debugBox->init();
+   }
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -249,6 +253,22 @@ void RenderEngine::execute(double delta_time) {
    }
    for (auto &idx : this->vfc->dynamic) {
       this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+   }
+
+   for (auto debugBox : this->debugBoxes) {
+      shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
+      M->pushMatrix();
+         std::shared_ptr<Entity> entity = debugBox->getEntity();
+         debugBox->setTransform(entity->getTransform(true));
+         debugBox->setScale(entity->getScale());
+         std::shared_ptr<btTransform> trans = debugBox->getTransform();
+         M->loadMatrix(bulletToGlm(*trans.get()));
+         // std::shared_ptr<btVector3> scale = debugBox->getScale();
+         // M->scale(bulletToGlm(*scale.get()) * 2.0f);
+         glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
+
+         debugBox->draw(this->program, true);
+      M->popMatrix();
    }
 
    V->popMatrix();

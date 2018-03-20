@@ -12,7 +12,7 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
 
    int mapWidth = terrainShape->getMapWidth();
    int mapLength = terrainShape->getMapLength();
-   vector<unsigned char> heightData = terrainShape->getHeightData();
+   vector<float> heightData = terrainShape->getHeightData();
    btScalar heightScale = terrainShape->getHeightScale();
    btScalar minHeight = terrainShape->getMinHeight();
    btScalar maxHeight = terrainShape->getMaxHeight();
@@ -50,8 +50,13 @@ void Scene::apply(shared_ptr<Application> app) {
    shared_ptr<Entity> terrain = this->entities.at(0);
    initTerrain(app, terrain);
 
+   shared_ptr<RenderEngine> renderEngine = static_pointer_cast<RenderEngine>(app->getRenderEngine());
+
    // Set skybox
-   static_pointer_cast<RenderEngine>(app->getRenderEngine())->setSkybox(this->skybox);
+   renderEngine->setSkybox(this->skybox);
+
+   // Set debug boxes
+   renderEngine->setDebugBoxes(this->debugBoxes);
 
    // Init ship
    shared_ptr<Entity> ship = this->entities.at(1);

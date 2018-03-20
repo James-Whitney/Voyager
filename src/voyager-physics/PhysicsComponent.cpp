@@ -5,32 +5,40 @@ void PhysicsComponent::init() {
 
 }
 
-void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<unsigned char> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace) {
+void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<float> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace) {
    this->entity = entity;
-
    this->world = 1;
-  
-  std::shared_ptr<btTransform> transform = entity->getTransform();
 
-   btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
+   std::shared_ptr<btTransform> transform = entity->getTransform();
+   // btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
 
    this->collisionShape = new btHeightfieldTerrainShape( mapWidth,
                                                          mapLength,
                                                          (void *)(&heightfieldData[0]),
-                                                         heightScale,
+                                                         1.0,
                                                          minHeight,
                                                          maxHeight,
-                                                         1, PHY_UCHAR, false);
+                                                         1, PHY_FLOAT, false);
 
    //btHeightfieldTerrainShape *heightFieldShape = new btHeightfieldTerrainShape(mapWidth, mapLength, (void *)(&heightfieldData[0]), 1, -1024, 1016, 2, PHY_UCHAR, true);
 
    //btVector3 localScale = btVector3(mapWidth / 127.0, mapLength / 127.0, 8);
-   btVector3 localScale = btVector3(0.25, 0.25, 0.25);
-   collisionShape->setLocalScaling(localScale);
 
-   btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
+   // TODO: bring this back
+   // btVector3 localScale = btVector3(0.25, 0.25, 0.25);
+   // collisionShape->setLocalScaling(localScale);
 
-   this->body = new btRigidBody(rbInfo);                   
+   btTransform m_cTransform;
+   m_cTransform.setIdentity();
+   btScalar mass(0); // Set the Mass
+   btVector3 localInertia(0,0,0); // Set Inertia
+   m_cTransform.setOrigin(btVector3(0, 0, 0)); // Set Position
+   btDefaultMotionState * myMotionState = new btDefaultMotionState(m_cTransform); // Create Motion State
+
+   // btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
+   btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, localInertia);
+
+   this->body = new btRigidBody(rbInfo);
 }
 
 

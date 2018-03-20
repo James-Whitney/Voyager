@@ -164,10 +164,10 @@ void Terrain::buildTextureBuffer() {
    }
 }
 
-std::vector<unsigned char> Terrain::getHeightData() {
+std::vector<float> Terrain::getHeightData() {
 
    //std::shared_ptr<(unsigned char)[]> buffer();
-   std::vector<unsigned char> buffer;
+   std::vector<float> buffer;
 
    //std::shared_ptr<unsigned char> buffer(new unsigned char[this->heightmap->getPixels().size() * 3]);
 
@@ -176,9 +176,7 @@ std::vector<unsigned char> Terrain::getHeightData() {
          // Get heightmap pixel
          BitMap::pixel p = this->heightmap->getPixel(x, z);
 
-         buffer.push_back(p.r);
-         buffer.push_back(p.g);
-         buffer.push_back(p.b);
+         buffer.push_back(p.r / 255.0);
       }
    }
 

@@ -138,10 +138,11 @@ void main() {
 
    /* --=[ Default Shading ]=------------------------------------------------ */
    default:
-      vec3 Dcolor, Scolor;
-      normal = normalize(fragNor);
-      Dcolor = MatDif * lightColor * max(dot(normalize(lightPos), normal), 0) + MatAmb;
-      color = vec4(Dcolor, 1.0);
+      // vec3 Dcolor, Scolor;
+      // normal = normalize(fragNor);
+      // Dcolor = MatDif * lightColor * max(dot(normalize(lightPos), normal), 0) + MatAmb;
+      // color = vec4(Dcolor, 1.0);
+      color = vec4(0.0, 0.0, 0.0, 1.0);
 
 
    }
