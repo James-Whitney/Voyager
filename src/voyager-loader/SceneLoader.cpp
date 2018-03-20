@@ -257,16 +257,6 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
             entity->setMask(SHIP_MASK);
          }
-
-         btVector3 btAabbMin, btAabbMax;
-         btTransform t;
-         // physicsComponent->get_collisionShape()->getAabb(t, btAabbMin, btAabbMax);
-         physicsComponent->getBody()->getAabb(btAabbMin, btAabbMax);
-         shared_ptr<DebugBox> debugBox = make_shared<DebugBox>(btAabbMin, btAabbMax);
-         debugBox->setTransform(entity->getTransform(true));
-         debugBox->setScale(entity->getScale());
-         debugBox->setEntity(entity);
-         scene->debugBoxes.push_back(debugBox);
       }
       else if (type == "STATION") {
          string subType = components[i]["sub-type"].GetString();
@@ -425,5 +415,17 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    }
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
+
+
+   btVector3 btAabbMin, btAabbMax;
+   btTransform t = *(entity->getTransform(false)).get();
+   collisionShape->getAabb(t, btAabbMin, btAabbMax);
+   //physicsComponent->getBody()->getAabb(btAabbMin, btAabbMax);
+   shared_ptr<DebugBox> debugBox = make_shared<DebugBox>(btAabbMin, btAabbMax);
+   debugBox->setShape(collisionShape);
+   debugBox->setEntity(entity);
+   scene->debugBoxes.push_back(debugBox);
+
+
    return physicsComponent;
 }

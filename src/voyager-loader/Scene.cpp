@@ -37,6 +37,14 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    renderEngine->setTerrainTexture(terrainShape->getTexture());
    renderEngine->setTerrainNormalMap(terrainShape->getNormalMap());
    renderEngine->setTerrainTextureScale(terrainShape->getTextureScale());
+
+   btVector3 btAabbMin, btAabbMax;
+         // physicsComponent->get_collisionShape()->getAabb(t, btAabbMin, btAabbMax);
+   physicsComponent->getBody()->getAabb(btAabbMin, btAabbMax);
+   shared_ptr<DebugBox> debugBox = make_shared<DebugBox>(btAabbMin, btAabbMax);
+   debugBox->setShape(physicsComponent->getBody()->getCollisionShape());
+   debugBox->setEntity(terrain);
+   debugBoxes.push_back(debugBox);
 }
 
 void Scene::apply(shared_ptr<Application> app) {

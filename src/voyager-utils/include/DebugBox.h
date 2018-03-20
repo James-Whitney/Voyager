@@ -25,15 +25,21 @@ public:
    void setTransform(std::shared_ptr<btTransform> transform) { this->transform = transform; }
    void setScale(std::shared_ptr<btVector3> scale) { this->scale = scale; }
    void setEntity(std::shared_ptr<Entity> entity) { this->entity = entity; }
+   void setShape(btCollisionShape* collisionShape) { this->collisionShape = collisionShape; }
 
    std::shared_ptr<btTransform> getTransform() { return this->transform; }
    std::shared_ptr<btVector3> getScale() { return this->scale; }
    std::shared_ptr<Entity> getEntity() { return this->entity; }
+   btCollisionShape* getShape() { return this->collisionShape; }
+
+
 
 private:
 
    void buildPositionBuffer(glm::vec3 min, glm::vec3 max);
    void buildNormalBuffer(glm::vec3 min, glm::vec3 max);
+
+   btCollisionShape* collisionShape = nullptr;
 
    GLuint vaoID;
    GLuint posBufID;

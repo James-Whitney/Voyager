@@ -258,11 +258,14 @@ void RenderEngine::execute(double delta_time) {
    for (auto debugBox : this->debugBoxes) {
       shared_ptr<MatrixStack> M = make_shared<MatrixStack>();
       M->pushMatrix();
-         std::shared_ptr<Entity> entity = debugBox->getEntity();
-         debugBox->setTransform(entity->getTransform(true));
-         debugBox->setScale(entity->getScale());
-         std::shared_ptr<btTransform> trans = debugBox->getTransform();
+         // std::shared_ptr<btTransform> trans = debugBox->getTransform();
+         // M->loadMatrix(bulletToGlm(*trans.get()));
+         // std::shared_ptr<btVector3> scale = debugBox->getScale();
+         // M->scale(bulletToGlm(*scale.get()));        
+         std::shared_ptr<btTransform> trans = debugBox->getEntity()->getTransform();
          M->loadMatrix(bulletToGlm(*trans.get()));
+         std::shared_ptr<btVector3> scale = make_shared<btVector3>(debugBox->getShape()->getLocalScaling());
+         M->scale(bulletToGlm(*scale.get()));  
          // std::shared_ptr<btVector3> scale = debugBox->getScale();
          // M->scale(bulletToGlm(*scale.get()) * 2.0f);
          glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
