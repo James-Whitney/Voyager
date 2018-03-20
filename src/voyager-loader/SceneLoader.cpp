@@ -182,7 +182,7 @@ void SceneLoader::parse_sounds(shared_ptr<Scene> scene, Value& sounds) {
       ss << "\t" << name << ": " << filename;
       log(ss.str());
 
-      // Audio::load(name, filename);
+      Audio::load(name, filename);
    }
 }
 
