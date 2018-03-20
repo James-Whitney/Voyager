@@ -94,7 +94,7 @@ void main() {
    /* --=[ Cook Torrance ]=-------------------------------------------------- */
    case 1:
       // interpolating normals will change the length, renormalize
-      normal = normalize(fragNor);
+      normal = normalize(wFragNor);
       color = cookTorrance(normal);
       break;
 
@@ -105,7 +105,7 @@ void main() {
 
    /* --=[ Normal Shading ]=------------------------------------------------- */
    case 3:
-      normal = normalize(fragNor);
+      normal = normalize(wFragNor);
       vec3 ncolor = 0.5 * normal + 0.5;
       color = vec4(ncolor, 1.0);
       break;
