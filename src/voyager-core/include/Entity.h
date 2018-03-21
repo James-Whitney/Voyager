@@ -49,6 +49,9 @@ public:
 
    void setMask(int mask) { this->mask = mask; }
 
+   int getTeamMask() { return this->team_mask; }
+   void setTeamMask(int mask) { this->team_mask = mask; }
+
    virtual void update(double delta_time);
 
    virtual void add(std::shared_ptr<Component> component);
@@ -58,7 +61,7 @@ public:
    virtual bool remove(std::shared_ptr<Component> component);
 
    void setHealth(float health) { this->health = health; }
-   float* getHealth() { return &health; } 
+   float* getHealth() { return &health; }
 
 protected:
 
@@ -67,6 +70,7 @@ protected:
    std::shared_ptr<btTransform>  transform;
 
    int mask = 0;
+   int team_mask = 0;
 
    std::vector< std::shared_ptr<Entity> > collideList;
 
