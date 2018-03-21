@@ -270,6 +270,9 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
             entity->setMask(TURRET_MASK);
          }
       }
+      else if (type == "SPAWNER") {
+         entity->add(this->parse_spawner(entity, scene, components[i]));
+      }
       else {
          cerr << "Unknown component type: " << type << endl;
          continue;
@@ -417,4 +420,21 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;
+}
+
+std::shared_ptr<Component> SceneLoader::parse_spawner(std::shared_ptr<Entity> entity,
+      std::shared_ptr<Scene> scene, rapidjson::Value &c) {
+
+   shared_ptr<Spawner> spawner = make_shared<Spawner>();
+   spawner->setFrequency(c["frequency"].GetFloat());
+   auto points = c["points"].GetArray();
+   for (int i = 0; i < points.Size(); ++i) {
+      btVector3 point = btVector3(points[i][0].GetFloat(), points[i][1].GetFloat(),
+         points[i][2].GetFloat());
+      spawner->push_back(point);
+   }
+
+   spawner->setScene(scene);
+   return static_pointer_cast<Component>(spawner);
+
 }
