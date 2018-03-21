@@ -26,7 +26,7 @@ glm::vec3 PlayerComponent::getPosition() {
 void PlayerComponent::collisionCheck() {
    // std::vector< std::shared_ptr<Entity> >  collisionList = getEntity()->getCollideList();
    // for (auto &collision: collisionList) {
-      
+
    // }
 }
 
@@ -73,7 +73,7 @@ void PlayerComponent::stationSelectionCheck() {
    if ((glfwGetKey(window->getHandle(), GLFW_KEY_E ) == GLFW_PRESS) && !E_DeBounce) {
       E_DeBounce = true;
       if (mounted != nullptr){
-         mounted->deactivate();  
+         mounted->deactivate();
          mounted = nullptr;
          active = true;
       }
@@ -118,7 +118,7 @@ void PlayerComponent::positionUpdate(float delta_time) {
    const float speed = 50000;
 
    physicsComponent->getBody()->applyGravity();
-   
+
 
    glm::vec3 lookDir = camera->getLookAt(false);
    lookDir = glm::vec3(lookDir.x, 0, lookDir.z);

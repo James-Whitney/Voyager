@@ -1,6 +1,14 @@
 #include "include/RenderEngine.h"
 
+#include <iostream>
+
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
+
+static void log(string msg) {
+#if _RENDERENGINE_LOG_RENDERS
+   cout << msg << endl;
+#endif
+}
 
 using namespace glm;
 using namespace std;
@@ -62,6 +70,7 @@ void RenderEngine::initTerrainNormalMap() {
 }
 
 void RenderEngine::init() {
+   log("make program");
    this->program = make_shared<Program>();
 
    glCullFace(GL_BACK);
@@ -103,17 +112,28 @@ void RenderEngine::init() {
    program->addAttribute("vertTan");
    program->addAttribute("vertBitan");
 
+   log("initialize renderables");
    for (int i = 0; i < this->components.size(); ++i) {
-      this->components.at(i)->init();
+      auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
+      renderable->renderableInit(this->resource_dir);
+      renderable->init();
    }
-   cout << "components size: " << this->components.size() << endl;
+
+   log("initialize VFC");
    this->vfc = make_shared<VFCobj>(&this->components);
+
+   log("initialize HUD");
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+
+   log("initialize Shadows");
    this->initShadows();
+
+   log("initialize Terrain");
    this->initTerrainTexture();
    this->initTerrainNormalMap();
 
    // Initialize the skybox
+   log("initialize skybox");
    this->skybox->init();
 
    // Initialize the skybox shader
@@ -135,6 +155,7 @@ void RenderEngine::init() {
    for (auto debugBox : this->debugBoxes) {
       debugBox->init();
    }
+   log("done initializing render engine");
 }
 
 void RenderEngine::removeFlagged()
@@ -258,7 +279,8 @@ void RenderEngine::execute(double delta_time) {
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+      auto r = static_pointer_cast<Renderable>(this->components.at(idx));
+      this->render(r);
    }
    for (auto &comp : this->components) {
       if (!static_pointer_cast<Renderable>(comp)->getCullStatus()) {
@@ -312,16 +334,22 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    M->pushMatrix();
    {
       std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
-      M->loadMatrix(bulletToGlm(*trans.get()));
+      if (trans != nullptr) {
+         M->loadMatrix(bulletToGlm(*trans.get()));
+      }
       std::shared_ptr<btVector3> scale = renderable->getEntity()->getScale();
-      M->scale(bulletToGlm(*scale.get()) * 2.0f);
+      if (scale != nullptr) {
+         M->scale(bulletToGlm(*scale.get()) * 2.0f);
+      }
 
-      renderable->getUber()->setUniforms(this->program);
+      auto uber = renderable->getUber();
+      if (uber != nullptr) {
+         uber->setUniforms(this->program);
+      }
+
       glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
 
-      for (std::shared_ptr<Shape> shape : renderable->getMesh()) {
-         shape->draw(this->program);
-      }
+      renderable->draw(this->program);
    }
    M->popMatrix();
 }
