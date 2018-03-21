@@ -7,11 +7,14 @@ using namespace std;
 Brain::Brain(shared_ptr<Entity> player) :
    StateMachine(), player(player)
 {
-   this->state_do_nothing = make_shared<DoNothing>(player);
-   this->state_chase = make_shared<Chase>(player);
+   // this->state_do_nothing = make_shared<DoNothing>(player);
+   // this->state_chase = make_shared<Chase>(player);
 }
 
 void Brain::build() {
+   assert(this->state_do_nothing != nullptr);
+   assert(this->state_chase != nullptr);
+
    this->addState(this->state_do_nothing);
    this->state_do_nothing->setEnemy(this->enemy);
    shared_ptr<Brain> me = static_pointer_cast<Brain>(this->shared_from_this());
@@ -55,12 +58,7 @@ float BrainState::getDistToPlayer() {
    // cout << "player at (" << p_pos.getX() << ", " << p_pos.getY() << ", " << p_pos.getZ() << ")" << endl;
    btVector3 e_pos = this->enemy->getTransform()->getOrigin();
    // cout << "enemy at (" << e_pos.getX() << ", " << e_pos.getY() << ", " << e_pos.getZ() << ")" << endl;
-
-   float d = sqrtf(
-      powf(p_pos.getX() - e_pos.getX(), 2.0f) +
-      powf(p_pos.getY() - e_pos.getY(), 2.0f) +
-      powf(p_pos.getZ() - e_pos.getZ(), 2.0f)
-   );
+   float d = (p_pos - e_pos).length();
    // cout << "d = " << d << endl;
    return d;
 }
@@ -80,7 +78,7 @@ void DoNothing::run(double delta_time) {
    float d = this->getDistToPlayer();
    if (d > DoNothing::START_CHASING_DISTANCE) {
       // continue doing nothing
-      this->wanderAimlessly(delta_time);
+      this->doNothing(delta_time);
    } else {
       // transition to chasing
       this->brain->startChasing();
@@ -89,10 +87,6 @@ void DoNothing::run(double delta_time) {
 
 void DoNothing::onEnd(shared_ptr<State> next) {
 
-}
-
-void DoNothing::wanderAimlessly(double delta_time) {
-   // TODO: implement
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +104,7 @@ void Chase::run(double delta_time) {
    float d = this->getDistToPlayer();
    if (d < Chase::START_DOING_NOTHING_DISTANCE) {
       // continue chasing
-      this->chaseThePlayer(delta_time);
+      this->chase(delta_time);
    } else {
       // start doing nothing
       this->brain->startDoingNothing();
@@ -119,8 +113,4 @@ void Chase::run(double delta_time) {
 
 void Chase::onEnd(shared_ptr<State> next) {
 
-}
-
-void Chase::chaseThePlayer(double delta_time) {
-   // TODO: implement
 }

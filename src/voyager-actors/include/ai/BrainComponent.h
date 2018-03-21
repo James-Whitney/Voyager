@@ -8,7 +8,7 @@
 
 class BrainComponent : public Component {
 public:
-   BrainComponent(std::shared_ptr<Entity> player);
+   BrainComponent(std::shared_ptr<Brain> brain);
    virtual void init() override;
    virtual void update(double delta_time);
 private:

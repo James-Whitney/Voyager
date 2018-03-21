@@ -4,9 +4,7 @@
 
 using namespace std;
 
-BrainComponent::BrainComponent(shared_ptr<Entity> player) : Component() {
-   this->brain = make_shared<Brain>(player);
-}
+BrainComponent::BrainComponent(shared_ptr<Brain> brain) : Component(), brain(brain) {}
 
 void BrainComponent::init() {
    cout << "INITIALIZING BRAIN COMPONENT" << endl;

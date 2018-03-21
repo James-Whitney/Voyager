@@ -63,7 +63,7 @@ public:
    void onEnd(std::shared_ptr<State> next);
 
 protected:
-   void wanderAimlessly(double delta_time);
+   virtual void doNothing(double delta_time) = 0;
 
 };
 
@@ -81,7 +81,7 @@ public:
    void onEnd(std::shared_ptr<State> next);
 
 protected:
-   void chaseThePlayer(double delta_time);
+   virtual void chase(double delta_time) = 0;
 };
 
 #endif

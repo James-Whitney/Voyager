@@ -37,7 +37,8 @@ Drone::Drone(shared_ptr<Scene> scene, shared_ptr<NavMap> nav_map, shared_ptr<btT
    this->renderable->setCullStatus(true);
 
    // brain
-   this->brain = make_shared<BrainComponent>(nav_map->getPlayer());
+   shared_ptr<DroneBrain> drone_brain = make_shared<DroneBrain>(nav_map->getPlayer());
+   this->brain = make_shared<BrainComponent>(drone_brain);
 }
 
 void Drone::initPhysics() {
@@ -50,4 +51,29 @@ void Drone::linkComponents() {
    this->add(this->renderable);
    this->add(this->brain);
    this->add(this->physics);
+
+   this->preparePhysicsComponent(this->shared_from_this());
+}
+
+DroneBrain::DroneBrain(shared_ptr<Entity> player) : Brain(player) {
+   this->state_do_nothing = make_shared<DroneDoNothing>(player);
+   this->state_chase = make_shared<DroneChase>(player);
+}
+
+void DroneDoNothing::doNothing(double delta_time) {
+   auto drone = static_pointer_cast<Drone>(this->enemy)->physics_component->getBody();
+   drone->applyDamping(delta_time);
+}
+
+void DroneChase::chase(double delta_time) {
+
+   // get the force
+   btVector3 p = this->player->getTransform()->getOrigin();
+   btVector3 e = this->enemy->getTransform()->getOrigin();
+   btVector3 f = 400.0f * (p - e).normalize();
+   // cout << "f = (" << f.getX() << ", " << f.getY() << ", " << f.getZ() << ")" << endl;
+
+   // apply it
+   auto drone = static_pointer_cast<Drone>(this->enemy)->physics_component->getBody();
+   drone->applyCentralForce(f);
 }
