@@ -26,6 +26,7 @@
 
 #include "Camera.h"
 #include "Renderable.h"
+#include "ParticleSystem.h"
 
 class RenderEngine : public Engine {
 
@@ -90,6 +91,9 @@ protected:
 
    std::shared_ptr<Skybox> skybox;
    std::shared_ptr<Program> skyboxProgram;
+
+   std::vector<std::shared_ptr<Component>> renderables;
+   std::vector<std::shared_ptr<Component>> psystems;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 
