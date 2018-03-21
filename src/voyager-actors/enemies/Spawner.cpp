@@ -22,7 +22,7 @@ void Spawner::spawnDrone() {
    assert(this->app != nullptr);
 
    // pick the spawn point
-   int idx = (rand() / RAND_MAX) * this->size();
+   int idx = ((float)rand() / (float)RAND_MAX) * this->size();
    assert((idx >= 0 && idx < this->size()));
    btVector3 loc = this->at(idx);
 

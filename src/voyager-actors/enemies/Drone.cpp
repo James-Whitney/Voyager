@@ -26,6 +26,8 @@ Drone::Drone(shared_ptr<Scene> scene, shared_ptr<NavMap> nav_map, shared_ptr<btT
    nav_map(nav_map),
    app(app)
 {
+   this->setTeamMask(12345);
+
    // transform
    this->setTransform(trans);
    DronePhysicsProperties props;
@@ -86,7 +88,10 @@ void DroneBrain::run(double delta_time) {
    for (auto &collision: collisionList) {
      float enemyHealth = *(collision->getHealth());
      float myHealth = *(this->enemy->getHealth());
-     this->enemy->setHealth(myHealth - enemyHealth);
+     if (this->enemy->getTeamMask() != collision->getTeamMask()) {
+         this->enemy->setHealth(myHealth - enemyHealth);
+         cout << "drone health is now " << *(this->enemy->getHealth()) << endl;
+     }
    }
 
    if (*(this->enemy->getHealth()) <= 0) {
