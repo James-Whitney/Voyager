@@ -2,7 +2,6 @@
 #ifndef _HELMCOMPONENT_H
 #define _HELMCOMPONENT_H
 
-#include "ShipComponent.h"
 #include "StationComponent.h"
 
 
@@ -13,9 +12,6 @@ public:
    void init();
    void update(double delta_time);
 
-   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
-
-
    btScalar getMaxForwardThrottle() { return this->max_forwardThrottle; }
    btScalar getMinForwardThrottle() { return this->min_forwardThrottle; }
    btScalar* getForwardThrottle() { return &(this->forwardThrottle); }
@@ -24,7 +20,7 @@ public:
    void setRiseSpeed(btScalar riseSpeed) { this->riseSpeed = riseSpeed; }
 private:
 
-   std::shared_ptr<ShipComponent> ship;
+   
 
    void logicUpdate(double delta_time);
 

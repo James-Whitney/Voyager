@@ -1,3 +1,9 @@
 #!/bin/bash
 
-./build/bin/voyager-client config/client.config.json
+cd build
+make
+if [[ $? != 0 ]]; then
+  exit
+fi
+cd ..
+./build/bin/voyager-client ./config/client.config.json

@@ -63,7 +63,7 @@ void PhysicsEngine::checkCollision(btDiscreteDynamicsWorld *this_world) {
    //For each contact manifold
    for (int i = 0; i < numManifolds; i++) {
       btPersistentManifold* contactManifold =  this_world->getDispatcher()->getManifoldByIndexInternal(i);
-      std::shared_ptr<Entity> entityA = findEntityFromBody(contactManifold->getBody0());   
+      std::shared_ptr<Entity> entityA = findEntityFromBody(contactManifold->getBody0());
       std::shared_ptr<Entity> entityB = findEntityFromBody(contactManifold->getBody1());
       if (entityA == nullptr | entityB == nullptr) {
          printf("ROUGE BODY HAS NO ENTITY! WTF DID YOU DO!\n");
@@ -71,6 +71,23 @@ void PhysicsEngine::checkCollision(btDiscreteDynamicsWorld *this_world) {
       else {
          entityA->collide(entityB);
          entityB->collide(entityA);
+      }
+   }
+}
+
+
+void PhysicsEngine::removeFlagged()
+{
+   for (int i = 0; i < components.size(); i++) {
+      std::shared_ptr<PhysicsComponent> component = std::static_pointer_cast<PhysicsComponent>(components[i]);
+      if (component->getRemoveFlag()) {
+         if (component->getWorldIndex() == 0) {
+            ship_world->removeRigidBody(component->getBody());
+         }
+         else if (component->getWorldIndex() == 1) {
+            world->removeRigidBody(component->getBody());
+         }
+         components.erase(components.begin() + i);
       }
    }
 }

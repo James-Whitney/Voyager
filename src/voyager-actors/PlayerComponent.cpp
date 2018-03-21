@@ -26,7 +26,7 @@ glm::vec3 PlayerComponent::getPosition() {
 void PlayerComponent::collisionCheck() {
    // std::vector< std::shared_ptr<Entity> >  collisionList = getEntity()->getCollideList();
    // for (auto &collision: collisionList) {
-      
+
    // }
 }
 
@@ -45,7 +45,7 @@ std::shared_ptr<StationComponent> PlayerComponent::attemptMount() {
    std::shared_ptr<StationComponent> nearestMount = nullptr;
    btScalar nearestDistance = 99999999;
    btScalar distance;
-   btScalar mountDistance = 4;
+   btScalar mountDistance = 5;
 
    //CHECK HELM
    distance = (helm->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
@@ -62,7 +62,7 @@ std::shared_ptr<StationComponent> PlayerComponent::attemptMount() {
    //CHECK TURRET1
    distance = (turret1->getEntity()->getTransform()->getOrigin() - getEntity()->getTransform()->getOrigin()).length();
    if ( (distance < mountDistance) && (distance < nearestDistance) ) {
-      nearestMount = turret0;
+      nearestMount = turret1;
       nearestDistance = distance;
    }
    return nearestMount;
@@ -73,7 +73,7 @@ void PlayerComponent::stationSelectionCheck() {
    if ((glfwGetKey(window->getHandle(), GLFW_KEY_E ) == GLFW_PRESS) && !E_DeBounce) {
       E_DeBounce = true;
       if (mounted != nullptr){
-         mounted->deactivate();  
+         mounted->deactivate();
          mounted = nullptr;
          active = true;
       }
@@ -118,7 +118,7 @@ void PlayerComponent::positionUpdate(float delta_time) {
    const float speed = 50000;
 
    physicsComponent->getBody()->applyGravity();
-   
+
 
    glm::vec3 lookDir = camera->getLookAt(false);
    lookDir = glm::vec3(lookDir.x, 0, lookDir.z);

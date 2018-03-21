@@ -8,13 +8,16 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <sstream>
 
 #include <voyager-utils/include/GLSL.h>
 #include <voyager-utils/include/Time.h>
 //#include <voyager-utils/include/IdMap.h>
 #include <voyager-render/include/RenderEngine.h>
+//#include <voyager-render/include/Renderable.h>
 #include <voyager-physics/include/PhysicsEngine.h>
 
+#include "SceneMesh.h"
 #include "ApplicationType.h"
 #include "Component.h"
 #include "Engine.h"
@@ -48,7 +51,13 @@ public:
    std::shared_ptr<Engine> getActorEngine() { return this->actor_engine; }
    void setActorEngine(std::shared_ptr<Engine> actor_engine) { this->actor_engine = actor_engine; }
 
+   std::shared_ptr<Engine> getAiEngine() { return this->ai_engine; }
+   void setAiEngine(std::shared_ptr<Engine> ai_engine) { this->ai_engine = ai_engine; }
+
    std::unordered_map<long, std::shared_ptr<Entity> > getThings() { return this->things; }
+
+   void setSceneMesh(std::shared_ptr<SceneMesh> scene) { this->scene = scene; }
+   std::shared_ptr<SceneMesh> getSceneMesh() { return this->scene; }
 
    void collisionClean();
 
@@ -67,6 +76,8 @@ private:
 
    std::shared_ptr<WindowManager> window;
 
+   std::shared_ptr<SceneMesh> scene;
+
    std::unordered_map< long, std::shared_ptr<Entity> > things;
 
    LoopTimer timer = LoopTimer(10); // 10ms max time step
@@ -74,6 +85,7 @@ private:
    std::shared_ptr<Engine> render_engine;
    std::shared_ptr<Engine> physics_engine;
    std::shared_ptr<Engine> actor_engine;
+   std::shared_ptr<Engine> ai_engine;
 
    void init();                     // called once at the beginning
    void update(double delta_time);  // game update

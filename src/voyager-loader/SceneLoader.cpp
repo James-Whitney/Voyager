@@ -11,7 +11,7 @@ using namespace glm;
 using namespace rapidjson;
 using namespace std;
 
-void log(string msg) {
+static void log(string msg) {
 #if _SCENELOADER_LOG
    cout << msg << endl;
 #endif
@@ -259,6 +259,7 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          else if ( components[i].HasMember("ship") ) {
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
             entity->setMask(SHIP_MASK);
+            entity->setHealth(1000.0);
          }
       }
       else if (type == "STATION") {
@@ -393,7 +394,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    }
    else if (strncmp(collision["type"].GetString(), "sphere", 6) == 0) {
       btScalar radius = component["collisionShape"]["radius"].GetFloat();
-      collisionShape = new btSphereShape(radius);      
+      collisionShape = new btSphereShape(radius);
    }
 
    if (component.HasMember("ghost")){
@@ -428,7 +429,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
                                   vel[1].GetFloat(),
                                   vel[2].GetFloat());
    if (ghost) {
-      
+
    }
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
