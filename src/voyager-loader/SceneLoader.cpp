@@ -246,6 +246,9 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
       if (type == "RENDER") {
          entity->add(this->parse_renderable(scene, components[i]));
       }
+      else if (type == "PARTICLES") {
+         entity->add(this->parse_particles(scene, components[i]));
+      }
       else if (type == "PHYSICS") {
          shared_ptr<PhysicsComponent> physicsComponent = this->parse_physicsComponent(entity, scene, components[i]);
          entity->add(static_pointer_cast<Component>(physicsComponent));
@@ -270,6 +273,9 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
             entity->setMask(TURRET_MASK);
          }
       }
+      else if (type == "SPAWNER") {
+         entity->add(this->parse_spawner(entity, scene, components[i]));
+      }
       else {
          cerr << "Unknown component type: " << type << endl;
          continue;
@@ -291,6 +297,20 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
    return static_pointer_cast<Component>(renderable);
 }
 
+shared_ptr<Component> SceneLoader::parse_particles(shared_ptr<Scene> scene, Value& component) {
+   shared_ptr<ParticleSystem> particleSystem = make_shared<ParticleSystem>();
+
+   string tex_path = this->resource_dir + component["texture"].GetString();
+   int unit = component["unit"].GetInt();
+
+   shared_ptr<Texture> particleTexture = make_shared<Texture>();
+
+   particleTexture->setFilename(tex_path);
+   particleTexture->setUnit(unit);
+   particleSystem->setTexture(particleTexture);
+
+   return static_pointer_cast<Component>(particleSystem);
+}
 
 shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity,
                                                             shared_ptr<PhysicsComponent> physicsComponent,
@@ -417,4 +437,21 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
    physicsComponent->initRigidBody(world, entity, collisionShape, mass, position, btQuad, velocity, friction);
    physicsComponent->getBody()->setDamping(lin_damp, ang_damp);
    return physicsComponent;
+}
+
+std::shared_ptr<Component> SceneLoader::parse_spawner(std::shared_ptr<Entity> entity,
+      std::shared_ptr<Scene> scene, rapidjson::Value &c) {
+
+   shared_ptr<Spawner> spawner = make_shared<Spawner>();
+   spawner->setFrequency(c["frequency"].GetFloat());
+   auto points = c["points"].GetArray();
+   for (int i = 0; i < points.Size(); ++i) {
+      btVector3 point = btVector3(points[i][0].GetFloat(), points[i][1].GetFloat(),
+         points[i][2].GetFloat());
+      spawner->push_back(point);
+   }
+
+   spawner->setScene(scene);
+   return static_pointer_cast<Component>(spawner);
+
 }

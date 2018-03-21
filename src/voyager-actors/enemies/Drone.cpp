@@ -11,7 +11,7 @@ shared_ptr<PhysicsComponent> DronePhysicsProperties::toPhysicsComponent(shared_p
    btVector3 position = ent->getTransform()->getOrigin();
    btQuaternion rotation = ent->getTransform()->getRotation();
    btVector3 velocity = btVector3(0, 0, 0);
-   btBoxShape *shape = new btBoxShape(btVector3(props.box_size, props.box_size, props.box_size));
+   btSphereShape *shape = new btSphereShape(2.4f * props.box_size);
 
    // initialize the component
    phys->initRigidBody(world, ent, shape, props.mass, position, rotation, velocity, props.friction);
@@ -20,21 +20,24 @@ shared_ptr<PhysicsComponent> DronePhysicsProperties::toPhysicsComponent(shared_p
    return phys;
 }
 
-Drone::Drone(shared_ptr<Scene> scene, shared_ptr<NavMap> nav_map, shared_ptr<btTransform> trans) :
+Drone::Drone(shared_ptr<Scene> scene, shared_ptr<NavMap> nav_map, shared_ptr<btTransform> trans,
+      shared_ptr<Application> app) :
    Entity(),
-   nav_map(nav_map)
+   nav_map(nav_map),
+   app(app)
 {
    // transform
    this->setTransform(trans);
-   this->setScale(make_shared<btVector3>(4, 4, 4));
+   DronePhysicsProperties props;
+   this->setScale(make_shared<btVector3>(props.box_size, props.box_size, props.box_size));
 
    // renderable
    this->renderable = make_shared<Renderable>();
-   this->renderable->setMesh(scene->meshes[1]);
+   this->renderable->setMesh(scene->meshes[4]);
    shared_ptr<Uber> uber = scene->ubers[6];
    assert(uber != nullptr);
    this->renderable->setUber(uber);
-   this->renderable->setCullStatus(true);
+   this->renderable->setCullStatus(false);
 
    // brain
    shared_ptr<DroneBrain> drone_brain = make_shared<DroneBrain>(nav_map->getPlayer());
@@ -55,25 +58,71 @@ void Drone::linkComponents() {
    this->preparePhysicsComponent(this->shared_from_this());
 }
 
+void Drone::update(double delta_time) {
+   Entity::update(delta_time);
+}
+
+void Drone::kill() {
+   for (int i = 0; i < this->numComponents(); ++i) {
+      this->componentAt(i)->setRemoveFlag();
+   }
+   for (int i = 0; i < this->numComponents(); ++i) {
+      this->removeComponentAt(i);
+   }
+   assert(this->app != nullptr);
+   this->app->getThings().erase(this->getId());
+}
+
 DroneBrain::DroneBrain(shared_ptr<Entity> player) : Brain(player) {
    this->state_do_nothing = make_shared<DroneDoNothing>(player);
    this->state_chase = make_shared<DroneChase>(player);
 }
 
-void DroneDoNothing::doNothing(double delta_time) {
+void DroneBrain::run(double delta_time) {
+   Brain::run(delta_time);
+
+   auto collisionList = this->enemy->getCollideList();
+
+   for (auto &collision: collisionList) {
+     float enemyHealth = *(collision->getHealth());
+     float myHealth = *(this->enemy->getHealth());
+     this->enemy->setHealth(myHealth - enemyHealth);
+   }
+
+   if (*(this->enemy->getHealth()) <= 0) {
+      static_pointer_cast<Drone>(this->enemy)->kill();
+   }
+}
+
+void DroneDoNothing::doNothing(double delta_time, float d) {
    auto drone = static_pointer_cast<Drone>(this->enemy)->physics_component->getBody();
    drone->applyDamping(delta_time);
 }
 
-void DroneChase::chase(double delta_time) {
+float DroneChase::DIRECT_CHASE_RADIUS = 100.0f;
 
-   // get the force
-   btVector3 p = this->player->getTransform()->getOrigin();
+void DroneChase::chase(double delta_time, float d) {
+
+   // btVector3 target;
+   // if (d < DroneChase::DIRECT_CHASE_RADIUS) {
+   //    // close enough to the player, just chase them directly
+   //    target = this->player->getTransform()->getOrigin();
+   // } else {
+   //    // navigate along the navmap
+   //    auto nav_map = static_pointer_cast<Drone>(this->enemy)->getNavMap();
+   //    target = this->brain->getNavTarget(nav_map);
+   // }
+   btVector3 target = this->player->getTransform()->getOrigin();
+
+   this->moveToTarget(target, delta_time);
+
+}
+
+void DroneChase::moveToTarget(const btVector3 &target, const double delta_time) {
    btVector3 e = this->enemy->getTransform()->getOrigin();
-   btVector3 f = 400.0f * (p - e).normalize();
-   // cout << "f = (" << f.getX() << ", " << f.getY() << ", " << f.getZ() << ")" << endl;
+   DronePhysicsProperties props;
+   btVector3 f = props.move_force * (target - e).normalize();
 
-   // apply it
    auto drone = static_pointer_cast<Drone>(this->enemy)->physics_component->getBody();
    drone->applyCentralForce(f);
 }

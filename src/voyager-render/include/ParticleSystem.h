@@ -35,6 +35,7 @@ public:
 	void setProgram(shared_ptr<Program> program) { this->particleProg = program; }
 	void setTexture(shared_ptr<Texture> texture) { this->texture = texture; }
 	void setTimer(int timer) { this->timer = timer; }
+
     virtual void init();
 
 	virtual void update(double delta_time);

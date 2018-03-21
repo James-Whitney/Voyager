@@ -10,7 +10,7 @@ class BrainComponent : public Component {
 public:
    BrainComponent(std::shared_ptr<Brain> brain);
    virtual void init() override;
-   virtual void update(double delta_time);
+   virtual void update(double delta_time) override;
 private:
    std::shared_ptr<Brain> brain;
 };

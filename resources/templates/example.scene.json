@@ -361,6 +361,53 @@
                "friction": 0.2
             }
          ]
+      },
+      {
+         "name": "spawn_entity",
+         "transform": {
+            "position": [0, 0, 0],
+            "scale": [1.0, 1.0, 1.0],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
+         "components": [
+            {
+               "type": "SPAWNER",
+               "frequency": 1000,
+               "points": [
+                  [20, 0, 20],
+                  [20, 0, 30],
+                  [20, 0, 40]
+               ]
+            }
+         ]
+      },
+      {
+        "name": "engine_trail",
+        "components": [
+           {
+              "type": "PARTICLES",
+              "texture": "/ParticleTex.png",
+              "unit": 10
+           },
+           {
+              "type": "PHYSICS",
+              "world": 0,
+              "collisionShape":
+              {
+                 "type": "sphere",
+                 "radius": 1.0
+              },
+              "mass": 0.0,
+              "position": [-7, -2, 0.0],
+              "scale": [1.0, 1.0, 1.0],
+              "axis": [0, 0, 1],
+              "rotation": 0.0,
+              "velocity": [0, 0, 0],
+              "damping": [0.0, 0.0],
+              "friction": 0.2
+           }
+        ]
       }
    ],
 
@@ -373,6 +420,9 @@
       },
       {
          "path": "/SimpleSphere.obj"
+      },
+      {
+         "path": "/IcoSphere.obj"
       }
    ],
 

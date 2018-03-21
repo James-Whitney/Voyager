@@ -2,8 +2,9 @@
 
 #include <voyager-actors/include/ai/AiEngine.h>
 #include <voyager-actors/include/enemies/Drone.h>
+#include <voyager-actors/include/enemies/Spawner.h>
 
-#define SHOW_NAVMAP_WAYPOINTS 1
+#define SHOW_NAVMAP_WAYPOINTS 0
 
 using namespace std;
 
@@ -92,13 +93,13 @@ void Scene::apply(shared_ptr<Application> app) {
 #endif
 
    // TEMPORARILY INJECT A DRONE HERE
-   shared_ptr<btTransform> drone_trans = make_shared<btTransform>();
-   drone_trans->setOrigin(btVector3(30, 0, 40));
-   drone_trans->setRotation(btQuaternion(btVector3(0, 0, 1), 0));
-   shared_ptr<Drone> drone = make_shared<Drone>(this->shared_from_this(), nav_map_entity->getNavMap(), drone_trans);
-   drone->initPhysics();
-   drone->linkComponents();
-   this->inject_entity(drone);
+   // shared_ptr<btTransform> drone_trans = make_shared<btTransform>();
+   // drone_trans->setOrigin(btVector3(30, 0, 40));
+   // drone_trans->setRotation(btQuaternion(btVector3(0, 0, 1), 0));
+   // shared_ptr<Drone> drone = make_shared<Drone>(this->shared_from_this(), nav_map_entity->getNavMap(), drone_trans);
+   // drone->initPhysics();
+   // drone->linkComponents();
+   // this->inject_entity(drone);
 
    // Transfer entities to the app
    for (int i = 0; i < this->entities.size(); ++i) {
@@ -113,6 +114,9 @@ void Scene::apply(shared_ptr<Application> app) {
       if (dynamic_pointer_cast<Renderable>(component)) {
          app->getRenderEngine()->registerComponent(component);
       }
+      else if (dynamic_pointer_cast<ParticleSystem>(component)) {
+          app->getRenderEngine()->registerComponent(component);
+      }
       else if (dynamic_pointer_cast<PhysicsComponent>(component)) {
          app->getPhysicsEngine()->registerComponent(component);
       }
@@ -120,7 +124,7 @@ void Scene::apply(shared_ptr<Application> app) {
          static_pointer_cast<StationComponent>(component)->setWindow(app->getWindowManager());
          if (dynamic_pointer_cast<StationComponent>(component)) {
             static_pointer_cast<StationComponent>(component)->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
-            static_pointer_cast<StationComponent>(component)->setShip(shipComponent);            
+            static_pointer_cast<StationComponent>(component)->setShip(shipComponent);
          }
          if (dynamic_pointer_cast<HelmComponent>(component)) {
             playerComponent->setHelm(static_pointer_cast<StationComponent>(component));
@@ -132,6 +136,11 @@ void Scene::apply(shared_ptr<Application> app) {
          }
          app->getActorEngine()->registerComponent(component);
       } else if (dynamic_pointer_cast<BrainComponent>(component)) {
+         app->getAiEngine()->registerComponent(component);
+      } else if (dynamic_pointer_cast<Spawner>(component)) {
+         std::shared_ptr<Spawner> spawner = static_pointer_cast<Spawner>(component);
+         spawner->setNavMap(nav_map_entity->getNavMap());
+         spawner->setApplication(app);
          app->getAiEngine()->registerComponent(component);
       }
    }

@@ -114,13 +114,16 @@ void RenderEngine::init() {
 
    log("initialize renderables");
    for (int i = 0; i < this->components.size(); ++i) {
-      auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
-      renderable->renderableInit(this->resource_dir);
-      renderable->init();
+      auto c = this->components.at(i);
+      c->init();
+      if (dynamic_pointer_cast<Renderable>(c)) {
+         auto r = static_pointer_cast<Renderable>(c);
+         r->renderableInit(this->resource_dir);
+      }
    }
 
    log("initialize VFC");
-   this->vfc = make_shared<VFCobj>(&this->components);
+   this->vfc = make_shared<VFCobj>(&this->renderables);
 
    log("initialize HUD");
    this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
@@ -152,17 +155,62 @@ void RenderEngine::init() {
    this->skyboxProgram->addUniform("fogColor");
    this->skyboxProgram->addUniform("fogHeight");
 
+   auto particleProgram = std::make_shared<Program>();
+   particleProgram->setVerbose(true);
+   particleProgram->setShaderNames(
+       this->resource_dir + "/part_vert.glsl",
+       this->resource_dir + "/part_frag.glsl"
+   );
+
+   if (!particleProgram->init())
+   {
+      cerr << "Failed to initialize particle program" << endl;
+      exit(1);
+   }
+   particleProgram->addUniform("VP");
+   particleProgram->addUniform("CameraRight");
+   particleProgram->addUniform("CameraUp");
+   particleProgram->addUniform("Texture");
+
+   for (int i = 0; i < this->psystems.size(); i++) {
+       auto pSystem = static_pointer_cast<ParticleSystem>(this->psystems.at(i));
+       pSystem->setCamera(this->camera);
+       pSystem->setProgram(particleProgram);
+   }
+
    log("done initializing render engine");
 }
 
 void RenderEngine::removeFlagged()
 {
-   for (int i = 0; i < components.size(); i++) {
-      std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(components[i]);
-      if (component->getRemoveFlag()) {
-         components.erase(components.begin() + i);
+
+   for (int i = 0; i < this->components.size(); ++i) {
+      auto c = this->components.at(i);
+      if (c->getRemoveFlag()) {
+         this->components.erase(this->components.begin() + i);
       }
    }
+
+   for (int i = 0; i < this->renderables.size(); ++i) {
+      auto c = this->renderables.at(i);
+      if (c->getRemoveFlag()) {
+         this->renderables.erase(this->renderables.begin() + i);
+      }
+   }
+
+   for (int i = 0; i < this->psystems.size(); ++i) {
+      auto c = this->psystems.at(i);
+      if (c->getRemoveFlag()) {
+         this->psystems.erase(this->psystems.begin() + i);
+      }
+   }
+
+   // for (int i = 0; i < renderables.size(); i++) {
+      // std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(renderables[i]);
+      // if (component->getRemoveFlag()) {
+      //    renderables.erase(components.begin() + i);
+      // }
+   // }
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -179,11 +227,11 @@ void RenderEngine::execute(double delta_time) {
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
 
-   std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
+   std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->renderables.at(0))->getMesh().at(0));
    float maxHeight = terrain->getMaxHeight();
    float size = maxHeight * 2;
 
-   btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))
+   btVector3 terrPos = static_pointer_cast<Renderable>(this->renderables.at(0))
       ->getEntity()->getTransform()->getOrigin();
    float minY = terrPos.getY();
 
@@ -204,8 +252,8 @@ void RenderEngine::execute(double delta_time) {
    glClear(GL_DEPTH_BUFFER_BIT);
 
    glUniform1i(this->program->getUniform("shadowMode"), 1);
-   for (int i = 0; i < this->components.size(); ++i) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
+   for (int i = 0; i < this->renderables.size(); ++i) {
+      this->render(static_pointer_cast<Renderable>(this->renderables.at(i)));
    }
 
    // Bind the depth texture to the uniform "depthTexture"
@@ -276,17 +324,15 @@ void RenderEngine::execute(double delta_time) {
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
-      auto r = static_pointer_cast<Renderable>(this->components.at(idx));
+
+      auto r = static_pointer_cast<Renderable>(this->renderables.at(idx));
       this->render(r);
    }
-   for (auto &comp : this->components) {
+   for (auto &comp : this->renderables) {
       if (!static_pointer_cast<Renderable>(comp)->getCullStatus()) {
          this->render(static_pointer_cast<Renderable>(comp));
       }
    }
-
-   V->popMatrix();
-   P->popMatrix();
 
    //if (hud->startScreen) {
       //hud->startMenu();
@@ -348,3 +394,32 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    }
    M->popMatrix();
 }
+
+void RenderEngine::registerComponent(std::shared_ptr<Component> c) {
+   Engine::registerComponent(c);
+   if (dynamic_pointer_cast<ParticleSystem>(c)) {
+      this->psystems.push_back(c);
+   } else if (dynamic_pointer_cast<Renderable>(c)) {
+      // auto r = static_pointer_cast<Renderable>(c);
+      // r->renderableInit(this->resource_dir);
+      // r->init();
+      this->renderables.push_back(c);
+   } else {
+      // unknown component type
+      assert(false);
+   }
+}
+
+   // log("initialize renderables");
+   // for (int i = 0; i < this->components.size(); ++i) {
+   //    if (dynamic_pointer_cast<ParticleSystem>(this->components.at(i))) {
+   //        this->components.at(i)->init();
+   //        this->psystems.push_back(this->components.at(i));
+   //    } else {
+   //        auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
+   //        renderable->renderableInit(this->resource_dir);
+   //        renderable->init();
+   //        this->renderables.push_back(renderable);
+   //    }
+   // }
+   // cout << "components size: " << this->renderables.size() << endl;
