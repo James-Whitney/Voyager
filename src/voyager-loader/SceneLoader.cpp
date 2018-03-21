@@ -246,6 +246,9 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
       if (type == "RENDER") {
          entity->add(this->parse_renderable(scene, components[i]));
       }
+      else if (type == "PARTICLES") {
+         entity->add(this->parse_particles(scene, components[i]));
+      }
       else if (type == "PHYSICS") {
          shared_ptr<PhysicsComponent> physicsComponent = this->parse_physicsComponent(entity, scene, components[i]);
          entity->add(static_pointer_cast<Component>(physicsComponent));
@@ -290,6 +293,20 @@ shared_ptr<Component> SceneLoader::parse_renderable(shared_ptr<Scene> scene, Val
    return static_pointer_cast<Component>(renderable);
 }
 
+shared_ptr<Component> SceneLoader::parse_particles(shared_ptr<Scene> scene, Value& component) {
+   shared_ptr<ParticleSystem> particleSystem = make_shared<ParticleSystem>();
+
+   string tex_path = this->resource_dir + component["texture"].GetString();
+   int unit = component["unit"].GetInt();
+
+   shared_ptr<Texture> particleTexture = make_shared<Texture>();
+
+   particleTexture->setFilename(tex_path);
+   particleTexture->setUnit(unit);
+   particleSystem->setTexture(particleTexture);
+
+   return static_pointer_cast<Component>(particleSystem);
+}
 
 shared_ptr<Component> SceneLoader::parse_playerComponent(   shared_ptr<Entity> entity,
                                                             shared_ptr<PhysicsComponent> physicsComponent,
