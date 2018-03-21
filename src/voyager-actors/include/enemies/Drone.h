@@ -38,6 +38,8 @@ public:
 
 private:
 
+   bool dead = false;
+
    std::shared_ptr<Renderable> renderable;
    std::shared_ptr<BrainComponent> brain;
    std::shared_ptr<PhysicsComponent> physics;
