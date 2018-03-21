@@ -24,7 +24,7 @@ void BulletComponent::removeBullet()
 void BulletComponent::logicUpdate(double delta_time)
 {
    life_time += delta_time;
-   if (life_time > 300.0 | getEntity()->getCollideList().size() > 0) {
+   if (life_time > 600.0) {
       removeBullet();
    } 
    // std::vector< std::shared_ptr<Entity> > collisionList = getEntity()->getCollideList();

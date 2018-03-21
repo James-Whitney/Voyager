@@ -57,10 +57,10 @@
                "axis": [0, 1, 0],
                "rotation": 3.14,
                "velocity": [0, 0, 0],
-               "damping": [0.005, 0.005],
+               "damping": [0.01, 0.01],
                "friction": 1.0,
                "ship": true,
-               "speed": 500.0
+               "speed": 250.0
             }
          ]
       },
@@ -260,8 +260,8 @@
                "type": "STATION",
                "sub-type": "HELM",
                "cameraHeight": 4.0,
-               "turnSpeed": 80000.0,
-               "riseSpeed": 60000.0
+               "turnSpeed": 40000.0,
+               "riseSpeed": 20000.0
             }
          ]
       },
