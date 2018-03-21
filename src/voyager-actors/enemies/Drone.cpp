@@ -90,7 +90,7 @@ void DroneBrain::run(double delta_time) {
      float myHealth = *(this->enemy->getHealth());
      if (this->enemy->getTeamMask() != collision->getTeamMask()) {
          this->enemy->setHealth(myHealth - enemyHealth);
-         cout << "drone health is now " << *(this->enemy->getHealth()) << endl;
+         // cout << "drone health is now " << *(this->enemy->getHealth()) << endl;
      }
    }
 
