@@ -411,6 +411,11 @@
       },
       {
          "type": "NORMAL"
+      },
+      {
+         "type": "SIMPLE",
+         "ambient": [1.0, 0.16, 0],
+         "diffuse": [0.4, 0.4, 0.1]
       }
    ]
 

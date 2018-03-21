@@ -53,7 +53,6 @@ void Application::run() {
       log_life("--------------------==[ LOOP ]==--------------------");
       // Game Update
       double delta_time;
-      
 
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
@@ -63,6 +62,8 @@ void Application::run() {
          this->physics(delta_time);
          //actors
          this->actors(delta_time);
+         assert(this->ai_engine != nullptr);
+         this->ai_engine->execute(delta_time);
 
          this->collisionClean();
       }
@@ -101,7 +102,14 @@ void Application::init() {
          cerr << "Application has no render_engine" << endl;
          exit(1);
       }
+
+      cout << "initialize render engine" << endl;
       this->render_engine->init();
+
+      cout << "initializing ai engine" << endl;
+      this->ai_engine->init();
+
+      cout << "client initialization done" << endl;
    }
 }
 

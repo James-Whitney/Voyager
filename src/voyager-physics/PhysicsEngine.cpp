@@ -63,7 +63,7 @@ void PhysicsEngine::checkCollision(btDiscreteDynamicsWorld *this_world) {
    //For each contact manifold
    for (int i = 0; i < numManifolds; i++) {
       btPersistentManifold* contactManifold =  this_world->getDispatcher()->getManifoldByIndexInternal(i);
-      std::shared_ptr<Entity> entityA = findEntityFromBody(contactManifold->getBody0());   
+      std::shared_ptr<Entity> entityA = findEntityFromBody(contactManifold->getBody0());
       std::shared_ptr<Entity> entityB = findEntityFromBody(contactManifold->getBody1());
       if (entityA == nullptr | entityB == nullptr) {
          printf("ROUGE BODY HAS NO ENTITY! WTF DID YOU DO!\n");
