@@ -114,17 +114,13 @@ void RenderEngine::init() {
 
    log("initialize renderables");
    for (int i = 0; i < this->components.size(); ++i) {
-      if (dynamic_pointer_cast<ParticleSystem>(this->components.at(i))) {
-          this->components.at(i)->init();
-          this->psystems.push_back(this->components.at(i));
-      } else {
-          auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
-          renderable->renderableInit(this->resource_dir);
-          renderable->init();
-          this->renderables.push_back(renderable);
+      auto c = this->components.at(i);
+      c->init();
+      if (dynamic_pointer_cast<Renderable>(c)) {
+         auto r = static_pointer_cast<Renderable>(c);
+         r->renderableInit(this->resource_dir);
       }
    }
-   cout << "components size: " << this->renderables.size() << endl;
 
    log("initialize VFC");
    this->vfc = make_shared<VFCobj>(&this->renderables);
@@ -378,3 +374,32 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    }
    M->popMatrix();
 }
+
+void RenderEngine::registerComponent(std::shared_ptr<Component> c) {
+   Engine::registerComponent(c);
+   if (dynamic_pointer_cast<ParticleSystem>(c)) {
+      this->psystems.push_back(c);
+   } else if (dynamic_pointer_cast<Renderable>(c)) {
+      // auto r = static_pointer_cast<Renderable>(c);
+      // r->renderableInit(this->resource_dir);
+      // r->init();
+      this->renderables.push_back(c);
+   } else {
+      // unknown component type
+      assert(false);
+   }
+}
+
+   // log("initialize renderables");
+   // for (int i = 0; i < this->components.size(); ++i) {
+   //    if (dynamic_pointer_cast<ParticleSystem>(this->components.at(i))) {
+   //        this->components.at(i)->init();
+   //        this->psystems.push_back(this->components.at(i));
+   //    } else {
+   //        auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
+   //        renderable->renderableInit(this->resource_dir);
+   //        renderable->init();
+   //        this->renderables.push_back(renderable);
+   //    }
+   // }
+   // cout << "components size: " << this->renderables.size() << endl;

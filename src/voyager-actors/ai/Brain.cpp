@@ -25,7 +25,6 @@ void Brain::build() {
 }
 
 void Brain::start(shared_ptr<Entity> enemy) {
-   cout << "starting brain" << endl;
    this->enemy = enemy;
    this->build();
    StateMachine::start(this->state_do_nothing);
