@@ -19,7 +19,7 @@ public:
    virtual void build() = 0;
 
    void start(std::shared_ptr<State> initial_state);
-   void run(double delta_time);
+   virtual void run(double delta_time);
    void stop();
 
    void addState(std::shared_ptr<State> state);

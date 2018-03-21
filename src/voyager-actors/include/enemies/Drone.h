@@ -16,7 +16,9 @@ struct DronePhysicsProperties {
    btScalar ang_damp = 0.1f;
    btScalar friction = 1.0f;
    btScalar mass = 200.0f;
-   btScalar box_size = 4.0f;
+   btScalar box_size = 0.5f;
+
+   btScalar move_force = 800.0f;
 
    static std::shared_ptr<PhysicsComponent> toPhysicsComponent(std::shared_ptr<Entity> entity);
 };
@@ -24,9 +26,13 @@ struct DronePhysicsProperties {
 class Drone : public Entity, public Enemy {
 public:
    Drone(std::shared_ptr<Scene> scene, std::shared_ptr<NavMap> nav_map,
-      std::shared_ptr<btTransform> trans);
+      std::shared_ptr<btTransform> trans, std::shared_ptr<Application> app);
    void initPhysics();
    void linkComponents();
+
+   virtual void update(double delta_time) override;
+
+   void kill();
 
    const std::shared_ptr<NavMap> getNavMap() { return this->nav_map; }
 
@@ -37,11 +43,14 @@ private:
    std::shared_ptr<PhysicsComponent> physics;
 
    std::shared_ptr<NavMap> nav_map;
+
+   std::shared_ptr<Application> app;
 };
 
 class DroneBrain : public Brain {
 public:
    DroneBrain(std::shared_ptr<Entity> player);
+   virtual void run(double delta_time) override;
 };
 
 class DroneDoNothing : public DoNothing {
