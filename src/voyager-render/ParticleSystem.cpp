@@ -72,8 +72,6 @@ void ParticleSystem::createParticles(double delta) {
         newparticles = (int)(0.016f*10000.0);
     }
 
-    position.y = position.y - 2;
-
     for(int i=0; i<newparticles; i++){
 
         int particleIndex = FindUnusedParticle();
