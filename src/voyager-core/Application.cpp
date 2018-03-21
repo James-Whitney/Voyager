@@ -83,6 +83,8 @@ void Application::init() {
    ss << "--------==[ Initializing " << type << " ]==--------";
    log_life(ss.str());
 
+   std::system("afplay sail.mp3 &");
+
    if (this->getType() == CLIENT) {
 
       if (this->window == nullptr) {
@@ -148,6 +150,8 @@ void Application::render() {
 
 void Application::shutdown() {
    log_life("--------==[ Shutting Down ]==--------");
+
+   std::system("pgrep afplay | xargs kill &");
 
    if (this->getType() == CLIENT) {
       this->window->shutdown();
