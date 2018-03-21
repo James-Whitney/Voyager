@@ -16,7 +16,7 @@ struct DronePhysicsProperties {
    btScalar ang_damp = 0.1f;
    btScalar friction = 1.0f;
    btScalar mass = 200.0f;
-   btScalar box_size = 0.5f;
+   btScalar box_size = 1.0f;
 
    btScalar move_force = 800.0f;
 

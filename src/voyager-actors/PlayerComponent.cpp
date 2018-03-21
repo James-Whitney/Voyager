@@ -115,7 +115,7 @@ void PlayerComponent::cameraUpdate() {
 void PlayerComponent::positionUpdate(float delta_time) {
    glm::vec3 movement = glm::vec3(0,0,0);
 
-   const float speed = 50000;
+   const float speed = 20000;
 
    physicsComponent->getBody()->applyGravity();
 

@@ -9,6 +9,12 @@ void ShipComponent::init() {
 
 void ShipComponent::update(double delta_time) {
    moveShip(delta_time);
+   std::vector< std::shared_ptr<Entity> > collisionList = getEntity()->getCollideList();
+   for (auto &collision: collisionList) {
+      float enemyHealth = *(collision->getHealth());
+      float myHealth = *(getEntity()->getHealth());
+      getEntity()->setHealth(myHealth - enemyHealth);
+   }
 }
 
 btScalar ShipComponent::getRotation() {
