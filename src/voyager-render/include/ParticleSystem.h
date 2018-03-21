@@ -34,7 +34,8 @@ public:
 	void setCamera(shared_ptr<Camera> camera) { this->camera = camera; }
 	void setProgram(shared_ptr<Program> program) { this->particleProg = program; }
 	void setTexture(shared_ptr<Texture> texture) { this->texture = texture; }
-	void setCreate(bool create) { this->create = create; }
+	void setTimer(int timer) { this->timer = timer; }
+
     virtual void init();
 
 	virtual void update(double delta_time);
@@ -66,7 +67,7 @@ private:
 	shared_ptr<Program> particleProg;
 	shared_ptr<Texture> texture;
 	vec3 position;
-	bool create;
+	int timer;
 
 	static const int MaxParticles = 100000;
 	Particle ParticlesContainer[MaxParticles];

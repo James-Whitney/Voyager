@@ -351,9 +351,7 @@ void RenderEngine::execute(double delta_time) {
        auto pSystem = static_pointer_cast<ParticleSystem>(this->psystems.at(i));
        vec3 position = bulletToGlm(pSystem->getEntity()->getTransform()->getOrigin());
        pSystem->setPosition(position);
-
-       // This is the only thing that is engine specific. Not sure how to make it generic.
-       pSystem->setCreate(*throttle > 10);
+       pSystem->setTimer(*throttle > 10);
        pSystem->update(delta);
        pSystem->drawParticles(V->topMatrix(), P->topMatrix());
    }

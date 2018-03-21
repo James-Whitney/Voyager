@@ -61,7 +61,7 @@ void ParticleSystem::SortParticles(){
 }
 
 void ParticleSystem::createParticles(double delta) {
-    if (!create) {
+    if (timer-- <= 0) {
         return;
     }
 
