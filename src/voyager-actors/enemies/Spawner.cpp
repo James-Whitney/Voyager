@@ -19,6 +19,7 @@ void Spawner::update(double delta_time) {
 }
 
 void Spawner::spawnDrone() {
+   assert(this->app != nullptr);
 
    // pick the spawn point
    int idx = (rand() / RAND_MAX) * this->size();
@@ -31,12 +32,12 @@ void Spawner::spawnDrone() {
    trans->setRotation(btQuaternion(btVector3(0, 0, 1), 0));
    assert(this->scene != nullptr);
    assert(this->nav_map != nullptr);
-   shared_ptr<Drone> drone = make_shared<Drone>(this->scene, this->nav_map, trans);
+   shared_ptr<Drone> drone = make_shared<Drone>(this->scene, this->nav_map, trans, this->app);
+   drone->setHealth(300.0f);
    drone->initPhysics();
    drone->linkComponents();
 
    // put the drone in the application
-   assert(this->app != nullptr);
    app->getThings()[drone->getId()] = drone;
    for (int i = 0; i < drone->numComponents(); ++i) {
       auto c = drone->componentAt(i);
