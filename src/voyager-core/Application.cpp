@@ -28,7 +28,7 @@ void Application::keyCallback(GLFWwindow *window, int key, int scancode, int act
 
 void Application::mouseCallback(GLFWwindow *window, int button, int action, int mods) {
    if (static_pointer_cast<RenderEngine>(this->render_engine)->getHud()->inputScreen()) {
-      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+      glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
    } else {
       glfwSetInputMode(this->window->getHandle(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
    }
