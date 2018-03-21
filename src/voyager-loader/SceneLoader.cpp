@@ -418,9 +418,7 @@ shared_ptr<PhysicsComponent> SceneLoader::parse_physicsComponent( shared_ptr<Ent
 
 
    btVector3 btAabbMin, btAabbMax;
-   btTransform t = *(entity->getTransform(false)).get();
-   collisionShape->getAabb(t, btAabbMin, btAabbMax);
-   //physicsComponent->getBody()->getAabb(btAabbMin, btAabbMax);
+   physicsComponent->getBody()->getAabb(btAabbMin, btAabbMax);
    shared_ptr<DebugBox> debugBox = make_shared<DebugBox>(btAabbMin, btAabbMax);
    debugBox->setShape(collisionShape);
    debugBox->setEntity(entity);

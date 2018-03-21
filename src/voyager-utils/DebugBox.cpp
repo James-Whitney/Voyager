@@ -1,6 +1,9 @@
 #include "include/DebugBox.h"
 
 DebugBox::DebugBox(btVector3 btAabbMin, btVector3 btAabbMax) {
+   btAabbMin = btVector3(btAabbMin.getX()/2.0f,btAabbMin.getY()/2.0f,btAabbMin.getZ()/2.0f); 
+   btAabbMax = btVector3(btAabbMax.getX()/2.0f,btAabbMax.getY()/2.0f,btAabbMax.getZ()/2.0f); 
+
    this->aabbMin = glm::vec3((float)btAabbMin[0], (float)btAabbMin[1], (float)btAabbMin[2]);
    this->aabbMax = glm::vec3((float)btAabbMax[0], (float)btAabbMax[1], (float)btAabbMax[2]);
 }

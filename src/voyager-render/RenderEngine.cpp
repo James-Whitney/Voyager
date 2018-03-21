@@ -275,10 +275,13 @@ void RenderEngine::execute(double delta_time) {
          // M->loadMatrix(bulletToGlm(*trans.get()));
          // std::shared_ptr<btVector3> scale = debugBox->getScale();
          // M->scale(bulletToGlm(*scale.get()));        
-         std::shared_ptr<btTransform> trans = debugBox->getEntity()->getTransform();
-         M->loadMatrix(bulletToGlm(*trans.get()));
+         std::shared_ptr<btTransform> trans = debugBox->getEntity()->getTransform(false);
          std::shared_ptr<btVector3> scale = make_shared<btVector3>(debugBox->getShape()->getLocalScaling());
-         M->scale(bulletToGlm(*scale.get()));  
+         M->loadIdentity();
+         // M->loadMatrix(bulletToGlm(trans->getOrigin()));
+          M->scale(bulletToGlm(*scale.get() * 2.0));
+         // M->rotate(trans->getRotation().getAngle(), bulletToGlm(trans->getRotation().getAxis()));
+         //M->translate(bulletToGlm(trans->getOrigin()));
          // std::shared_ptr<btVector3> scale = debugBox->getScale();
          // M->scale(bulletToGlm(*scale.get()) * 2.0f);
          glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
