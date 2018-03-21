@@ -183,12 +183,34 @@ void RenderEngine::init() {
 
 void RenderEngine::removeFlagged()
 {
-   for (int i = 0; i < renderables.size(); i++) {
-      std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(renderables[i]);
-      if (component->getRemoveFlag()) {
-         renderables.erase(components.begin() + i);
+
+   for (int i = 0; i < this->components.size(); ++i) {
+      auto c = this->components.at(i);
+      if (c->getRemoveFlag()) {
+         this->components.erase(this->components.begin() + i);
       }
    }
+
+   for (int i = 0; i < this->renderables.size(); ++i) {
+      auto c = this->renderables.at(i);
+      if (c->getRemoveFlag()) {
+         this->renderables.erase(this->renderables.begin() + i);
+      }
+   }
+
+   for (int i = 0; i < this->psystems.size(); ++i) {
+      auto c = this->psystems.at(i);
+      if (c->getRemoveFlag()) {
+         this->psystems.erase(this->psystems.begin() + i);
+      }
+   }
+
+   // for (int i = 0; i < renderables.size(); i++) {
+      // std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(renderables[i]);
+      // if (component->getRemoveFlag()) {
+      //    renderables.erase(components.begin() + i);
+      // }
+   // }
 }
 
 void RenderEngine::execute(double delta_time) {
