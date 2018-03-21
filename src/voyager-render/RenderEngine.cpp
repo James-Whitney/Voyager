@@ -252,27 +252,25 @@ void RenderEngine::execute(double delta_time) {
    this->skyboxProgram->unbind();
    this->program->bind();
 
-   // this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
-   // for (auto &idx : this->vfc->ViewFrustCull()) {
-   //    this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
-   // }
-   // for (auto &idx : this->vfc->dynamic) {
-   //    this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
-   // }
-
-    for (int i = 0; i < this->components.size(); ++i) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
+   this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
+   for (auto &idx : this->vfc->ViewFrustCull()) {
+      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+   }
+   for (auto &comp : this->components) {
+      if (!static_pointer_cast<Renderable>(comp)->getCullStatus()) {
+         this->render(static_pointer_cast<Renderable>(comp));
+      }
    }
 
    V->popMatrix();
    P->popMatrix();
 
-   if (hud->startScreen) {
-      hud->startMenu();
-   }  else {
+   //if (hud->startScreen) {
+      //hud->startMenu();
+   //}  else {
       hud->render();
       hud->shipStats(helm);
-   }
+   //}
 
    this->program->unbind();
    glfwSwapBuffers(this->window->getHandle());
