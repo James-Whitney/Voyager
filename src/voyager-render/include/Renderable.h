@@ -25,7 +25,10 @@ public:
    void setCullStatus(bool status) { this->shouldCull = status; }
 
    virtual void init();
+   virtual void renderableInit(std::string resource_dir);
+   virtual bool hasCustomProgram() { return false; };
    virtual void update(double delta_time);
+   virtual void draw(std::shared_ptr<Program> prog);
 
 private:
 
