@@ -5,40 +5,30 @@ void PhysicsComponent::init() {
 
 }
 
-void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, int mapWidth, int mapLength, std::vector<float> heightfieldData, btScalar heightScale, btScalar minHeight, btScalar maxHeight, btScalar vertexSpace) {
+void PhysicsComponent::initHeightMap(std::shared_ptr<Entity> entity, btVector3 position, btQuaternion rotation, btHeightfieldTerrainShape *collisionShape) {
    this->entity = entity;
    this->world = 1;
+   this->terrain = true;
 
    std::shared_ptr<btTransform> transform = entity->getTransform();
+   transform->setIdentity();
+   transform->setOrigin(position); // Set Position
+   btDefaultMotionState * myMotionState = new btDefaultMotionState(*(transform.get())); // Create Motion State
+
    // btDefaultMotionState* myMotionState = new btDefaultMotionState(*(transform.get()));
-
-   this->collisionShape = new btHeightfieldTerrainShape( mapWidth,
-                                                         mapLength,
-                                                         (void *)(&heightfieldData[0]),
-                                                         1.0,
-                                                         minHeight,
-                                                         maxHeight,
-                                                         1, PHY_FLOAT, false);
-
    //btHeightfieldTerrainShape *heightFieldShape = new btHeightfieldTerrainShape(mapWidth, mapLength, (void *)(&heightfieldData[0]), 1, -1024, 1016, 2, PHY_UCHAR, true);
-
    //btVector3 localScale = btVector3(mapWidth / 127.0, mapLength / 127.0, 8);
-
    // TODO: bring this back
    // btVector3 localScale = btVector3(0.25, 0.25, 0.25);
-   // collisionShape->setLocalScaling(localScale);
+   //collisionShape->setUseDiamondSubdivision(true);
+   collisionShape->setLocalScaling(btVector3(1.0, 1.0, 1.0));
+   // collisionShape->processAllTriangles();
+   //collisionShape->setLocalScaling(btVector3());
 
-   btTransform m_cTransform;
-   m_cTransform.setIdentity();
-   btScalar mass(0); // Set the Mass
-   btVector3 localInertia(0,0,0); // Set Inertia
-   m_cTransform.setOrigin(btVector3(0, 0, 0)); // Set Position
-   btDefaultMotionState * myMotionState = new btDefaultMotionState(m_cTransform); // Create Motion State
-
-   // btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
-   btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0, myMotionState, collisionShape, localInertia);
+   btRigidBody::btRigidBodyConstructionInfo rbInfo(btScalar(0.0), myMotionState, collisionShape, btVector3(0.0, 0.0, 0.0));
 
    this->body = new btRigidBody(rbInfo);
+   // this->body->setActivationState(DISABLE_DEACTIVATION);
 }
 
 
@@ -94,6 +84,11 @@ void PhysicsComponent::updatePosition(std::shared_ptr<ShipComponent> ship) {
       objectTrans.setOrigin(position);
       btQuaternion rotation = objectTrans.getRotation() * shipTrans.getRotation();
       objectTrans.setRotation(rotation);
+   }
+   if (terrain) {
+      // btVector3 temp = objectTrans->getOrigin();
+      // objectTrans->setOrigin(temp.getX() / 2.0f, temp.getY() / 2.0f, temp.getZ() / 2.0f);
+      objectTrans.setOrigin(btVector3(0.0, 0.0, 0.0));
    }
    entity->setTransform(std::make_shared<btTransform>(objectTrans));
 }

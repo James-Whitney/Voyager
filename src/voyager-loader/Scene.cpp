@@ -18,16 +18,23 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    btScalar maxHeight = terrainShape->getMaxHeight();
    btScalar vertexScale = terrainShape->getVertexSpacing();
 
-   physicsComponent->initHeightMap( terrain,
-                                    btVector3(0, 0, 0),
-                                    terrain->getTransform()->getRotation(),
-                                    mapWidth,
-                                    mapLength,
-                                    heightData,
-                                    heightScale,
-                                    minHeight,
-                                    maxHeight,
-                                    vertexScale);
+   heightScale = 1.0;
+   // maxHeight = 100.0;
+
+   printf("mapWidth: %d\n", mapWidth);
+   printf("mapLength: %d\n", mapLength);
+   printf("heightScale: %f\n", heightScale);
+   printf("minHeight: %f\n", minHeight);
+   printf("maxHeight: %f\n", maxHeight);
+   printf("vertexScale: %f\n", vertexScale);
+
+   //                                                                                                                vertexscale, heightScale
+   btHeightfieldTerrainShape *collisionShape = new btHeightfieldTerrainShape( mapWidth, mapLength, (void *)(&heightData[0]), vertexScale, minHeight, maxHeight, 1, PHY_FLOAT, false);
+   // btCollisionShape *collisionShape = new btHeightfieldTerrainShape( mapWidth, mapLength, (void *)(&heightData[0]), vertexScale, minHeight, maxHeight, 1, PHY_FLOAT, false);
+   printf("Collision Shape made\n");
+   btVector3 position = btVector3(mapWidth/2.0, 0, mapLength/2.0);
+   physicsComponent->initHeightMap( terrain, position, terrain->getTransform()->getRotation(), collisionShape );
+   printf("initHeightMap\n");
 
    terrain->add(physicsComponent);
    app->getPhysicsEngine()->registerComponent(physicsComponent);
@@ -39,12 +46,12 @@ void Scene::initTerrain(shared_ptr<Application> app, shared_ptr<Entity> terrain)
    renderEngine->setTerrainTextureScale(terrainShape->getTextureScale());
 
    btVector3 btAabbMin, btAabbMax;
-         // physicsComponent->get_collisionShape()->getAabb(t, btAabbMin, btAabbMax);
    physicsComponent->getBody()->getAabb(btAabbMin, btAabbMax);
    shared_ptr<DebugBox> debugBox = make_shared<DebugBox>(btAabbMin, btAabbMax);
    debugBox->setShape(physicsComponent->getBody()->getCollisionShape());
    debugBox->setEntity(terrain);
    debugBoxes.push_back(debugBox);
+   printf("initTerrain\n");
 }
 
 void Scene::apply(shared_ptr<Application> app) {

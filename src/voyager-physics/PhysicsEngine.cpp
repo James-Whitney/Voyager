@@ -102,7 +102,6 @@ void PhysicsEngine::execute(double delta_time) {
 
    world->stepSimulation(delta_time, 1);
    checkCollision(world);
-
    for (int i = 0; i < components.size(); i++) {
       //cout << "Updating Pcom: " << i << endl;
       static_pointer_cast<PhysicsComponent>(components[i])->updatePosition(ship);
