@@ -120,20 +120,22 @@ void Scene::apply(shared_ptr<Application> app) {
          static_pointer_cast<StationComponent>(component)->setWindow(app->getWindowManager());
          if (dynamic_pointer_cast<StationComponent>(component)) {
             static_pointer_cast<StationComponent>(component)->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
+            static_pointer_cast<StationComponent>(component)->setShip(shipComponent);            
          }
          if (dynamic_pointer_cast<HelmComponent>(component)) {
             playerComponent->setHelm(static_pointer_cast<StationComponent>(component));
             static_pointer_cast<RenderEngine>(app->getRenderEngine())->setHelm(static_pointer_cast<HelmComponent>(component));
-            static_pointer_cast<HelmComponent>(component)->setShip(shipComponent);
          }
          else if (dynamic_pointer_cast<TurretComponent>(component)) {
             playerComponent->setTurret(static_pointer_cast<StationComponent>(component), static_pointer_cast<TurretComponent>(component)->getTurretID());
+            static_pointer_cast<TurretComponent>(component)->setApp(app);
          }
          app->getActorEngine()->registerComponent(component);
       } else if (dynamic_pointer_cast<BrainComponent>(component)) {
          app->getAiEngine()->registerComponent(component);
       }
    }
+   app->setSceneMesh(this->shared_from_this());
 }
 
 void Scene::dump() {

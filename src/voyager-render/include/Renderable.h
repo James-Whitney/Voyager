@@ -34,7 +34,7 @@ private:
 
    std::shared_ptr<Uber> uber;
    std::vector<std::shared_ptr<Shape>> mesh;
-   bool shouldCull;
+   bool shouldCull = false;
 
 };
 

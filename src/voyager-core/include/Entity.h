@@ -53,8 +53,12 @@ public:
 
    virtual void add(std::shared_ptr<Component> component);
    virtual std::shared_ptr<Component> componentAt(int i);
+   virtual void removeComponentAt(int i);
    virtual int numComponents();
    virtual bool remove(std::shared_ptr<Component> component);
+
+   void setHealth(float health) { this->health = health; }
+   float* getHealth() { return &health; } 
 
 protected:
 
@@ -69,6 +73,7 @@ protected:
    std::shared_ptr<Entity> parent = nullptr;
    std::vector< std::shared_ptr<Entity> > children;
 
+   float health = 0.0;
 
 };
 

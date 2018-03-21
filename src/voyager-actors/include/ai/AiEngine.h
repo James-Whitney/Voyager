@@ -13,6 +13,7 @@ class AiEngine :
 public:
    virtual void init();
    virtual void execute(double delta_time = 0) override;
+   virtual void removeFlagged();
    void setNavMapEntity(std::shared_ptr<NavMapEntity> nav_map_entity) { this->nav_map_entity = nav_map_entity; }
 private:
    std::shared_ptr<NavMapEntity> nav_map_entity = nullptr;

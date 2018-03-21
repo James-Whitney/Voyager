@@ -76,6 +76,23 @@ void PhysicsEngine::checkCollision(btDiscreteDynamicsWorld *this_world) {
 }
 
 
+void PhysicsEngine::removeFlagged()
+{
+   for (int i = 0; i < components.size(); i++) {
+      std::shared_ptr<PhysicsComponent> component = std::static_pointer_cast<PhysicsComponent>(components[i]);
+      if (component->getRemoveFlag()) {
+         if (component->getWorldIndex() == 0) {
+            ship_world->removeRigidBody(component->getBody());
+         }
+         else if (component->getWorldIndex() == 1) {
+            world->removeRigidBody(component->getBody());
+         }
+         components.erase(components.begin() + i);
+      }
+   }
+}
+
+
 void PhysicsEngine::execute(double delta_time) {
    ///-----stepsimulation_start-----
    //cout << "Num of Objects: " << world->getNumCollisionObjects() << endl;

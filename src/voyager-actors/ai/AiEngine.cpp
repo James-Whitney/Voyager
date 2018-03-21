@@ -19,6 +19,15 @@ void AiEngine::init() {
    }
 }
 
+void AiEngine::removeFlagged() {
+   for (int i = 0; i < components.size(); i++) {
+      std::shared_ptr<Component> component = components[i];
+      if (component->getRemoveFlag()) {
+         components.erase(components.begin() + i);
+      }
+   }
+}
+
 void AiEngine::execute(double delta_time) {
    // log("--< Ai Engine >------------------------------------");
    for (int i = 0; i < this->components.size(); ++i) {

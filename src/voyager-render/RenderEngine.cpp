@@ -155,12 +155,21 @@ void RenderEngine::init() {
    log("done initializing render engine");
 }
 
+void RenderEngine::removeFlagged()
+{
+   for (int i = 0; i < components.size(); i++) {
+      std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(components[i]);
+      if (component->getRemoveFlag()) {
+         components.erase(components.begin() + i);
+      }
+   }
+}
+
 void RenderEngine::execute(double delta_time) {
 #if _RENDERENGINE_LOG_RENDERS
    cout << "-<Rendering>------------------" << endl;
    this->camera->dump();
 #endif
-
    int width, height;
    glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
    float aspect = width / (float)height;
@@ -270,20 +279,21 @@ void RenderEngine::execute(double delta_time) {
       auto r = static_pointer_cast<Renderable>(this->components.at(idx));
       this->render(r);
    }
-   for (auto &idx : this->vfc->dynamic) {
-      auto r = static_pointer_cast<Renderable>(this->components.at(idx));
-      this->render(r);
+   for (auto &comp : this->components) {
+      if (!static_pointer_cast<Renderable>(comp)->getCullStatus()) {
+         this->render(static_pointer_cast<Renderable>(comp));
+      }
    }
 
    V->popMatrix();
    P->popMatrix();
 
-   if (hud->startScreen) {
-      hud->startMenu();
-   }  else {
+   //if (hud->startScreen) {
+      //hud->startMenu();
+   //}  else {
       hud->render();
       hud->shipStats(helm);
-   }
+   //}
 
    this->program->unbind();
    glfwSwapBuffers(this->window->getHandle());
