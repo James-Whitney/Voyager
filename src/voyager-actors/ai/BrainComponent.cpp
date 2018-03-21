@@ -16,5 +16,5 @@ void BrainComponent::init() {
 }
 
 void BrainComponent::update(double delta_time) {
-   this->brain->run();
+   this->brain->run(delta_time);
 }

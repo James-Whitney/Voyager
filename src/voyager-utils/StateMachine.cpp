@@ -11,9 +11,9 @@ void StateMachine::start(shared_ptr<State> initial_state) {
    this->cur_state->onStart(nullptr);
 }
 
-void StateMachine::run() {
+void StateMachine::run(double delta_time) {
    assert(this->cur_state != nullptr);
-   this->cur_state->run();
+   this->cur_state->run(delta_time);
 }
 
 void StateMachine::stop() {

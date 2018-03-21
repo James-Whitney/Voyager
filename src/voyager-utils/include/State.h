@@ -11,7 +11,7 @@ class State {
 public:
 
    virtual void onStart(std::shared_ptr<State> prev) = 0;
-   virtual void run() = 0;
+   virtual void run(double delta_time) = 0;
    virtual void onEnd(std::shared_ptr<State> next) = 0;
 
 private:

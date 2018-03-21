@@ -96,6 +96,7 @@ void Scene::apply(shared_ptr<Application> app) {
    drone_trans->setOrigin(btVector3(30, 0, 40));
    drone_trans->setRotation(btQuaternion(btVector3(0, 0, 1), 0));
    shared_ptr<Drone> drone = make_shared<Drone>(this->shared_from_this(), nav_map_entity->getNavMap(), drone_trans);
+   drone->initPhysics();
    drone->linkComponents();
    this->inject_entity(drone);
 

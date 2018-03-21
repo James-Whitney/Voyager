@@ -59,8 +59,11 @@ public:
    DoNothing(std::shared_ptr<Entity> player) : BrainState(player) {};
 
    void onStart(std::shared_ptr<State> prev);
-   void run();
+   void run(double delta_time);
    void onEnd(std::shared_ptr<State> next);
+
+protected:
+   void wanderAimlessly(double delta_time);
 
 };
 
@@ -74,8 +77,11 @@ public:
    Chase(std::shared_ptr<Entity> player) : BrainState(player) {};
 
    void onStart(std::shared_ptr<State> prev);
-   void run();
+   void run(double delta_time);
    void onEnd(std::shared_ptr<State> next);
+
+protected:
+   void chaseThePlayer(double delta_time);
 };
 
 #endif
