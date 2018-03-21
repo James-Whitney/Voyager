@@ -2,7 +2,7 @@
 
 cd build
 make
-if [[ $? != 0 ]]; then 
+if [[ $? != 0 ]]; then
   exit
 fi
 cd ..

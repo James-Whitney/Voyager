@@ -114,6 +114,9 @@ void Scene::apply(shared_ptr<Application> app) {
       if (dynamic_pointer_cast<Renderable>(component)) {
          app->getRenderEngine()->registerComponent(component);
       }
+      else if (dynamic_pointer_cast<ParticleSystem>(component)) {
+          app->getRenderEngine()->registerComponent(component);
+      }
       else if (dynamic_pointer_cast<PhysicsComponent>(component)) {
          app->getPhysicsEngine()->registerComponent(component);
       }
