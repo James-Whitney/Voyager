@@ -296,6 +296,26 @@ void RenderEngine::execute(double delta_time) {
    //}
 
    this->program->unbind();
+
+   static double lastTime = glfwGetTime();
+   double currentTime = glfwGetTime();
+   double delta = currentTime - lastTime;
+   lastTime = currentTime;
+
+   btScalar* throttle = helm->getForwardThrottle();
+
+   for (int i = 0; i < this->psystems.size(); i++) {
+       auto pSystem = static_pointer_cast<ParticleSystem>(this->psystems.at(i));
+       vec3 position = bulletToGlm(pSystem->getEntity()->getTransform()->getOrigin());
+       pSystem->setPosition(position);
+       pSystem->setTimer(*throttle > 10);
+       pSystem->update(delta);
+       pSystem->drawParticles(V->topMatrix(), P->topMatrix());
+   }
+
+   V->popMatrix();
+   P->popMatrix();
+
    glfwSwapBuffers(this->window->getHandle());
 }
 
