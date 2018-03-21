@@ -351,7 +351,7 @@
                   "type": "box",
                   "scale": [1.0, 1.0, 1.0]
                },
-               "mass": 0.0,
+               "mass": 100.0,
                "position": [20.0, 10.0, -6.0],
                "scale": [1.0, 1.0, 1.0],
                "axis": [0, 0, 1],
@@ -372,7 +372,7 @@
          "path": "/ship_light.obj"
       },
       {
-         "path": "/IcoSphere.obj"
+         "path": "/SimpleSphere.obj"
       }
    ],
 

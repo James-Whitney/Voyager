@@ -16,8 +16,6 @@ VFCobj::VFCobj(std::vector< std::shared_ptr<Component> > *objs) {
          std::vector<int> idx;
          idx.push_back(i);
          boxes.push_back(std::make_shared<VFCbox>(center, min, max, radius, &idx));
-      } else {
-         this->dynamic.push_back(i);
       }
    }
 
@@ -132,7 +130,7 @@ std::vector<int> VFCobj::getIdxToRender(std::vector<int> &model, std::vector<int
    std::set_difference(s_model.begin(), s_model.end(), s_pattern.begin(), s_pattern.end(),
       std::back_inserter(result));
 
-   result.insert(result.end(), this->dynamic.begin(), this->dynamic.end());
+   //result.insert(result.end(), this->dynamic.begin(), this->dynamic.end());
 
    return result;
 }

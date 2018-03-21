@@ -256,6 +256,7 @@ void SceneLoader::parse_components(shared_ptr<Scene> scene, shared_ptr<Entity> e
          else if ( components[i].HasMember("ship") ) {
             entity->add(this->parse_shipComponent(entity, physicsComponent, scene, components[i]));
             entity->setMask(SHIP_MASK);
+            entity->setHealth(1000.0);
          }
       }
       else if (type == "STATION") {
