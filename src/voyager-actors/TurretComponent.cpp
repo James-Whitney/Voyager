@@ -33,7 +33,7 @@ void TurretComponent::fireBullet() {
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
    btCollisionShape* collisionShape = new btSphereShape(0.01);
    btScalar mass(1.0);
-   btVector3 position = getEntity()->getTransform()->getOrigin() + btVector3( 0.0, 2.5, 0.0);
+   btVector3 position = getEntity()->getTransform()->getOrigin() + btVector3( 0.0, 0.0, 0.0);
    shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(0.1, 0.1, 0.1));
    entity->setScale(scale);
    btScalar friction = btScalar(0.1);

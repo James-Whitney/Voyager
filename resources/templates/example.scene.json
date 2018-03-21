@@ -44,29 +44,23 @@
          "name": "ship",
          "components": [
             {
-               "type": "RENDER",
-               "uber": 0,
-               "mesh": 1,
-               "static": false
-            },
-            {
                "type": "PHYSICS",
                "world": 1,
                "collisionShape":
                {
                   "type": "box",
-                  "scale": [10.0, 0.25, 5.0]
+                  "scale": [10.0, 2.0, 5.0]
                },
                "mass": 1000.0,
-               "position": [0, 0, 0],
-               "scale": [10.0, 0.25, 5.0],
+               "position": [100, 0.0, 0.0],
+               "scale": [10.0, 2.0, 5.0],
                "axis": [0, 1, 0],
-               "rotation": 0.0,
+               "rotation": 3.14,
                "velocity": [0, 0, 0],
-               "damping": [0.1, 0.1],
+               "damping": [0.005, 0.005],
                "friction": 1.0,
                "ship": true,
-               "speed": 2500.0
+               "speed": 500.0
             }
          ]
       },
@@ -98,6 +92,13 @@
          "name": "shipFloor",
          "components": [
             {
+               "type": "RENDER",
+               "uber": 0,
+               "mesh": 1,
+               "static": false
+            },
+            {
+               
                "type": "PHYSICS",
                "world": 0,
                "collisionShape":
@@ -259,8 +260,8 @@
                "type": "STATION",
                "sub-type": "HELM",
                "cameraHeight": 4.0,
-               "turnSpeed": 100000.0,
-               "riseSpeed": 50000.0
+               "turnSpeed": 80000.0,
+               "riseSpeed": 60000.0
             }
          ]
       },
@@ -356,6 +357,146 @@
                "scale": [1.0, 1.0, 1.0],
                "axis": [0, 0, 1],
                "rotation": 0.0,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            }
+         ]
+      },
+      {
+         "name": "EAST_WALL",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1,
+               "static": false
+            },
+            {
+               "type": "PHYSICS",
+               "world": 1,
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [5.0, 75.0, 1000.0]
+               },
+               "mass": 0.0,
+               "position": [-30.0, 20.0, 800.0],
+               "scale": [5.0, 75.0, 1000.0],
+               "axis": [0, 0, 1],
+               "rotation": 0.52359877559,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            }
+         ]
+      },
+      {
+         "name": "WEST_WALL",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1,
+               "static": false
+            },
+            {
+               "type": "PHYSICS",
+               "world": 1,
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [5.0, 75.0, 1000.0]
+               },
+               "mass": 0.0,
+               "position": [155.0, 20.0, 800.0],
+               "scale": [5.0, 75.0, 1000.0],
+               "axis": [0, 0, 1],
+               "rotation": -0.52359877559,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            }
+         ]
+      },
+      {
+         "name": "SOUTH_WALL",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1,
+               "static": false
+            },
+            {
+               "type": "PHYSICS",
+               "world": 1,
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [150.0, 75.0, 5.0]
+               },
+               "mass": 0.0,
+               "position": [75.0, 20.0, -125.0],
+               "scale": [150.0, 75.0, 5.0],
+               "axis": [1, 0, 0],
+               "rotation": -0.52359877559,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            }
+         ]
+      },
+      {
+         "name": "NORTH_WALL",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1,
+               "static": false
+            },
+            {
+               "type": "PHYSICS",
+               "world": 1,
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [150.0, 75.0, 5.0]
+               },
+               "mass": 0.0,
+               "position": [75.0, 20.0, 1700.0],
+               "scale": [150.0, 75.0, 5.0],
+               "axis": [1, 0, 0],
+               "rotation": 0.52359877559,
+               "velocity": [0, 0, 0],
+               "damping": [0.0, 0.0],
+               "friction": 0.2
+            }
+         ]
+      },
+      {
+         "name": "FLOOR_WALL",
+         "components": [
+            {
+               "type": "RENDER",
+               "uber": 2,
+               "mesh": 1,
+               "static": false
+            },
+            {
+               "type": "PHYSICS",
+               "world": 1,
+               "collisionShape":
+               {
+                  "type": "box",
+                  "scale": [100.0, 5.0, 1000.0]
+               },
+               "mass": 0.0,
+               "position": [50.0, -20.0, 800.0],
+               "scale": [100.0, 5.0, 1000.0],
+               "axis": [0, 0, 1],
+               "rotation": 0,
                "velocity": [0, 0, 0],
                "damping": [0.0, 0.0],
                "friction": 0.2
