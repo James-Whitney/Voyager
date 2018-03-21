@@ -363,6 +363,26 @@
          ]
       },
       {
+         "name": "spawn_entity",
+         "transform": {
+            "position": [0, 0, 0],
+            "scale": [1.0, 1.0, 1.0],
+            "axis": [0, 0, 1],
+            "rotation": 0.0
+         },
+         "components": [
+            {
+               "type": "SPAWNER",
+               "frequency": 1000,
+               "points": [
+                  [20, 0, 20],
+                  [20, 0, 30],
+                  [20, 0, 40]
+               ]
+            }
+         ]
+      },
+      {
         "name": "engine_trail",
         "components": [
            {

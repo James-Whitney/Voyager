@@ -7,6 +7,8 @@
 #include <voyager-core/include/Entity.h>
 #include <voyager-utils/include/StateMachine.h>
 
+#include "NavMap.h"
+
 class DoNothing;
 class Chase;
 
@@ -20,6 +22,8 @@ public:
 
    void startChasing();
    void startDoingNothing();
+
+   btVector3 getNavTarget(std::shared_ptr<NavMap> nav_map);
 
 protected:
 
@@ -63,7 +67,7 @@ public:
    void onEnd(std::shared_ptr<State> next);
 
 protected:
-   virtual void doNothing(double delta_time) = 0;
+   virtual void doNothing(double delta_time, float distance_to_player) = 0;
 
 };
 
@@ -81,7 +85,7 @@ public:
    void onEnd(std::shared_ptr<State> next);
 
 protected:
-   virtual void chase(double delta_time) = 0;
+   virtual void chase(double delta_time, float distance_to_player) = 0;
 };
 
 #endif

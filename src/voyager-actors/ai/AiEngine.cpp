@@ -31,15 +31,28 @@ void AiEngine::removeFlagged() {
 void AiEngine::execute(double delta_time) {
    // log("--< Ai Engine >------------------------------------");
    for (int i = 0; i < this->components.size(); ++i) {
-      stringstream ss;
-      ss << "Component " << i;
+      // stringstream ss;
+      // ss << "Component " << i;
       // log(ss.str());
       auto component = this->components.at(i);
       this->runBrain(delta_time, static_pointer_cast<BrainComponent>(component));
    }
+
+   // log("Spawners");
+   for (int i = 0; i < this->spawners.size(); ++i) {
+      this->spawners.at(i)->update(delta_time);
+   }
+
    // log("---------------------------------------------------");
 }
 
 void AiEngine::runBrain(double delta_time, std::shared_ptr<BrainComponent> brain) {
    brain->update(delta_time);
+}
+void AiEngine::registerComponent(shared_ptr<Component> c) {
+   if (dynamic_pointer_cast<Spawner>(c)) {
+      this->spawners.push_back(static_pointer_cast<Spawner>(c));
+   } else {
+      Engine::registerComponent(c);
+   }
 }

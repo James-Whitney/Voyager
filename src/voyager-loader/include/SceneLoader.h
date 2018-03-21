@@ -12,6 +12,7 @@
 #include <voyager-render/include/Renderable.h>
 
 #include <voyager-physics/include/PhysicsComponent.h>
+#include <voyager-actors/include/enemies/Spawner.h>
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
@@ -51,6 +52,7 @@ private:
    std::shared_ptr<PhysicsComponent> parse_physicsComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    std::shared_ptr<HelmComponent> parse_helmComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
    std::shared_ptr<TurretComponent> parse_turretComponent(shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value& component);
+   std::shared_ptr<Component> parse_spawner(std::shared_ptr<Entity> entity, std::shared_ptr<Scene> scene, rapidjson::Value &component);
    void parse_transform(shared_ptr<Scene> scene, shared_ptr<Entity> entity, Value& transform);
 
 };

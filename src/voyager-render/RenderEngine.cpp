@@ -114,17 +114,13 @@ void RenderEngine::init() {
 
    log("initialize renderables");
    for (int i = 0; i < this->components.size(); ++i) {
-      if (dynamic_pointer_cast<ParticleSystem>(this->components.at(i))) {
-          this->components.at(i)->init();
-          this->psystems.push_back(this->components.at(i));
-      } else {
-          auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
-          renderable->renderableInit(this->resource_dir);
-          renderable->init();
-          this->renderables.push_back(renderable);
+      auto c = this->components.at(i);
+      c->init();
+      if (dynamic_pointer_cast<Renderable>(c)) {
+         auto r = static_pointer_cast<Renderable>(c);
+         r->renderableInit(this->resource_dir);
       }
    }
-   cout << "components size: " << this->renderables.size() << endl;
 
    log("initialize VFC");
    this->vfc = make_shared<VFCobj>(&this->renderables);
@@ -187,12 +183,34 @@ void RenderEngine::init() {
 
 void RenderEngine::removeFlagged()
 {
-   for (int i = 0; i < renderables.size(); i++) {
-      std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(renderables[i]);
-      if (component->getRemoveFlag()) {
-         renderables.erase(components.begin() + i);
+
+   for (int i = 0; i < this->components.size(); ++i) {
+      auto c = this->components.at(i);
+      if (c->getRemoveFlag()) {
+         this->components.erase(this->components.begin() + i);
       }
    }
+
+   for (int i = 0; i < this->renderables.size(); ++i) {
+      auto c = this->renderables.at(i);
+      if (c->getRemoveFlag()) {
+         this->renderables.erase(this->renderables.begin() + i);
+      }
+   }
+
+   for (int i = 0; i < this->psystems.size(); ++i) {
+      auto c = this->psystems.at(i);
+      if (c->getRemoveFlag()) {
+         this->psystems.erase(this->psystems.begin() + i);
+      }
+   }
+
+   // for (int i = 0; i < renderables.size(); i++) {
+      // std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(renderables[i]);
+      // if (component->getRemoveFlag()) {
+      //    renderables.erase(components.begin() + i);
+      // }
+   // }
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -378,3 +396,32 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    }
    M->popMatrix();
 }
+
+void RenderEngine::registerComponent(std::shared_ptr<Component> c) {
+   Engine::registerComponent(c);
+   if (dynamic_pointer_cast<ParticleSystem>(c)) {
+      this->psystems.push_back(c);
+   } else if (dynamic_pointer_cast<Renderable>(c)) {
+      // auto r = static_pointer_cast<Renderable>(c);
+      // r->renderableInit(this->resource_dir);
+      // r->init();
+      this->renderables.push_back(c);
+   } else {
+      // unknown component type
+      assert(false);
+   }
+}
+
+   // log("initialize renderables");
+   // for (int i = 0; i < this->components.size(); ++i) {
+   //    if (dynamic_pointer_cast<ParticleSystem>(this->components.at(i))) {
+   //        this->components.at(i)->init();
+   //        this->psystems.push_back(this->components.at(i));
+   //    } else {
+   //        auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
+   //        renderable->renderableInit(this->resource_dir);
+   //        renderable->init();
+   //        this->renderables.push_back(renderable);
+   //    }
+   // }
+   // cout << "components size: " << this->renderables.size() << endl;

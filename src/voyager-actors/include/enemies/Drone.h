@@ -28,6 +28,8 @@ public:
    void initPhysics();
    void linkComponents();
 
+   const std::shared_ptr<NavMap> getNavMap() { return this->nav_map; }
+
 private:
 
    std::shared_ptr<Renderable> renderable;
@@ -46,14 +48,16 @@ class DroneDoNothing : public DoNothing {
 public:
    DroneDoNothing(std::shared_ptr<Entity> player) : DoNothing(player) {}
 protected:
-   virtual void doNothing(double delta_time) override;
+   virtual void doNothing(double delta_time, float distance_to_player) override;
 };
 
 class DroneChase : public Chase {
 public:
+   static float DIRECT_CHASE_RADIUS;
    DroneChase(std::shared_ptr<Entity> player) : Chase(player) {}
 protected:
-   virtual void chase(double delta_time) override;
+   virtual void chase(double delta_time, float distance_to_player) override;
+   virtual void moveToTarget(const btVector3 &target, const double delta_time);
 };
 
 #endif
