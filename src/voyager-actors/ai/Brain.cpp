@@ -45,6 +45,21 @@ void Brain::startDoingNothing() {
    }
 }
 
+btVector3 Brain::getNavTarget(shared_ptr<NavMap> nav_map) {
+   // do an A* search along enough of the map to find
+   wpt_ptr_t start = nav_map->getNearestWaypoint(this->enemy->getTransform()->getOrigin());
+   wpt_ptr_t end = nav_map->getNearestWaypoint(this->player->getTransform()->getOrigin());
+   int max_depth = 3;
+   wpt_list_t route = nav_map->navigate(start, end, max_depth);
+   assert(route.size() > 0);
+   wpt_ptr_t target = route.at(0);
+   return btVector3(
+      target->getLocation().x,
+      target->getLocation().y,
+      target->getLocation().z
+   );
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Brain State                                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +93,7 @@ void DoNothing::run(double delta_time) {
    float d = this->getDistToPlayer();
    if (d > DoNothing::START_CHASING_DISTANCE) {
       // continue doing nothing
-      this->doNothing(delta_time);
+      this->doNothing(delta_time, d);
    } else {
       // transition to chasing
       this->brain->startChasing();
@@ -104,7 +119,7 @@ void Chase::run(double delta_time) {
    float d = this->getDistToPlayer();
    if (d < Chase::START_DOING_NOTHING_DISTANCE) {
       // continue chasing
-      this->chase(delta_time);
+      this->chase(delta_time, d);
    } else {
       // start doing nothing
       this->brain->startDoingNothing();

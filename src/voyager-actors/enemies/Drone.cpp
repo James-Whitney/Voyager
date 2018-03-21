@@ -34,7 +34,7 @@ Drone::Drone(shared_ptr<Scene> scene, shared_ptr<NavMap> nav_map, shared_ptr<btT
    shared_ptr<Uber> uber = scene->ubers[6];
    assert(uber != nullptr);
    this->renderable->setUber(uber);
-   this->renderable->setCullStatus(true);
+   this->renderable->setCullStatus(false);
 
    // brain
    shared_ptr<DroneBrain> drone_brain = make_shared<DroneBrain>(nav_map->getPlayer());
@@ -60,20 +60,34 @@ DroneBrain::DroneBrain(shared_ptr<Entity> player) : Brain(player) {
    this->state_chase = make_shared<DroneChase>(player);
 }
 
-void DroneDoNothing::doNothing(double delta_time) {
+void DroneDoNothing::doNothing(double delta_time, float d) {
    auto drone = static_pointer_cast<Drone>(this->enemy)->physics_component->getBody();
    drone->applyDamping(delta_time);
 }
 
-void DroneChase::chase(double delta_time) {
+float DroneChase::DIRECT_CHASE_RADIUS = 100.0f;
 
-   // get the force
-   btVector3 p = this->player->getTransform()->getOrigin();
+void DroneChase::chase(double delta_time, float d) {
+
+   // btVector3 target;
+   // if (d < DroneChase::DIRECT_CHASE_RADIUS) {
+   //    // close enough to the player, just chase them directly
+   //    target = this->player->getTransform()->getOrigin();
+   // } else {
+   //    // navigate along the navmap
+   //    auto nav_map = static_pointer_cast<Drone>(this->enemy)->getNavMap();
+   //    target = this->brain->getNavTarget(nav_map);
+   // }
+   btVector3 target = this->player->getTransform()->getOrigin();
+
+   this->moveToTarget(target, delta_time);
+
+}
+
+void DroneChase::moveToTarget(const btVector3 &target, const double delta_time) {
    btVector3 e = this->enemy->getTransform()->getOrigin();
-   btVector3 f = 400.0f * (p - e).normalize();
-   // cout << "f = (" << f.getX() << ", " << f.getY() << ", " << f.getZ() << ")" << endl;
+   btVector3 f = 400.0f * (target - e).normalize();
 
-   // apply it
    auto drone = static_pointer_cast<Drone>(this->enemy)->physics_component->getBody();
    drone->applyCentralForce(f);
 }

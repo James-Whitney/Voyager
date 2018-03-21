@@ -31,8 +31,8 @@ void AiEngine::removeFlagged() {
 void AiEngine::execute(double delta_time) {
    // log("--< Ai Engine >------------------------------------");
    for (int i = 0; i < this->components.size(); ++i) {
-      stringstream ss;
-      ss << "Component " << i;
+      // stringstream ss;
+      // ss << "Component " << i;
       // log(ss.str());
       auto component = this->components.at(i);
       this->runBrain(delta_time, static_pointer_cast<BrainComponent>(component));

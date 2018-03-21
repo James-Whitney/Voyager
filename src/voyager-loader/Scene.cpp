@@ -3,7 +3,7 @@
 #include <voyager-actors/include/ai/AiEngine.h>
 #include <voyager-actors/include/enemies/Drone.h>
 
-#define SHOW_NAVMAP_WAYPOINTS 1
+#define SHOW_NAVMAP_WAYPOINTS 0
 
 using namespace std;
 
@@ -120,7 +120,7 @@ void Scene::apply(shared_ptr<Application> app) {
          static_pointer_cast<StationComponent>(component)->setWindow(app->getWindowManager());
          if (dynamic_pointer_cast<StationComponent>(component)) {
             static_pointer_cast<StationComponent>(component)->setCamera(static_pointer_cast<RenderEngine>(app->getRenderEngine())->getCamera());
-            static_pointer_cast<StationComponent>(component)->setShip(shipComponent);            
+            static_pointer_cast<StationComponent>(component)->setShip(shipComponent);
          }
          if (dynamic_pointer_cast<HelmComponent>(component)) {
             playerComponent->setHelm(static_pointer_cast<StationComponent>(component));

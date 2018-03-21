@@ -11,9 +11,9 @@ class AiEngine :
    public Engine
 {
 public:
-   virtual void init();
+   virtual void init() override;
    virtual void execute(double delta_time = 0) override;
-   virtual void removeFlagged();
+   virtual void removeFlagged() override;
    void setNavMapEntity(std::shared_ptr<NavMapEntity> nav_map_entity) { this->nav_map_entity = nav_map_entity; }
 private:
    std::shared_ptr<NavMapEntity> nav_map_entity = nullptr;
