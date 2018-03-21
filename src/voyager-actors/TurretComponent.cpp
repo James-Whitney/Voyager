@@ -20,6 +20,7 @@ void TurretComponent::fireBullet() {
    btTrans->setOrigin(getEntity()->getTransform()->getOrigin() + btVector3( 0.0, 3.0, 0.0));
    btTrans->setRotation(ship->getEntity()->getTransform()->getRotation());
    entity->setTransform(btTrans);
+   entity->setHealth(10.0);
    ////////RENDER
    shared_ptr<Renderable> renderComponent = make_shared<Renderable>();
    renderComponent->setMesh(app->getSceneMesh()->meshes[3]);
@@ -32,14 +33,14 @@ void TurretComponent::fireBullet() {
    shared_ptr<PhysicsComponent> physicsComponent = make_shared<PhysicsComponent>();
    btCollisionShape* collisionShape = new btSphereShape(0.01);
    btScalar mass(1.0);
-   btVector3 position = getEntity()->getTransform()->getOrigin() + btVector3( 0.0, 3.0, 0.0);
+   btVector3 position = getEntity()->getTransform()->getOrigin() + btVector3( 0.0, 2.5, 0.0);
    shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(0.1, 0.1, 0.1));
    entity->setScale(scale);
    btScalar friction = btScalar(0.1);
    // btVector3 axis = btVector3();
    // btScalar rotation = btScalar();
    btQuaternion rotationQuat = ship->getEntity()->getTransform()->getRotation();
-   btVector3 velocity = btVector3(0.0, 0.0, 10.0);
+   btVector3 velocity = btVector3(0.0, 0.0, 0.0);
    physicsComponent->initRigidBody(1, entity, collisionShape, mass, position, rotationQuat, velocity, friction);
    app->getPhysicsEngine()->registerComponent(std::static_pointer_cast<Component>(physicsComponent));
    btVector3 lookAt = glmToBullet(camera->getLookAt(false));

@@ -268,7 +268,7 @@ void RenderEngine::execute(double delta_time) {
    P->popMatrix();
 
    if (hud->startScreen) {
-      hud->startMenu();
+      hud->startMenu() ;
    }  else {
       hud->render();
       hud->shipStats(helm);
