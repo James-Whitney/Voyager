@@ -24,7 +24,7 @@ public:
    }
 
    void render() {
-      printf("%f\n", player->getRotation());
+      //printf("%f\n", player->getRotation());
       //this->text = std::to_string(player->getRotation()).c_str();
       Textbox::render();
    }

@@ -9,26 +9,8 @@
     "height" : 32
   },
   {
-    "type" : "image",
-    "titlebar" : "compass-image",
-    "image" : "resources/blue_button03.png",
-    "x_pos" : 0.5,
-    "y_pos" : 0.95,
-    "width" : 380,
-    "height" : 90
-  },
-  {
-    "type" : "playerinfo",
-    "titlebar" : "compass-text",
-    "text" : "Fore",
-    "x_pos" : 0.5,
-    "y_pos" : 0.95,
-    "r" : 1, "g" : 1, "b" : 1, "a" : 1
-  },
-  {
     "type" : "progress",
     "titlebar" : "health-bar",
-    "percent" : 0.75,
     "x_pos" : 0.5,
     "y_pos" : 0.02,
     "width" : 0.75,
@@ -58,11 +40,12 @@
     "y_pos" : 0.98
    },
    {
-    "type" : "shipinfo",
-    "titlebar" : "",
-    "x_pos" : 0.75,
-    "y_pos" : 0.85,
-    "width" : 25,
-    "height" : 100
+     "type" : "image",
+     "titlebar" : "ship-image",
+     "image" : "resources/blue_button03.png",
+     "x_pos" : 0.5,
+     "y_pos" : 0.5,
+     "width" : 50,
+     "height" : 200
    }
 ]

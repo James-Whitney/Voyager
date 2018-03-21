@@ -78,8 +78,8 @@ void Hud::generate() {
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["width"].GetInt(), widget["height"].GetInt()));
       } else if (!strcmp("progress", widget["type"].GetString())) {
-         if (!strcmp("health-bar", widget["titlebar"].GetString())) { this->healthIdx = this->widgets.size(); }
-         this->widgets.push_back(new ProgressBar(widget["titlebar"].GetString(), widget["percent"].GetFloat(),
+         this->widgets.push_back(new ProgressBar(widget["titlebar"].GetString(),
+            this->ship->getShip()->getEntity()->getHealth(),
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["width"].GetFloat()*Hud::width, widget["height"].GetFloat()*Hud::height));
       } else if (!strcmp("shipinfo", widget["type"].GetString())) {
