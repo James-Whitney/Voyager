@@ -30,6 +30,10 @@ function(AddExt TargetName)
    # glad
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/glad/include")
 
+   # sfml
+   target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext/sfml/include")
+   target_link_libraries(${TargetName} "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-audio.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-graphics.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-network.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-system.a" "${PROJECT_SOURCE_DIR}/build/ext/sfml/lib/libsfml-window.a")
+
    # general include dir
    target_include_directories(${TargetName} PUBLIC "${PROJECT_SOURCE_DIR}/ext")
 
@@ -80,6 +84,15 @@ option(GLFW_BUILD_EXAMPLES "GLFW_BUILD_EXAMPLES" OFF)
 option(GLFW_BUILD_TESTS "GLFW_BUILD_TESTS" OFF)
 option(GLFW_BUILD_DOCS "GLFW_BUILD_DOCS" OFF)
 add_subdirectory(${GLFW_DIR})
+
+###############################################################################################
+
+# SFML
+set(SFML_DIR "${PROJECT_SOURCE_DIR}/ext/SFML")
+option(SFML_BUILD_EXAMPLES "SFML_BUILD_EXAMPLES" OFF)
+option(SFML_BUILD_TESTS "SFML_BUILD_TESTS" OFF)
+option(SFML_BUILD_DOCS "SFML_BUILD_DOCS" OFF)
+add_subdirectory(${SFML_DIR})
 
 ###############################################################################################
 

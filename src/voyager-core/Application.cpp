@@ -1,8 +1,5 @@
 #include "include/Application.h"
 
-#include <sstream>
-
-#include <voyager-render/include/Renderable.h>
 
 #define _APPLICATION_LOG_LIFECYCLE 0 // set to 1 to log lifecycle events
 
@@ -56,8 +53,6 @@ void Application::run() {
       log_life("--------------------==[ LOOP ]==--------------------");
       // Game Update
       double delta_time;
-      //this->timer.tick(&delta_time);
-      
 
       this->timer.reset();
       while (this->timer.tick(&delta_time)) {
@@ -67,6 +62,8 @@ void Application::run() {
          this->physics(delta_time);
          //actors
          this->actors(delta_time);
+         assert(this->ai_engine != nullptr);
+         this->ai_engine->execute(delta_time);
 
          this->collisionClean();
       }
@@ -105,7 +102,14 @@ void Application::init() {
          cerr << "Application has no render_engine" << endl;
          exit(1);
       }
+
+      cout << "initialize render engine" << endl;
       this->render_engine->init();
+
+      cout << "initializing ai engine" << endl;
+      this->ai_engine->init();
+
+      cout << "client initialization done" << endl;
    }
 }
 
@@ -125,17 +129,20 @@ void Application::collisionClean() {
 
 void Application::actors(double delta_time) {
    assert(this->actor_engine != nullptr);
+   this->actor_engine->removeFlagged();
    this->actor_engine->execute(delta_time);
 }
 
 void Application::physics(double delta_time) {
    assert(this->physics_engine != nullptr);
+   this->physics_engine->removeFlagged();
    this->physics_engine->execute(delta_time);
 }
 
 void Application::render() {
    assert(this->getType() == CLIENT);
    assert(this->render_engine != nullptr);
+   this->render_engine->removeFlagged();
    this->render_engine->execute();
 }
 

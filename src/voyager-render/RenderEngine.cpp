@@ -1,6 +1,14 @@
 #include "include/RenderEngine.h"
 
+#include <iostream>
+
 #define _RENDERENGINE_LOG_RENDERS 0 // set to 1 to log rendering
+
+static void log(string msg) {
+#if _RENDERENGINE_LOG_RENDERS
+   cout << msg << endl;
+#endif
+}
 
 using namespace glm;
 using namespace std;
@@ -62,6 +70,7 @@ void RenderEngine::initTerrainNormalMap() {
 }
 
 void RenderEngine::init() {
+   log("make program");
    this->program = make_shared<Program>();
 
    glCullFace(GL_BACK);
@@ -103,17 +112,31 @@ void RenderEngine::init() {
    program->addAttribute("vertTan");
    program->addAttribute("vertBitan");
 
+   log("initialize renderables");
    for (int i = 0; i < this->components.size(); ++i) {
-      this->components.at(i)->init();
+      auto c = this->components.at(i);
+      c->init();
+      if (dynamic_pointer_cast<Renderable>(c)) {
+         auto r = static_pointer_cast<Renderable>(c);
+         r->renderableInit(this->resource_dir);
+      }
    }
-   cout << "components size: " << this->components.size() << endl;
-   this->vfc = make_shared<VFCobj>(&this->components);
-   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir, this->getHelm(), this->getPlayer());
+   log("initialize VFC");
+   this->vfc = make_shared<VFCobj>(&this->renderables);
+
+   log("initialize HUD");
+   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir,
+      this->getHelm(), this->getPlayer());
+
+   log("initialize Shadows");
    this->initShadows();
+
+   log("initialize Terrain");
    this->initTerrainTexture();
    this->initTerrainNormalMap();
 
    // Initialize the skybox
+   log("initialize skybox");
    this->skybox->init();
 
    // Initialize the skybox shader
@@ -131,6 +154,63 @@ void RenderEngine::init() {
    this->skyboxProgram->addUniform("V");
    this->skyboxProgram->addUniform("fogColor");
    this->skyboxProgram->addUniform("fogHeight");
+
+   auto particleProgram = std::make_shared<Program>();
+   particleProgram->setVerbose(true);
+   particleProgram->setShaderNames(
+       this->resource_dir + "/part_vert.glsl",
+       this->resource_dir + "/part_frag.glsl"
+   );
+
+   if (!particleProgram->init())
+   {
+      cerr << "Failed to initialize particle program" << endl;
+      exit(1);
+   }
+   particleProgram->addUniform("VP");
+   particleProgram->addUniform("CameraRight");
+   particleProgram->addUniform("CameraUp");
+   particleProgram->addUniform("Texture");
+
+   for (int i = 0; i < this->psystems.size(); i++) {
+       auto pSystem = static_pointer_cast<ParticleSystem>(this->psystems.at(i));
+       pSystem->setCamera(this->camera);
+       pSystem->setProgram(particleProgram);
+   }
+
+   log("done initializing render engine");
+}
+
+void RenderEngine::removeFlagged()
+{
+
+   for (int i = 0; i < this->components.size(); ++i) {
+      auto c = this->components.at(i);
+      if (c->getRemoveFlag()) {
+         this->components.erase(this->components.begin() + i);
+      }
+   }
+
+   for (int i = 0; i < this->renderables.size(); ++i) {
+      auto c = this->renderables.at(i);
+      if (c->getRemoveFlag()) {
+         this->renderables.erase(this->renderables.begin() + i);
+      }
+   }
+
+   for (int i = 0; i < this->psystems.size(); ++i) {
+      auto c = this->psystems.at(i);
+      if (c->getRemoveFlag()) {
+         this->psystems.erase(this->psystems.begin() + i);
+      }
+   }
+
+   // for (int i = 0; i < renderables.size(); i++) {
+      // std::shared_ptr<Renderable> component = std::static_pointer_cast<Renderable>(renderables[i]);
+      // if (component->getRemoveFlag()) {
+      //    renderables.erase(components.begin() + i);
+      // }
+   // }
 }
 
 void RenderEngine::execute(double delta_time) {
@@ -138,7 +218,6 @@ void RenderEngine::execute(double delta_time) {
    cout << "-<Rendering>------------------" << endl;
    this->camera->dump();
 #endif
-
    int width, height;
    glfwGetFramebufferSize(this->window->getHandle(), &width, &height);
    float aspect = width / (float)height;
@@ -148,11 +227,11 @@ void RenderEngine::execute(double delta_time) {
    this->program->bind();
    glUniform1ui(this->program->getUniform("uberMode"), 0);
 
-   std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->components.at(0))->getMesh().at(0));
+   std::shared_ptr<Terrain> terrain = static_pointer_cast<Terrain>(static_pointer_cast<Renderable>(this->renderables.at(0))->getMesh().at(0));
    float maxHeight = terrain->getMaxHeight();
    float size = maxHeight * 2;
 
-   btVector3 terrPos = static_pointer_cast<Renderable>(this->components.at(0))
+   btVector3 terrPos = static_pointer_cast<Renderable>(this->renderables.at(0))
       ->getEntity()->getTransform()->getOrigin();
    float minY = terrPos.getY();
 
@@ -173,8 +252,8 @@ void RenderEngine::execute(double delta_time) {
    glClear(GL_DEPTH_BUFFER_BIT);
 
    glUniform1i(this->program->getUniform("shadowMode"), 1);
-   for (int i = 0; i < this->components.size(); ++i) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(i)));
+   for (int i = 0; i < this->renderables.size(); ++i) {
+      this->render(static_pointer_cast<Renderable>(this->renderables.at(i)));
    }
 
    // Bind the depth texture to the uniform "depthTexture"
@@ -245,22 +324,43 @@ void RenderEngine::execute(double delta_time) {
 
    this->vfc->ExtractVFPlanes(P->topMatrix(), V->topMatrix());
    for (auto &idx : this->vfc->ViewFrustCull()) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+
+      auto r = static_pointer_cast<Renderable>(this->renderables.at(idx));
+      this->render(r);
    }
-   for (auto &idx : this->vfc->dynamic) {
-      this->render(static_pointer_cast<Renderable>(this->components.at(idx)));
+   for (auto &comp : this->renderables) {
+      if (!static_pointer_cast<Renderable>(comp)->getCullStatus()) {
+         this->render(static_pointer_cast<Renderable>(comp));
+      }
+   }
+
+   //V->popMatrix();
+   //P->popMatrix();
+   hud->render();
+
+   this->program->unbind();
+
+   static double lastTime = glfwGetTime();
+   double currentTime = glfwGetTime();
+   double delta = currentTime - lastTime;
+   lastTime = currentTime;
+
+   btScalar* throttle = helm->getForwardThrottle();
+
+   for (int i = 0; i < this->psystems.size(); i++) {
+       auto pSystem = static_pointer_cast<ParticleSystem>(this->psystems.at(i));
+       vec3 position = bulletToGlm(pSystem->getEntity()->getTransform()->getOrigin());
+       pSystem->setPosition(position);
+
+       // This is the only thing that is engine specific. Not sure how to make it generic.
+       pSystem->setCreate(*throttle > 10);
+       pSystem->update(delta);
+       pSystem->drawParticles(V->topMatrix(), P->topMatrix());
    }
 
    V->popMatrix();
    P->popMatrix();
 
-   //if (hud->startScreen) {
-   ///   hud->startMenu();
-   //}  else {
-   hud->render();
-   //}
-
-   this->program->unbind();
    glfwSwapBuffers(this->window->getHandle());
 }
 
@@ -274,16 +374,51 @@ void RenderEngine::render(shared_ptr<Renderable> renderable) {
    M->pushMatrix();
    {
       std::shared_ptr<btTransform> trans = renderable->getEntity()->getTransform();
-      M->loadMatrix(bulletToGlm(*trans.get()));
+      if (trans != nullptr) {
+         M->loadMatrix(bulletToGlm(*trans.get()));
+      }
       std::shared_ptr<btVector3> scale = renderable->getEntity()->getScale();
-      M->scale(bulletToGlm(*scale.get()) * 2.0f);
+      if (scale != nullptr) {
+         M->scale(bulletToGlm(*scale.get()) * 2.0f);
+      }
 
-      renderable->getUber()->setUniforms(this->program);
+      auto uber = renderable->getUber();
+      if (uber != nullptr) {
+         uber->setUniforms(this->program);
+      }
+
       glUniformMatrix4fv(this->program->getUniform("M"), 1, GL_FALSE, value_ptr(M->topMatrix()));
 
-      for (std::shared_ptr<Shape> shape : renderable->getMesh()) {
-         shape->draw(this->program);
-      }
+      renderable->draw(this->program);
    }
    M->popMatrix();
 }
+
+void RenderEngine::registerComponent(std::shared_ptr<Component> c) {
+   Engine::registerComponent(c);
+   if (dynamic_pointer_cast<ParticleSystem>(c)) {
+      this->psystems.push_back(c);
+   } else if (dynamic_pointer_cast<Renderable>(c)) {
+      // auto r = static_pointer_cast<Renderable>(c);
+      // r->renderableInit(this->resource_dir);
+      // r->init();
+      this->renderables.push_back(c);
+   } else {
+      // unknown component type
+      assert(false);
+   }
+}
+
+   // log("initialize renderables");
+   // for (int i = 0; i < this->components.size(); ++i) {
+   //    if (dynamic_pointer_cast<ParticleSystem>(this->components.at(i))) {
+   //        this->components.at(i)->init();
+   //        this->psystems.push_back(this->components.at(i));
+   //    } else {
+   //        auto renderable = static_pointer_cast<Renderable>(this->components.at(i));
+   //        renderable->renderableInit(this->resource_dir);
+   //        renderable->init();
+   //        this->renderables.push_back(renderable);
+   //    }
+   // }
+   // cout << "components size: " << this->renderables.size() << endl;

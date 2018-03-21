@@ -27,6 +27,7 @@
 
 #include "Camera.h"
 #include "Renderable.h"
+#include "ParticleSystem.h"
 
 class RenderEngine : public Engine {
 
@@ -58,6 +59,8 @@ public:
 
    virtual void init();
    virtual void execute(double delta_time = 0);
+   virtual void removeFlagged();
+   virtual void registerComponent(std::shared_ptr<Component> c) override;
 
    void setTerrainTexture(std::string filename) { this->terrainTextureFilename = filename; }
    void setTerrainNormalMap(std::string filename) { this->terrainNormalMapFilename = filename; }
@@ -95,6 +98,9 @@ protected:
 
    std::shared_ptr<Skybox> skybox;
    std::shared_ptr<Program> skyboxProgram;
+
+   std::vector<std::shared_ptr<Component>> renderables;
+   std::vector<std::shared_ptr<Component>> psystems;
 
    virtual void render(std::shared_ptr<Renderable> renderable);
 

@@ -1,5 +1,7 @@
 #include "include/Entity.h"
 
+#include <iostream>
+
 using namespace std;
 
 static long nextId = 0;
@@ -38,7 +40,8 @@ void Entity::update(double delta_time) {
 
 void Entity::add(shared_ptr<Component> component) {
    this->push_back(component);
-   component->setEntity(this->shared_from_this());
+   shared_ptr<Entity> me = this->shared_from_this();
+   component->setEntity(me);
 }
 
 int Entity::numComponents() {
@@ -57,4 +60,8 @@ bool Entity::remove(shared_ptr<Component> component) {
       }
    }
    return false;
+}
+
+void Entity::removeComponentAt(int i) {
+   this->erase(this->begin() + i);
 }
