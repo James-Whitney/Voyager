@@ -81,7 +81,7 @@ float BrainState::getDistToPlayer() {
 // Do Nothing                                                                                     //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-float DoNothing::START_CHASING_DISTANCE = 300;
+float DoNothing::START_CHASING_DISTANCE = 9999999;
 
 void DoNothing::onStart(shared_ptr<State> prev) {
    // cout << "WE ARE DOING NOTHING" << endl;
@@ -107,7 +107,7 @@ void DoNothing::onEnd(shared_ptr<State> next) {
 // Chase                                                                                          //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-float Chase::START_DOING_NOTHING_DISTANCE = 400;
+float Chase::START_DOING_NOTHING_DISTANCE = 999999999;
 
 void Chase::onStart(shared_ptr<State> prev) {
    // cout << "LET THE CHASE BEGIN!!!" << endl;
