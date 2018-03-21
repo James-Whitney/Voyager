@@ -65,6 +65,13 @@ void Drone::update(double delta_time) {
 }
 
 void Drone::kill() {
+
+
+   if (!this->dead) {
+      std::system("afplay explosion.mp3 &");
+   }
+   this->dead = true;
+
    for (int i = 0; i < this->numComponents(); ++i) {
       this->componentAt(i)->setRemoveFlag();
    }

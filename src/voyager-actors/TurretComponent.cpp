@@ -1,5 +1,9 @@
 #include "include/TurretComponent.h"
 
+#include <cstdlib>
+
+#include <unistd.h>
+
 void TurretComponent::init() {
 
 }
@@ -63,6 +67,8 @@ void TurretComponent::logicUpdate(double delta_time) {
    if (glfwGetKey(window->getHandle(), GLFW_KEY_SPACE ) == GLFW_PRESS) {
       if (fire_recoil < 0.0) {
          fire_recoil = 15.0;
+
+         std::system("afplay shot.wav &");
          fireBullet();
       }
    }
