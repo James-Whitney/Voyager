@@ -40,12 +40,11 @@
     "y_pos" : 0.98
    },
    {
-     "type" : "image",
-     "titlebar" : "ship-image",
-     "image" : "resources/blue_button03.png",
-     "x_pos" : 0.5,
-     "y_pos" : 0.5,
-     "width" : 50,
-     "height" : 200
+    "type" : "shipinfo",
+    "titlebar" : "",
+    "x_pos" : 0.05,
+    "y_pos" : 0.5,
+    "width" : 50,
+    "height" : 200
    }
 ]
