@@ -368,12 +368,6 @@
          "name": "EAST_WALL",
          "components": [
             {
-               "type": "RENDER",
-               "uber": 2,
-               "mesh": 1,
-               "static": false
-            },
-            {
                "type": "PHYSICS",
                "world": 1,
                "collisionShape":
@@ -395,12 +389,6 @@
       {
          "name": "WEST_WALL",
          "components": [
-            {
-               "type": "RENDER",
-               "uber": 2,
-               "mesh": 1,
-               "static": false
-            },
             {
                "type": "PHYSICS",
                "world": 1,
@@ -444,12 +432,6 @@
          "name": "SOUTH_WALL",
          "components": [
             {
-               "type": "RENDER",
-               "uber": 2,
-               "mesh": 1,
-               "static": false
-            },
-            {
                "type": "PHYSICS",
                "world": 1,
                "collisionShape":
@@ -472,12 +454,6 @@
          "name": "NORTH_WALL",
          "components": [
             {
-               "type": "RENDER",
-               "uber": 2,
-               "mesh": 1,
-               "static": false
-            },
-            {
                "type": "PHYSICS",
                "world": 1,
                "collisionShape":
@@ -499,12 +475,6 @@
       {
          "name": "FLOOR_WALL",
          "components": [
-            {
-               "type": "RENDER",
-               "uber": 2,
-               "mesh": 1,
-               "static": false
-            },
             {
                "type": "PHYSICS",
                "world": 1,

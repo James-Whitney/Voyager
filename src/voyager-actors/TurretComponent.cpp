@@ -25,7 +25,7 @@ void TurretComponent::fireBullet() {
       ////////RENDER
       shared_ptr<Renderable> renderComponent = make_shared<Renderable>();
       renderComponent->setMesh(app->getSceneMesh()->meshes[3]);
-      renderComponent->setUber(app->getSceneMesh()->ubers[1]);
+      renderComponent->setUber(app->getSceneMesh()->ubers[0]);
       renderComponent->setCullStatus(false);
       renderComponent->init();
       app->getRenderEngine()->registerComponent(std::static_pointer_cast<Component>(renderComponent));
@@ -35,7 +35,7 @@ void TurretComponent::fireBullet() {
       btCollisionShape* collisionShape = new btSphereShape(0.05);
       btScalar mass(10.0);
       btVector3 position = getEntity()->getTransform()->getOrigin() + btVector3( 0.0, 3.0, 0.0);
-      shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(0.1, 0.1, 0.1));
+      shared_ptr<btVector3> scale = make_shared<btVector3>(btVector3(0.025, 0.025, 0.025));
       entity->setScale(scale);
       btScalar friction = btScalar(0.1);
       // btVector3 axis = btVector3();
@@ -71,7 +71,7 @@ void TurretComponent::fireBullet() {
       ////////RENDER
       shared_ptr<Renderable> renderComponent = make_shared<Renderable>();
       renderComponent->setMesh(app->getSceneMesh()->meshes[3]);
-      renderComponent->setUber(app->getSceneMesh()->ubers[1]);
+      renderComponent->setUber(app->getSceneMesh()->ubers[0]);
       renderComponent->setCullStatus(false);
       renderComponent->init();
       app->getRenderEngine()->registerComponent(std::static_pointer_cast<Component>(renderComponent));
