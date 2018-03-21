@@ -6,12 +6,16 @@
 #include <rapidjson/error/en.h>
 #include <rapidjson/filereadstream.h>
 
-Hud::Hud(GLFWwindow* window, std::string resourcedir) {
+Hud::Hud(GLFWwindow* window, std::string resourcedir,
+   std::shared_ptr<HelmComponent>  ship, std::shared_ptr<PlayerComponent>  player)
+{
    resource_dir = resourcedir;
    ImGui_ImplGlfwGL3_Init(window, false);
    glfwGetWindowSize(window, &width, &height);
+   this->ship = ship;
+   this->player = player;
    Hud::open();
-   startScreen = true;
+   startScreen = false;
    glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
    this->buf[0] = 0;
 }
@@ -41,25 +45,7 @@ void Hud::open() {
    Hud::generate();
 }
 
-
-void Hud::shipStats(std::shared_ptr<HelmComponent>  ship) {
-   Hud::start();
-   //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
-   ImGui::SetNextWindowPos(ImVec2(0.5, 0.5), 0, ImVec2(0.5f,0.5f));
-   ImGui::SetNextWindowSize(ImVec2(200,60), 0);
-   ImGui::Begin("Ship_Stats", NULL, ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoMove|ImGuiWindowFlags_NoCollapse);
-   ImGui::SliderFloat(  "Forward", 
-                        ship->getForwardThrottle(), 
-                        ship->getMinForwardThrottle(), 
-                        ship->getMaxForwardThrottle());
-   ImGui::End();
-   ImGui::Render();
-}
-
-
 void Hud::startMenu() {
-   //Hud::start();
-   //std::cout << "InGui Keyboard: " << ImGui::GetIO().WantCaptureKeyboard << std::endl;
    ImGui::SetNextWindowPos(ImVec2(0.5*Hud::width, 0.5*Hud::height), 0, ImVec2(0.5f,0.5f));
    ImGui::SetNextWindowSize(ImVec2(0,0), 0);
    ImGui::SetNextWindowBgAlpha(0.0f);
@@ -81,7 +67,6 @@ void Hud::dynamicTextbox(const char *titlebar, const char *txt, int x_pos, int y
 void Hud::generate() {
    for (auto& widget : doc.GetArray()) {
       if (!strcmp("textbox", widget["type"].GetString())) {
-         if (!strcmp("compass-text", widget["titlebar"].GetString())) { this->compassIdx = this->widgets.size(); }
          this->widgets.push_back(new Textbox(widget["titlebar"].GetString(), widget["text"].GetString(),
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["r"].GetInt(), widget["g"].GetInt(), widget["b"].GetInt(), widget["a"].GetInt()));
@@ -93,11 +78,22 @@ void Hud::generate() {
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["width"].GetInt(), widget["height"].GetInt()));
       } else if (!strcmp("progress", widget["type"].GetString())) {
-         if (!strcmp("health-bar", widget["titlebar"].GetString())) { this->healthIdx = this->widgets.size(); }
-         this->widgets.push_back(new ProgressBar(widget["titlebar"].GetString(), widget["percent"].GetFloat(),
+         this->widgets.push_back(new ProgressBar(widget["titlebar"].GetString(),
+            this->ship->getShip()->getEntity()->getHealth(),
             widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
             widget["width"].GetFloat()*Hud::width, widget["height"].GetFloat()*Hud::height));
+      } else if (!strcmp("shipinfo", widget["type"].GetString())) {
+         this->widgets.push_back(new ShipInfo(widget["titlebar"].GetString(),
+            widget["x_pos"].GetFloat(), widget["y_pos"].GetFloat(),
+            widget["width"].GetFloat(), widget["height"].GetFloat(),
+            this->ship->getMinForwardThrottle(), this->ship->getMaxForwardThrottle(), this->ship));
+      } else if (!strcmp("playerinfo", widget["type"].GetString())) {
+         this->widgets.push_back(new PlayerInfo(widget["titlebar"].GetString(),
+            widget["x_pos"].GetFloat()*Hud::width, widget["y_pos"].GetFloat()*Hud::height,
+            widget["r"].GetInt(), widget["g"].GetInt(), widget["b"].GetInt(), widget["a"].GetInt(),
+            this->player));
       }
+
    }
 }
 

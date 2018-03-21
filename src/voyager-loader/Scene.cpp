@@ -134,6 +134,9 @@ void Scene::apply(shared_ptr<Application> app) {
             playerComponent->setTurret(static_pointer_cast<StationComponent>(component), static_pointer_cast<TurretComponent>(component)->getTurretID());
             static_pointer_cast<TurretComponent>(component)->setApp(app);
          }
+         else if (dynamic_pointer_cast<PlayerComponent>(component)) {
+            static_pointer_cast<RenderEngine>(app->getRenderEngine())->setPlayer(static_pointer_cast<PlayerComponent>(component));
+         }
          app->getActorEngine()->registerComponent(component);
       } else if (dynamic_pointer_cast<BrainComponent>(component)) {
          app->getAiEngine()->registerComponent(component);

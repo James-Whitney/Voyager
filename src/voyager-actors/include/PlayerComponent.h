@@ -41,6 +41,8 @@ public:
    void update(double delta_time);
 
 
+   double getprev_playerAngle() { return this->prev_playerAngle; }
+
 private:
 
    std::shared_ptr<PhysicsComponent> physicsComponent;

@@ -14,6 +14,7 @@
 #include <rapidjson/include/rapidjson/document.h>
 
 #include <voyager-actors/include/HelmComponent.h>
+#include <voyager-actors/include/PlayerComponent.h>
 
 #include <string>
 #include <vector>
@@ -23,6 +24,8 @@
 #include "Textbox.h"
 #include "FPS.h"
 #include "ProgressBar.h"
+#include "ShipInfo.h"
+#include "PlayerInfo.h"
 
 class Hud {
 public:
@@ -49,7 +52,9 @@ public:
    char buf[1024];
 
    // Sets the window to work in and establishes the frame.
-   Hud(GLFWwindow* window, std::string resourcedir);
+   Hud(GLFWwindow* window, std::string resourcedir,
+      std::shared_ptr<HelmComponent>  ship,
+      std::shared_ptr<PlayerComponent>  player);
 
    void run() { start(); render(); }
    // Creates new frame, start adding widgets
@@ -63,7 +68,7 @@ public:
 
    void startMenu();
 
-   void shipStats(std::shared_ptr<HelmComponent>  ship);
+   void shipStats();
 
    void guiKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
    bool inputScreen() { return this->startScreen; }
@@ -73,6 +78,8 @@ private:
    void open();
 
    std::shared_ptr<GLFWwindow> window;
+   std::shared_ptr<HelmComponent>  ship;
+   std::shared_ptr<PlayerComponent>  player;
 
 };
 

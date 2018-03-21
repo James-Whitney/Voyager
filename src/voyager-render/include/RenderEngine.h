@@ -21,6 +21,7 @@
 #include <voyager-vfc/include/VFCobj.h>
 
 #include <voyager-actors/include/ShipComponent.h>
+#include <voyager-actors/include/PlayerComponent.h>
 
 #include <bullet/src/btBulletDynamicsCommon.h>
 
@@ -67,6 +68,9 @@ public:
 
    void setSkybox(std::shared_ptr<Skybox> skybox) { this->skybox = skybox; }
 
+   void setPlayer(std::shared_ptr<PlayerComponent> p) { this->player = p; }
+   std::shared_ptr<PlayerComponent> getPlayer() { return this->player; }
+
 protected:
 
    std::string resource_dir;
@@ -89,6 +93,8 @@ protected:
    float terrainTextureScale;
 
    std::shared_ptr<HelmComponent> helm;
+   std::shared_ptr<PlayerComponent> player;
+
 
    std::shared_ptr<Skybox> skybox;
    std::shared_ptr<Program> skyboxProgram;

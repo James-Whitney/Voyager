@@ -121,12 +121,12 @@ void RenderEngine::init() {
          r->renderableInit(this->resource_dir);
       }
    }
-
    log("initialize VFC");
    this->vfc = make_shared<VFCobj>(&this->renderables);
 
    log("initialize HUD");
-   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir);
+   this->hud = make_shared<Hud>(this->window->getHandle(), this->resource_dir,
+      this->getHelm(), this->getPlayer());
 
    log("initialize Shadows");
    this->initShadows();
@@ -334,12 +334,9 @@ void RenderEngine::execute(double delta_time) {
       }
    }
 
-   //if (hud->startScreen) {
-      //hud->startMenu();
-   //}  else {
-      hud->render();
-      hud->shipStats(helm);
-   //}
+   //V->popMatrix();
+   //P->popMatrix();
+   hud->render();
 
    this->program->unbind();
 

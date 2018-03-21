@@ -18,7 +18,8 @@ public:
    int getHud() { return this->hud; }
    void setHud(int hud) { this->hud = hud; }
 
-   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }   
+   void setShip(std::shared_ptr<ShipComponent> ship) { this->ship = ship; }
+   std::shared_ptr<ShipComponent> getShip() { return this->ship; }
 
    void activate() { this->active = true; }
    void deactivate() { this->active = false; }
@@ -30,14 +31,14 @@ public:
    btScalar getRotation();
 
    void cameraUpdate(btScalar cameraHeight);
-   
+
 
 protected:
 
    bool active = false;
 
    int hud = 0;
-   
+
    std::shared_ptr<ShipComponent> ship;
 
    std::shared_ptr<Camera> camera;
