@@ -68,7 +68,7 @@ void Drone::kill() {
 
 
    if (!this->dead) {
-      std::system("afplay explosion.mp3 &");
+      std::system("afplay -v 0.25 explosion.mp3 &");
    }
    this->dead = true;
 

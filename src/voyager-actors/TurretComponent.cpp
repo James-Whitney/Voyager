@@ -114,8 +114,8 @@ void TurretComponent::logicUpdate(double delta_time) {
    fire_recoil -= delta_time;
    if (glfwGetKey(window->getHandle(), GLFW_KEY_SPACE ) == GLFW_PRESS) {
       if (fire_recoil < 0.0) {
-         std::system("afplay shot.wav &");
-         fire_recoil = ( id == 0 ? 5 : 100 );
+         std::system("afplay -v 0.25 shot.wav &");
+         fire_recoil = ( id == 0 ? 15 : 100 );
          fireBullet();
       }
    }
