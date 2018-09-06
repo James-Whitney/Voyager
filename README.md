@@ -1,7 +1,9 @@
 Voyager
 
+We didn't make a readme.
 
-#### Sean's Shity SFML (s)Fix
+
+#### Sean's SFML (s)Fix
 In build/src/voyager-{server/client}/CMakeFiles/voyager-client.dir/link.txt change the two instances of -lsfml to 
 `../../ext/sfml/lib/libsfml-audio.a 
  ../../ext/sfml/lib/libsfml-graphics.a  
